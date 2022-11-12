@@ -16,6 +16,7 @@ class Knight:
         self.team = team
         self.name = name
         self.cooldown = 0
+        self.view_radius = 100
 
     def __repr__(self):
         return f'{self.name}: {self.health}% at {self._x}, {self._y}'
@@ -41,6 +42,9 @@ class Knight:
         vec = self.direction / np.linalg.norm(self.direction)
         new_pos = self.position + self.speed * vec * dt
         return new_pos.astype(int)
+
+    def get_distance(self, pos):
+        return np.sqrt((pos[0] - self._x)**2 + (pos[1] - self._y)**2)
 
     def advance_dt(self, time, dt):
         self.cooldown = max(self.cooldown - dt, 0)
