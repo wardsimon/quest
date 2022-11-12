@@ -1,5 +1,6 @@
 from game_map import Map
 from knight import Knight
+from fight import fight
 
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
@@ -7,12 +8,27 @@ import matplotlib.pyplot as plt
 if __name__ == '__main__':
     # mpl.use('TkAgg')
 
-    nx = 1920
-    ny = 1080
-    m = Map(nx=nx, ny=ny)
-    k = Knight(x=nx - 1, y=800)
+    ng = 32
+    nx = ng * 56  # 1920
+    ny = ng * 32  # 1080
+    m = Map(nx=nx, ny=ny, ng=ng)
+    # knights = [
+    #     Knight(x=nx - 1, y=800, direction=[-1, -0.5], name='Arthur'),
+    #     Knight(x=1, y=100, direction=[1, 0.5], name='Lancelot')
+    # ]
+    knights = [
+        Knight(x=nx - 1, y=800, direction=[-1, 0], name='Arthur', team='red'),
+        Knight(x=nx - 100,
+               y=800,
+               direction=[1, 0],
+               name='Lancelot',
+               team='blue')
+    ]
 
-    line, = m.ax.plot(k.x, k.y, 'o')
+    lines = {}
+    for k in knights:
+        line, = m.ax.plot(k.x, k.y, 'o')
+        lines[k.name] = line
 
     # circle = patches.Circle(pos, 15)
     # m.ax.add_patch(circle)
@@ -27,12 +43,21 @@ if __name__ == '__main__':
         # ix = int(new_pos[0])
         # iy = int(new_pos[1])
         m.ax.set_title(f'time = {time}')
-        k.move(time=time)
-        pos = k.next_position(dt=dt)
-        print(pos)
-        if not m.array[pos[1], pos[0]]:
-            k.position = pos
-        line.set_data([k.x], [k.y])
+        for k in knights:
+            k.advance_dt(time=time, dt=dt)
+            k.execute(time=time)
+            pos = k.next_position(dt=dt)
+            print(pos)
+            if not m.array[pos[1], pos[0]]:
+                k.position = pos
+            lines[k.name].set_data([k.x], [k.y])
+
+        dead_bodies = fight(knights=knights, game_map=m)
+        for k in dead_bodies:
+            lines[k.name].remove()
+            del lines[k.name]
+            knights.remove(k)
+
         plt.pause(0.001)
 
     sec = input('Let us wait for user input.')

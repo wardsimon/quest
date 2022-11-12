@@ -5,10 +5,12 @@ import matplotlib.patches as patches
 
 class Map:
 
-    def __init__(self, nx=1920, ny=1080):
+    def __init__(self, nx, ny, ng):
         self.nx = nx
         self.ny = ny
+        self.ng = ng
         self.array = np.zeros((ny, nx), dtype=int)
+        self.grid = np.zeros((ny // ng, nx // ng), dtype=int)
         self.fig, self.ax = plt.subplots()
         self.ax.set_aspect('equal')
         self.ax.set_xlim(0, nx)
@@ -17,7 +19,7 @@ class Map:
         self._make_castle()
         self.fig.show()
 
-    def _make_obstacles(self, n=100):
+    def _make_obstacles(self, n=10):
         posx = np.random.random(n) * self.nx
         posy = np.random.random(n) * self.ny
         dx = 40
