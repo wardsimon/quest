@@ -8,7 +8,7 @@ class Map:
     def __init__(self, nx=1920, ny=1080):
         self.nx = nx
         self.ny = ny
-        self.map = np.zeros((ny, nx))
+        self.array = np.zeros((ny, nx), dtype=int)
         self.fig, self.ax = plt.subplots()
         self.ax.set_aspect('equal')
         self.ax.set_xlim(0, nx)
@@ -17,7 +17,7 @@ class Map:
         self._make_castle()
         self.fig.show()
 
-    def _make_obstacles(self, n=30):
+    def _make_obstacles(self, n=100):
         posx = np.random.random(n) * self.nx
         posy = np.random.random(n) * self.ny
         dx = 40
@@ -29,7 +29,7 @@ class Map:
                            min(int(ic + 0.5 * dx), self.nx)):
                 for j in range(max(int(jc - 0.5 * dx), 0),
                                min(int(jc + 0.5 * dx), self.ny)):
-                    self.map[j, i] = 1.0
+                    self.array[j, i] = 1
 
             # rect = patches.Rectangle((posx[i], posy[i]),
             #                          dx,
@@ -43,7 +43,7 @@ class Map:
         #                    np.arange(self.ny + 1),
         #                    self.map,
         #                    shading='auto')
-        self.im = self.ax.imshow(self.map, origin='lower')
+        self.im = self.ax.imshow(self.array, origin='lower')
 
     def _make_castle(self):
         dx = 80
