@@ -19,7 +19,7 @@ class Knight:
         self.view_radius = 100
 
     def __repr__(self):
-        return f'{self.name}: {self.health}% at {self._x}, {self._y}'
+        return f'{self.name}: {self.health}% {self.attack} {self.speed} at {self._x}, {self._y}'
 
     @property
     def x(self):

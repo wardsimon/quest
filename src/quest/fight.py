@@ -13,7 +13,7 @@ def fight(knights, game_map):
             else:
                 combats[key][k.team].append(k)
     print(combats)
-    input('preeeees')
+    # input('preeeees')
     for key in combats:
         if set(combats[key]) == {'blue', 'red'}:
             print("Fight in cell", key)
@@ -32,5 +32,5 @@ def fight(knights, game_map):
                 k.cooldown = 10
             print(dead)
             print(combats[key])
-            input('press key')
+            # input('press key')
     return dead

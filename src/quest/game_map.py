@@ -9,13 +9,13 @@ class Map:
         self.nx = nx
         self.ny = ny
         self.ng = ng
-        self.array = np.zeros((ny, nx), dtype=int)
-        self.grid = np.zeros((ny // ng, nx // ng), dtype=int)
+        self.array = np.zeros((nx, ny), dtype=int)
         self.fig, self.ax = plt.subplots()
         self.ax.set_aspect('equal')
         self.ax.set_xlim(0, nx)
         self.ax.set_ylim(0, ny)
         self._make_obstacles()
+        self._make_gems()
         self._make_castle()
         self.fig.show()
 
@@ -31,7 +31,7 @@ class Map:
                            min(int(ic + 0.5 * dx), self.nx)):
                 for j in range(max(int(jc - 0.5 * dx), 0),
                                min(int(jc + 0.5 * dx), self.ny)):
-                    self.array[j, i] = 1
+                    self.array[i, j] = 1
 
             # rect = patches.Rectangle((posx[i], posy[i]),
             #                          dx,
@@ -45,7 +45,14 @@ class Map:
         #                    np.arange(self.ny + 1),
         #                    self.map,
         #                    shading='auto')
-        self.im = self.ax.imshow(self.array, origin='lower')
+        self.im = self.ax.imshow(self.array.T, origin='lower')
+
+    def _make_gems(self, n=200):
+        posx = (np.random.random(n) * self.nx).astype(int)
+        posy = (np.random.random(n) * self.ny).astype(int)
+        for i in range(n):
+            self.array[posx[i], posy[i]] = 2
+        self.ax.plot(posx, posy, '^')
 
     def _make_castle(self):
         dx = 80

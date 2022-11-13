@@ -2,14 +2,27 @@ from game_map import Map
 from knight import Knight
 from fight import fight
 
+from dataclasses import dataclass
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
+import numpy as np
 
+# @dataclass
+# class Gem:
+#     x: int
+#     y: int
+#     kind: int
 
-def generate_gems(n, game_map):
-    posx = np.random.random(n) * game_map.nx
-    posy = np.random.random(n) * game_map.ny
-    kind = np.random.choice([0, 1, 2], size=n)
+# def generate_gems(n, game_map):
+#     possible_locations = np.where(np.logical_not(game_map.array.ravel()))[0]
+#     inds = np.random.choice(possible_locations, size=n)
+#     # posx = np.random.random(n) * game_map.nx
+#     # posy = np.random.random(n) * game_map.ny
+#     kind = np.random.choice([1, 2, 3], size=n)
+#     array = np.zeros_like(game_map.array)
+#     for i in range(n):
+#         array[inds[i] % game_map.nx, inds[i] // game_map.nx] = kind[i]
+#     return array
 
 
 class Engine:
@@ -21,7 +34,12 @@ class Engine:
         self.ny = self.ng * 32  # 1080
         self.map = Map(nx=self.nx, ny=self.ny, ng=self.ng)
 
-        self.gems = generate_gems(n=100, game_map=self.map)
+        # self.gems = generate_gems(n=100, game_map=self.map)
+
+        # inds = np.where(self.gems == 1)[0].ravel()
+        # if np.sum(inds) > 0:
+        #     self._gems_1 = self.map.ax.plot([g.x for g in self.gems],
+        #                                     [g.y for g in self.gems], '^')
         # knights = [
         #     Knight(x=nx - 1, y=800, direction=[-1, -0.5], name='Arthur'),
         #     Knight(x=1, y=100, direction=[1, 0.5], name='Lancelot')
@@ -29,20 +47,27 @@ class Engine:
         self.knights = [
             Knight(x=self.nx - 1,
                    y=800,
-                   direction=[-1, 0],
+                   direction=[-1, -0.5],
                    name='Arthur',
                    team='red'),
-            Knight(x=self.nx - 100,
-                   y=800,
-                   direction=[1, 0],
-                   name='Lancelot',
-                   team='blue')
+            # Knight(x=self.nx - 100,
+            #        y=800,
+            #        direction=[1, 0],
+            #        name='Lancelot',
+            #        team='blue')
         ]
 
-        self.lines = {}
+        self.circles = {}
         for k in self.knights:
-            line, = self.map.ax.plot(k.x, k.y, 'o')
-            self.lines[k.name] = line
+            knight_circle = patches.Circle(k.position, 15, color=k.team)
+            view_circle = patches.Circle(k.position,
+                                         k.view_radius,
+                                         ec='w',
+                                         fc='None')
+            self.map.ax.add_patch(knight_circle)
+            self.map.ax.add_patch(view_circle)
+            # line, = self.map.ax.plot(k.x, k.y, 'o')
+            self.circles[k.name] = (knight_circle, view_circle)
 
         # circle = patches.Circle(pos, 15)
         # m.ax.add_patch(circle)
@@ -50,8 +75,8 @@ class Engine:
 
     def get_intel(self, knight):
         dx = knight.view_radius // 2
-        local_map = self.map.array[knight.y - dx:knight.y + dx,
-                                   knight.x - dx:knight.x + dx]
+        local_map = self.map.array[knight.x - dx:knight.x + dx,
+                                   knight.y - dx:knight.y + dx]
         friends = {
             k.name: k
             for k in self.knights
@@ -77,6 +102,32 @@ class Engine:
 
         return {'local_map': local_map, 'friends': friends, 'enemies': enemies}
 
+    def pickup_gem(self, x, y, team):
+        kind_mapping = {0: ('attack', 5), 1: ('health', 5), 2: ('speed', 0.5)}
+        kind = np.random.choice([0, 1, 2])
+        bonus = np.random.random() * kind_mapping[kind][1]
+        for k in self.knights:
+            if k.team == team:
+                if kind == 0:
+                    k.attack += bonus
+                elif kind == 1:
+                    k.health += bonus
+                elif kind == 2:
+                    k.speed += bonus
+
+    def move(self, knight, time, dt):
+        pos = knight.next_position(dt=dt)
+        # print(pos)
+        if (pos[0] >= 0) and (pos[0] < self.map.nx) and (pos[1] >= 0) and (
+                pos[1] < self.map.ny) and (self.map.array[pos[0], pos[1]] !=
+                                           1):
+            knight.position = pos
+        self.circles[knight.name][0].center = (knight.x, knight.y)
+        self.circles[knight.name][1].center = (knight.x, knight.y)
+        if self.map.array[pos[0], pos[1]] == 2:
+            self.pickup_gem(x=pos[0], y=pos[1], team=knight.team)
+            self.map.array[pos[0], pos[1]] == 0
+
     def run(self):
 
         # time = 0
@@ -87,21 +138,26 @@ class Engine:
             # new_pos = k.position + k.speed * vec
             # ix = int(new_pos[0])
             # iy = int(new_pos[1])
-            m.ax.set_title(f'time = {time}')
-            for k in knights:
+            self.map.ax.set_title(f'time = {time}')
+            for k in self.knights:
                 k.advance_dt(time=time, dt=dt)
-                k.execute(time=time,
-                          local_env=get_local_environment(knight=k, ))
-                pos = k.next_position(dt=dt)
-                print(pos)
-                if not m.array[pos[1], pos[0]]:
-                    k.position = pos
-                lines[k.name].set_data([k.x], [k.y])
+                k.execute(time=time)
+                self.move(knight=k, time=time, dt=dt)
+                # # local_env=get_local_environment(knight=k, ))
+                # pos = k.next_position(dt=dt)
+                # # print(pos)
+                # if (pos[0] >= 0) and (pos[0] < self.map.nx) and (
+                #         pos[1] >= 0) and (pos[1] < self.map.ny) and (
+                #             self.map.array[pos[1], pos[0]] != 1):
+                #     k.position = pos
+                # self.circles[k.name][0].center = (k.x, k.y)
+                # self.circles[k.name][1].center = (k.x, k.y)
 
-            dead_bodies = fight(knights=knights, game_map=m)
+            dead_bodies = fight(knights=self.knights, game_map=self.map)
             for k in dead_bodies:
-                lines[k.name].remove()
-                del lines[k.name]
-                knights.remove(k)
+                self.circles[k.name][0].remove()
+                self.circles[k.name][1].remove()
+                del self.circles[k.name]
+                self.knights.remove(k)
 
             plt.pause(0.001)
