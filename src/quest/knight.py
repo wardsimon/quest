@@ -5,10 +5,10 @@ import matplotlib.patches as patches
 
 class Knight:
 
-    def __init__(self, x, y, name, direction, team):
+    def __init__(self, x, y, name, vector, team):
         self._x = int(x)
         self._y = int(y)
-        self.direction = direction
+        self.vector = vector
         self.speed = 2.0
         self.previous_position = [0, 0]
         self.health = 100
@@ -38,8 +38,18 @@ class Knight:
         self._x = int(pos[0])
         self._y = int(pos[1])
 
+    @property
+    def heading(self):
+        # head = np.arccos(np.dot(self.position, [1, 0])) * 180. / np.pi
+        # print(head)
+        head = (np.arctan2(self.vector[1], self.vector[0]) * 180. / np.pi +
+                360) % 360
+        return head
+
     def next_position(self, dt):
-        vec = self.direction / np.linalg.norm(self.direction)
+        vec = self.vector / np.linalg.norm(self.vector)
+        print(np.linalg.norm(self.speed * vec * dt))
+        print(np.linalg.norm(vec), vec)
         new_pos = self.position + self.speed * vec * dt
         return new_pos.astype(int)
 
@@ -57,6 +67,6 @@ class Knight:
         #                                       size=2) * np.random.random(2)
         if all(self.position == self.previous_position) or (self.cooldown >=
                                                             9):
-            self.direction = np.random.choice([-1, 1],
-                                              size=2) * np.random.random(2)
+            self.vector = np.random.choice([-1, 1],
+                                           size=2) * np.random.random(2)
         self.previous_position = self.position

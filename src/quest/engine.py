@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 # @dataclass
 # class Gem:
@@ -52,7 +53,7 @@ class Engine:
         self.knights = [
             Knight(x=self.nx - 1,
                    y=800,
-                   direction=[-1, -0.5],
+                   vector=[-1, -0.5],
                    name='Arthur',
                    team='red'),
             # Knight(x=self.nx - 100,
@@ -99,7 +100,7 @@ class Engine:
                         'attack': k.attack,
                         'health': k.health,
                         'speed': k.speed,
-                        'direction': k.direction,
+                        'vector': k.vector,
                         'cooldown': k.cooldown,
                         'view_radius': k.view_radius
                     }
@@ -141,16 +142,16 @@ class Engine:
         # time = 0
         dt = 1.0
         sec = True
-        for time in range(3000):
+        for t in range(3000):
             # vec = k.direction / np.linalg.norm(k.direction)
             # new_pos = k.position + k.speed * vec
             # ix = int(new_pos[0])
             # iy = int(new_pos[1])
             # self.map.ax.set_title(f'time = {time}')
             for k in self.knights:
-                k.advance_dt(time=time, dt=dt)
-                k.execute(time=time)
-                self.move(knight=k, time=time, dt=dt)
+                k.advance_dt(time=t, dt=dt)
+                k.execute(time=t)
+                self.move(knight=k, time=t, dt=dt)
                 # # local_env=get_local_environment(knight=k, ))
                 # pos = k.next_position(dt=dt)
                 # # print(pos)
@@ -169,4 +170,4 @@ class Engine:
                 del self.circles[k.name]
                 self.knights.remove(k)
 
-            plt.pause(0.001)
+            time.sleep(0.01)

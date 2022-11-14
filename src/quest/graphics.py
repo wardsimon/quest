@@ -56,10 +56,12 @@ class Graphics:
         x = obstacles['x']
         y = obstacles['y']
         dx = obstacles['dx']
+
         self.pen.color('#2F4F4F')
         for i in range(len(x)):
             self.pen.penup()
             self.pen.goto(x[i] - 0.5 * dx, y[i] - 0.5 * dx)
+            self.pen.setheading(0)
             self.pen.pendown()
             self.pen.begin_fill()
             self.pen.forward(dx)
@@ -73,7 +75,9 @@ class Graphics:
 
     def add_knights(self, knights):
         for k in knights:
-            self.knights[k.name] = turtle.Turtle()
+            self.knights[k.name] = turtle.Turtle(shape='triangle')
+            self.knights[k.name].speed(0)
+            self.knights[k.name].penup()
 
         # for n in range(len(obstacles['x'])):
         #     pen.penup()
@@ -82,10 +86,11 @@ class Graphics:
 
         # set turtle object speed
     def move_knight(self, knight):
-        self.knights[knight.name].clear()
+        # self.knights[knight.name].clear()
         self.knights[knight.name].goto(knight.position)
+        self.knights[knight.name].setheading(knight.heading)
         # self.knights[knight.name].pendown()
-        self.knights[knight.name].dot(10)
+        # self.knights[knight.name].dot(10)
 
 
 # ng = 32

@@ -19,7 +19,7 @@ class Map:
         # self._make_castle()
         # self.fig.show()
 
-    def _make_obstacles(self, n=10):
+    def _make_obstacles(self, n=50):
         posx = np.random.random(n) * self.nx
         posy = np.random.random(n) * self.ny
         dx = 40
