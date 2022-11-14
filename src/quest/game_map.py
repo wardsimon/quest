@@ -10,14 +10,14 @@ class Map:
         self.ny = ny
         self.ng = ng
         self.array = np.zeros((nx, ny), dtype=int)
-        self.fig, self.ax = plt.subplots()
-        self.ax.set_aspect('equal')
-        self.ax.set_xlim(0, nx)
-        self.ax.set_ylim(0, ny)
+        # self.fig, self.ax = plt.subplots()
+        # self.ax.set_aspect('equal')
+        # self.ax.set_xlim(0, nx)
+        # self.ax.set_ylim(0, ny)
         self._make_obstacles()
-        self._make_gems()
-        self._make_castle()
-        self.fig.show()
+        # self._make_gems()
+        # self._make_castle()
+        # self.fig.show()
 
     def _make_obstacles(self, n=10):
         posx = np.random.random(n) * self.nx
@@ -45,7 +45,8 @@ class Map:
         #                    np.arange(self.ny + 1),
         #                    self.map,
         #                    shading='auto')
-        self.im = self.ax.imshow(self.array.T, origin='lower')
+        # self.im = self.ax.imshow(self.array.T, origin='lower')
+        self._obstacles = {'x': posx, 'y': posy, 'dx': dx}
 
     def _make_gems(self, n=200):
         posx = (np.random.random(n) * self.nx).astype(int)

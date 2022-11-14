@@ -1,4 +1,5 @@
 from game_map import Map
+from graphics import Graphics
 from knight import Knight
 from fight import fight
 
@@ -32,7 +33,11 @@ class Engine:
         self.ng = 32
         self.nx = self.ng * 56  # 1920
         self.ny = self.ng * 32  # 1080
+        self.graphics = Graphics(nx=self.nx, ny=self.ny)
         self.map = Map(nx=self.nx, ny=self.ny, ng=self.ng)
+
+        self.graphics.add_obstacles(self.map._obstacles)
+        sec = input('Let us wait for user input.')
 
         # self.gems = generate_gems(n=100, game_map=self.map)
 
@@ -56,22 +61,23 @@ class Engine:
             #        name='Lancelot',
             #        team='blue')
         ]
+        self.graphics.add_knights(self.knights)
 
-        self.circles = {}
-        for k in self.knights:
-            knight_circle = patches.Circle(k.position, 15, color=k.team)
-            view_circle = patches.Circle(k.position,
-                                         k.view_radius,
-                                         ec='w',
-                                         fc='None')
-            self.map.ax.add_patch(knight_circle)
-            self.map.ax.add_patch(view_circle)
-            # line, = self.map.ax.plot(k.x, k.y, 'o')
-            self.circles[k.name] = (knight_circle, view_circle)
+        # self.circles = {}
+        # for k in self.knights:
+        #     knight_circle = patches.Circle(k.position, 15, color=k.team)
+        #     view_circle = patches.Circle(k.position,
+        #                                  k.view_radius,
+        #                                  ec='w',
+        #                                  fc='None')
+        #     self.map.ax.add_patch(knight_circle)
+        #     self.map.ax.add_patch(view_circle)
+        #     # line, = self.map.ax.plot(k.x, k.y, 'o')
+        #     self.circles[k.name] = (knight_circle, view_circle)
 
-        # circle = patches.Circle(pos, 15)
-        # m.ax.add_patch(circle)
-        sec = input('Let us wait for user input.')
+        # # circle = patches.Circle(pos, 15)
+        # # m.ax.add_patch(circle)
+        # sec = input('Let us wait for user input.')
 
     def get_intel(self, knight):
         dx = knight.view_radius // 2
@@ -122,11 +128,13 @@ class Engine:
                 pos[1] < self.map.ny) and (self.map.array[pos[0], pos[1]] !=
                                            1):
             knight.position = pos
-        self.circles[knight.name][0].center = (knight.x, knight.y)
-        self.circles[knight.name][1].center = (knight.x, knight.y)
-        if self.map.array[pos[0], pos[1]] == 2:
-            self.pickup_gem(x=pos[0], y=pos[1], team=knight.team)
-            self.map.array[pos[0], pos[1]] == 0
+        self.graphics.move_knight(knight)
+
+        # self.circles[knight.name][0].center = (knight.x, knight.y)
+        # self.circles[knight.name][1].center = (knight.x, knight.y)
+        # if self.map.array[pos[0], pos[1]] == 2:
+        #     self.pickup_gem(x=pos[0], y=pos[1], team=knight.team)
+        #     self.map.array[pos[0], pos[1]] == 0
 
     def run(self):
 
@@ -138,7 +146,7 @@ class Engine:
             # new_pos = k.position + k.speed * vec
             # ix = int(new_pos[0])
             # iy = int(new_pos[1])
-            self.map.ax.set_title(f'time = {time}')
+            # self.map.ax.set_title(f'time = {time}')
             for k in self.knights:
                 k.advance_dt(time=time, dt=dt)
                 k.execute(time=time)
@@ -152,6 +160,7 @@ class Engine:
                 #     k.position = pos
                 # self.circles[k.name][0].center = (k.x, k.y)
                 # self.circles[k.name][1].center = (k.x, k.y)
+            self.graphics.screen.update()
 
             dead_bodies = fight(knights=self.knights, game_map=self.map)
             for k in dead_bodies:
