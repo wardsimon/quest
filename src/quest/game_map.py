@@ -16,7 +16,8 @@ class Map:
         # self.ax.set_ylim(0, ny)
         self._make_obstacles()
         self._make_castles()
-        # self._make_gems()
+        self._make_fountains()
+        self._make_gems()
         # self._make_castle()
         # self.fig.show()
 
@@ -50,12 +51,13 @@ class Map:
         # self.im = self.ax.imshow(self.array.T, origin='lower')
         self._obstacles = {'x': posx, 'y': posy, 'dx': dx}
 
-    def _make_gems(self, n=200):
+    def _make_gems(self, n=100):
         posx = (np.random.random(n) * self.nx).astype(int)
         posy = (np.random.random(n) * self.ny).astype(int)
         for i in range(n):
             self.array[posx[i], posy[i]] = 2
-        self.ax.plot(posx, posy, '^')
+        self._gems = {'x': posx, 'y': posy}
+        # self.ax.plot(posx, posy, '^')
 
     def _make_castles(self):
         dx = 80
@@ -98,3 +100,13 @@ class Map:
                 'y': y[1],
             }
         }
+
+    def _make_fountains(self):
+        dist = self.ny // 3
+        size = 100
+        self._fountains = {'size': size}
+        for team in ('red', 'blue'):
+            posx = self._castles[team]['x']
+            posy = self._castles[team]['y'] - dist if self._castles[team][
+                'y'] > (self.ny // 2) else self._castles[team]['y'] + dist
+            self._fountains[team] = {'x': posx, 'y': posy}

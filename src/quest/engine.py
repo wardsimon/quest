@@ -39,6 +39,8 @@ class Engine:
 
         self.graphics.add_obstacles(self.map._obstacles)
         self.graphics.add_castles(self.map._castles)
+        self.graphics.add_fountains(self.map._fountains)
+        self.graphics.add_gems(self.map._gems)
         sec = input('Let us wait for user input.')
 
         # self.gems = generate_gems(n=100, game_map=self.map)
