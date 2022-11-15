@@ -23,6 +23,14 @@ class Graphics:
 
         self.pen = turtle.Turtle()
         self.pen.speed(0)
+        self.pen.hideturtle()
+
+        self.time_pen = turtle.Turtle()
+        self.time_pen.hideturtle()
+        self.time_pen.speed(0)
+        self.time_pen.penup()
+        self.time_pen.goto(self.nx // 2, self.ny)
+        self.time_pen.pendown()
 
         self.add_border()
 
@@ -75,7 +83,7 @@ class Graphics:
 
     def add_knights(self, knights):
         for k in knights:
-            self.knights[k.name] = turtle.Turtle(shape='triangle')
+            self.knights[k.name] = turtle.Turtle()
             self.knights[k.name].speed(0)
             self.knights[k.name].penup()
 
@@ -91,6 +99,18 @@ class Graphics:
         self.knights[knight.name].setheading(knight.heading)
         # self.knights[knight.name].pendown()
         # self.knights[knight.name].dot(10)
+
+    def update(self, time):
+        # self.pen.penup()
+        # self.pen.goto(self.nx // 2, self.ny)
+        # self.pen.pendown()
+        self.time_pen.clear()
+        self.time_pen.write(f"Time = {time}",
+                            move=False,
+                            align="center",
+                            font=('Arial', 18, 'normal'))
+        # self.pen.penup()
+        self.screen.update()
 
 
 # ng = 32

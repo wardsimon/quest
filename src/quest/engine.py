@@ -53,7 +53,7 @@ class Engine:
         self.knights = [
             Knight(x=self.nx - 1,
                    y=800,
-                   vector=[-1, -0.5],
+                   heading=360 - 45,
                    name='Arthur',
                    team='red'),
             # Knight(x=self.nx - 100,
@@ -128,8 +128,9 @@ class Engine:
         if (pos[0] >= 0) and (pos[0] < self.map.nx) and (pos[1] >= 0) and (
                 pos[1] < self.map.ny) and (self.map.array[pos[0], pos[1]] !=
                                            1):
-            knight.position = pos
-        self.graphics.move_knight(knight)
+            # knight.position = pos
+            knight.forward(dt)
+            # self.graphics.move_knight(knight)
 
         # self.circles[knight.name][0].center = (knight.x, knight.y)
         # self.circles[knight.name][1].center = (knight.x, knight.y)
@@ -161,7 +162,7 @@ class Engine:
                 #     k.position = pos
                 # self.circles[k.name][0].center = (k.x, k.y)
                 # self.circles[k.name][1].center = (k.x, k.y)
-            self.graphics.screen.update()
+            self.graphics.update(time=t)
 
             dead_bodies = fight(knights=self.knights, game_map=self.map)
             for k in dead_bodies:
