@@ -6,7 +6,7 @@ import turtle
 
 class Knight:
 
-    def __init__(self, x, y, name, heading, team):
+    def __init__(self, x, y, name, heading, team, castle, fountain):
         # self._x = int(x)
         # self._y = int(y)
         # self.vector = vector
@@ -30,7 +30,8 @@ class Knight:
         self.heading = heading
         self.speed = 2.0
         self.previous_position = [0, 0]
-        self.health = 100
+        self.max_health = 100
+        self.health = self.max_health
         self.attack = 50
         self.team = team
         self.name = name
@@ -39,6 +40,9 @@ class Knight:
         self.avatar.color(self.team)
         self.avatar_circle.color(self.team)
         self.avatar_name.color(self.team)
+
+        self.castle = castle
+        self.fountain = fountain
 
     def __repr__(self):
         return f'{self.name}: {self.health}% {self.attack} {self.speed} at {self.x}, {self.y}'
@@ -92,6 +96,9 @@ class Knight:
 
     def advance_dt(self, time, dt):
         self.cooldown = max(self.cooldown - dt, 0)
+        if self.avatar.distance(self.fountain['x'],
+                                self.fountain['y']) <= self.fountain['size']:
+            self.health = min(self.max_health, self.health + dt)
 
     def move(self, dt):
         self.avatar.forward(self.speed * dt)

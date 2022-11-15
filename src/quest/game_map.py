@@ -104,9 +104,9 @@ class Map:
     def _make_fountains(self):
         dist = self.ny // 3
         size = 100
-        self._fountains = {'size': size}
+        self._fountains = {}
         for team in ('red', 'blue'):
             posx = self._castles[team]['x']
             posy = self._castles[team]['y'] - dist if self._castles[team][
                 'y'] > (self.ny // 2) else self._castles[team]['y'] + dist
-            self._fountains[team] = {'x': posx, 'y': posy}
+            self._fountains[team] = {'x': posx, 'y': posy, 'size': size}

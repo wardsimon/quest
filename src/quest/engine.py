@@ -58,12 +58,16 @@ class Engine:
                    y=800,
                    heading=180,
                    name='Arthur',
-                   team='red'),
+                   team='red',
+                   castle=self.map._castles['red'],
+                   fountain=self.map._fountains['red']),
             Knight(x=self.nx - 100,
                    y=800,
                    heading=0,
                    name='Lancelot',
-                   team='blue')
+                   team='blue',
+                   castle=self.map._castles['blue'],
+                   fountain=self.map._fountains['blue'])
         ]
         # self.knights[1].health = 110
         # self.graphics.add_knights(self.knights)

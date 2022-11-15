@@ -189,15 +189,14 @@ class Graphics:
 
     def add_fountains(self, fountains):
 
-        r = fountains['size']
         for team in ('red', 'blue'):
             params = fountains[team]
             self.pen.color('green')
             self.pen.penup()
-            self.pen.goto(params['x'] - r, params['y'])
+            self.pen.goto(params['x'] - params['size'], params['y'])
             self.pen.pendown()
             self.pen.setheading(270)
-            self.pen.circle(r)
+            self.pen.circle(params['size'])
 
     def add_gems(self, gems):
         x = gems['x']
