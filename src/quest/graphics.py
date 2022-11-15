@@ -28,7 +28,8 @@ class Graphics:
         # self.canvas = self.screen.getcanvas()
 
         # screen background color
-        self.screen.bgcolor('#D3D3D3')
+        self.background = '#D3D3D3'
+        self.screen.bgcolor(self.background)
 
         # screen updaion
         self.screen.tracer(0)
@@ -142,18 +143,31 @@ class Graphics:
         # pen = turtle.Turtle()
 
         # set a turtle object color
-        x = obstacles['x']
-        y = obstacles['y']
-        dx = obstacles['dx']
+        # x = obstacles['x']
+        # y = obstacles['y']
+        # dx = obstacles['dx']
+        dx = castles['dx']
+        thickness = castles['thickness']
+        direction = castles['direction']
 
         # x = [dx // 2]
         # y = [dx // 2]
-
-        self.pen.color('#2F4F4F')
-        for i in range(len(x)):
+        for team in ('red', 'blue'):
+            params = castles[team]
+            self.pen.color(team)
             self.pen.penup()
-            self.pen.goto(x[i] - 0.5 * dx, y[i] - 0.5 * dx)
-            self.pen.setheading(0)
+            if direction == 0:
+                self.pen.goto(params['x'] + 0.5 * dx, params['y'] + 0.5 * dx)
+                self.pen.setheading(180)
+            elif direction == 1:
+                self.pen.goto(params['x'] - 0.5 * dx, params['y'] + 0.5 * dx)
+                self.pen.setheading(270)
+            elif direction == 2:
+                self.pen.goto(params['x'] - 0.5 * dx, params['y'] - 0.5 * dx)
+                self.pen.setheading(0)
+            elif direction == 3:
+                self.pen.goto(params['x'] + 0.5 * dx, params['y'] - 0.5 * dx)
+                self.pen.setheading(90)
             self.pen.pendown()
             self.pen.begin_fill()
             self.pen.forward(dx)
@@ -162,21 +176,76 @@ class Graphics:
             self.pen.left(90)
             self.pen.forward(dx)
             self.pen.left(90)
-            self.pen.forward(dx)
+            self.pen.forward(thickness)
+            self.pen.left(90)
+            self.pen.forward(dx - thickness)
+            self.pen.right(90)
+            self.pen.forward(dx - (2 * thickness))
+            self.pen.right(90)
+            self.pen.forward(dx - thickness)
+            self.pen.left(90)
+            self.pen.forward(thickness)
             self.pen.end_fill()
 
-    # def add_knights(self, knights):
-    #     for k in knights:
-    #         self.knights[k.name] = turtle.Turtle()
-    #         self.knights[k.name].speed(0)
-    #         self.knights[k.name].penup()
+            # self.pen.color(self.background)
+            # self.pen.penup()
+            # self.pen.goto(
+            #     params['x'] - 0.5 * dx + (thickness * int(direction != 2)),
+            #     params['y'] - 0.5 * dx + (thickness * int(direction != 3)))
+            # self.pen.setheading(0)
+            # self.pen.pendown()
+            # self.pen.begin_fill()
+            # self.pen.forward(dx - thickness -
+            #                  (thickness * int(direction in [0, 2])))
+            # self.pen.left(90)
+            # self.pen.forward(dx - thickness -
+            #                  (thickness * int(direction in [1, 3])))
+            # self.pen.left(90)
+            # self.pen.forward(dx - thickness -
+            #                  (thickness * int(direction in [0, 2])))
+            # self.pen.left(90)
+            # self.pen.forward(dx - thickness -
+            #                  (thickness * int(direction in [1, 3])))
+            # self.pen.end_fill()
 
-    #     # for n in range(len(obstacles['x'])):
-    #     #     pen.penup()
-    #     #     pen.goto(obstacles['x'][-], 0)
-    #     #     pen.pendown()
+# self.array[int(posx - 0.5 * dx):int(posx + 0.5 * dx),
+#                        int(posy - 0.5 * dx):int(posy + 0.5 * dx)] = 1
+#             self.array[int(posx - 0.5 * dx) +
+#                        (thickness * int(direction != 2)):int(posx + 0.5 * dx) -
+#                        (thickness * int(direction != 0)),
+#                        int(posy - 0.5 * dx) +
+#                        (thickness * int(direction != 3)):int(posy + 0.5 * dx) -
+#                        (thickness * int(direction != 1))] = 0
 
-    # set turtle object speed
+#         self.pen.color('#2F4F4F')
+#         for i in range(len(x)):
+#             self.pen.penup()
+#             self.pen.goto(x[i] - 0.5 * dx, y[i] - 0.5 * dx)
+#             self.pen.setheading(0)
+#             self.pen.pendown()
+#             self.pen.begin_fill()
+#             self.pen.forward(dx)
+#             self.pen.left(90)
+#             self.pen.forward(dx)
+#             self.pen.left(90)
+#             self.pen.forward(dx)
+#             self.pen.left(90)
+#             self.pen.forward(dx)
+#             self.pen.end_fill()
+
+# def add_knights(self, knights):
+#     for k in knights:
+#         self.knights[k.name] = turtle.Turtle()
+#         self.knights[k.name].speed(0)
+#         self.knights[k.name].penup()
+
+#     # for n in range(len(obstacles['x'])):
+#     #     pen.penup()
+#     #     pen.goto(obstacles['x'][-], 0)
+#     #     pen.pendown()
+
+# set turtle object speed
+
     def move_knight(self, knight):
         # self.knights[knight.name].clear()
         self.knights[knight.name].goto(knight.position)

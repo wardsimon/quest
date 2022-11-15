@@ -81,9 +81,9 @@ class Map:
                        (thickness * int(direction != 1))] = 0
             x.append(posx)
             y.append(posy)
-        fig, ax = plt.subplots()
-        ax.imshow(self.array.T)
-        fig.show()
+        # fig, ax = plt.subplots()
+        # ax.imshow(self.array.T, origin='lower')
+        # fig.show()
 
         self._castles = {
             'dx': dx,

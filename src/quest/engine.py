@@ -38,7 +38,7 @@ class Engine:
         self.map = Map(nx=self.nx, ny=self.ny, ng=self.ng)
 
         self.graphics.add_obstacles(self.map._obstacles)
-        # self.graphics.add_castles(self.map._castles)
+        self.graphics.add_castles(self.map._castles)
         sec = input('Let us wait for user input.')
 
         # self.gems = generate_gems(n=100, game_map=self.map)
