@@ -10,7 +10,7 @@ class Graphics:
 
         # create a screen object
         self.screen = turtle.Screen()
-        print(self.nx, self.ny)
+        # print(self.nx, self.ny)
 
         # set screen size
         # self.screen.setup(width=int(self.nx * 1.2), height=int(self.ny * 1.2))

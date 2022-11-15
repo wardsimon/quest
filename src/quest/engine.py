@@ -53,22 +53,35 @@ class Engine:
         #     Knight(x=nx - 1, y=800, direction=[-1, -0.5], name='Arthur'),
         #     Knight(x=1, y=100, direction=[1, 0.5], name='Lancelot')
         # ]
-        self.knights = [
-            Knight(x=self.nx - 1,
-                   y=800,
-                   heading=180,
-                   name='Arthur',
-                   team='red',
-                   castle=self.map._castles['red'],
-                   fountain=self.map._fountains['red']),
-            Knight(x=self.nx - 100,
-                   y=800,
-                   heading=0,
-                   name='Lancelot',
-                   team='blue',
-                   castle=self.map._castles['blue'],
-                   fountain=self.map._fountains['blue'])
-        ]
+        team_names = {
+            'red': ['Arthur', 'Galahad', 'Winalot'],
+            'blue': ['Lancelot', 'Achiles', 'Melchior']
+        }
+
+        self.knights = []
+        for team, names in team_names.items():
+            for n, name in enumerate(names):
+                self.knights.append(
+                    Knight(x=self.map._castles[team]['x'] +
+                           self.map._castles['dx'] * (1 - 2.0 *
+                                                      (int(team == 'blue'))),
+                           y=int(self.map._castles[team]['y'] -
+                                 0.5 * self.map._castles['dx'] +
+                                 (n * 0.5 * self.map._castles['dx'])),
+                           heading=180 - (180 * int(team == 'red')),
+                           name=name,
+                           team=team,
+                           castle=self.map._castles[team],
+                           fountain=self.map._fountains[team]))
+
+        #     Knight(x=10,
+        #            y=800,
+        #            heading=0,
+        #            name='Lancelot',
+        #            team='blue',
+        #            castle=self.map._castles['blue'],
+        #            fountain=self.map._fountains['blue'])
+        # ]
         # self.knights[1].health = 110
         # self.graphics.add_knights(self.knights)
 

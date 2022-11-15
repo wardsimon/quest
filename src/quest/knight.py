@@ -57,8 +57,8 @@ class Knight:
 
     @property
     def position(self):
-        print(np.array(self.avatar.position()).astype(int))
-        print(type(np.array(self.avatar.position()).astype(int)))
+        # print(np.array(self.avatar.position()).astype(int))
+        # print(type(np.array(self.avatar.position()).astype(int)))
         return np.array(self.avatar.position()).astype(int)
 
     # @position.setter
@@ -87,7 +87,7 @@ class Knight:
         # vec = self.vector / np.linalg.norm(self.vector)
         # print(np.linalg.norm(self.speed * vec * dt))
         # print(np.linalg.norm(vec), vec)
-        print(self.position, self.speed, self.vector, dt)
+        # print(self.position, self.speed, self.vector, dt)
         new_pos = self.position + self.speed * self.vector * dt
         return new_pos.astype(int)
 
