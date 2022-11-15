@@ -3,17 +3,29 @@ import turtle
 
 class Graphics:
 
-    def __init__(self, nx, ny):
+    def __init__(self, nx, ny, ng):
         self.nx = nx
         self.ny = ny
+        self.ng = ng
 
         # create a screen object
         self.screen = turtle.Screen()
+        print(self.nx, self.ny)
 
         # set screen size
-        self.screen.screensize(self.nx, self.ny)
+        # self.screen.setup(width=int(self.nx * 1.2), height=int(self.ny * 1.2))
+        self.screen.setup(width=self.nx, height=self.ny)
+        # self.screen.setup(width=self.nx + 500, height=self.ny + 500)
+        # self.screen.screensize(self.nx, self.ny)
         self.screen.setworldcoordinates(0, 0, self.nx, self.ny)
-        self.screen.setup(width=self.nx * 1.1, height=self.ny * 1.1)
+
+        cv = self.screen.getcanvas()
+        cv.adjustScrolls()
+
+        # print(self.screen.window_height())
+        # print(self.screen.window_height())
+        # print(self.ny, int(self.ny * 1.1))
+        # self.canvas = self.screen.getcanvas()
 
         # screen background color
         self.screen.bgcolor('#D3D3D3')
@@ -21,6 +33,7 @@ class Graphics:
         # screen updaion
         self.screen.tracer(0)
 
+        # self.pen = turtle.RawTurtle(self.canvas)
         self.pen = turtle.Turtle()
         self.pen.speed(0)
         self.pen.hideturtle()
@@ -32,9 +45,48 @@ class Graphics:
         self.time_pen.goto(self.nx // 2, self.ny)
         self.time_pen.pendown()
 
+        self.add_grid()
         self.add_border()
 
         self.knights = {}
+
+    def add_grid(self):
+
+        # set a turtle object color
+        self.pen.color('#BDBDBD')
+        self.pen.penup()
+        self.pen.goto(0, 0)
+        self.pen.setheading(90)
+        self.pen.pendown()
+        for i in range(self.nx // self.ng):
+            self.pen.forward(self.ny)
+            if i % 2 == 0:
+                self.pen.right(90)
+            else:
+                self.pen.left(90)
+            self.pen.forward(self.ng)
+            if i % 2 == 0:
+                self.pen.right(90)
+            else:
+                self.pen.left(90)
+
+        self.pen.penup()
+        self.pen.goto(0, 0)
+        self.pen.setheading(0)
+        self.pen.pendown()
+        for i in range(self.nx // self.ng):
+            self.pen.forward(self.nx)
+            if i % 2 == 0:
+                self.pen.left(90)
+            else:
+                self.pen.right(90)
+            self.pen.forward(self.ng)
+            if i % 2 == 0:
+                self.pen.left(90)
+            else:
+                self.pen.right(90)
+
+        self.pen.penup()
 
     def add_border(self):
 
@@ -65,6 +117,9 @@ class Graphics:
         y = obstacles['y']
         dx = obstacles['dx']
 
+        # x = [dx // 2]
+        # y = [dx // 2]
+
         self.pen.color('#2F4F4F')
         for i in range(len(x)):
             self.pen.penup()
@@ -81,18 +136,47 @@ class Graphics:
             self.pen.forward(dx)
             self.pen.end_fill()
 
-    def add_knights(self, knights):
-        for k in knights:
-            self.knights[k.name] = turtle.Turtle()
-            self.knights[k.name].speed(0)
-            self.knights[k.name].penup()
+    def add_castles(self, castles):
 
-        # for n in range(len(obstacles['x'])):
-        #     pen.penup()
-        #     pen.goto(obstacles['x'][-], 0)
-        #     pen.pendown()
+        # create a turtle object object
+        # pen = turtle.Turtle()
 
-        # set turtle object speed
+        # set a turtle object color
+        x = obstacles['x']
+        y = obstacles['y']
+        dx = obstacles['dx']
+
+        # x = [dx // 2]
+        # y = [dx // 2]
+
+        self.pen.color('#2F4F4F')
+        for i in range(len(x)):
+            self.pen.penup()
+            self.pen.goto(x[i] - 0.5 * dx, y[i] - 0.5 * dx)
+            self.pen.setheading(0)
+            self.pen.pendown()
+            self.pen.begin_fill()
+            self.pen.forward(dx)
+            self.pen.left(90)
+            self.pen.forward(dx)
+            self.pen.left(90)
+            self.pen.forward(dx)
+            self.pen.left(90)
+            self.pen.forward(dx)
+            self.pen.end_fill()
+
+    # def add_knights(self, knights):
+    #     for k in knights:
+    #         self.knights[k.name] = turtle.Turtle()
+    #         self.knights[k.name].speed(0)
+    #         self.knights[k.name].penup()
+
+    #     # for n in range(len(obstacles['x'])):
+    #     #     pen.penup()
+    #     #     pen.goto(obstacles['x'][-], 0)
+    #     #     pen.pendown()
+
+    # set turtle object speed
     def move_knight(self, knight):
         # self.knights[knight.name].clear()
         self.knights[knight.name].goto(knight.position)

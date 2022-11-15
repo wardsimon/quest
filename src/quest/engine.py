@@ -34,10 +34,11 @@ class Engine:
         self.ng = 32
         self.nx = self.ng * 56  # 1920
         self.ny = self.ng * 32  # 1080
-        self.graphics = Graphics(nx=self.nx, ny=self.ny)
+        self.graphics = Graphics(nx=self.nx, ny=self.ny, ng=self.ng)
         self.map = Map(nx=self.nx, ny=self.ny, ng=self.ng)
 
         self.graphics.add_obstacles(self.map._obstacles)
+        # self.graphics.add_castles(self.map._castles)
         sec = input('Let us wait for user input.')
 
         # self.gems = generate_gems(n=100, game_map=self.map)
@@ -53,16 +54,17 @@ class Engine:
         self.knights = [
             Knight(x=self.nx - 1,
                    y=800,
-                   heading=360 - 45,
+                   heading=180,
                    name='Arthur',
                    team='red'),
-            # Knight(x=self.nx - 100,
-            #        y=800,
-            #        direction=[1, 0],
-            #        name='Lancelot',
-            #        team='blue')
+            Knight(x=self.nx - 100,
+                   y=800,
+                   heading=0,
+                   name='Lancelot',
+                   team='blue')
         ]
-        self.graphics.add_knights(self.knights)
+        # self.knights[1].health = 110
+        # self.graphics.add_knights(self.knights)
 
         # self.circles = {}
         # for k in self.knights:
@@ -129,7 +131,7 @@ class Engine:
                 pos[1] < self.map.ny) and (self.map.array[pos[0], pos[1]] !=
                                            1):
             # knight.position = pos
-            knight.forward(dt)
+            knight.move(dt)
             # self.graphics.move_knight(knight)
 
         # self.circles[knight.name][0].center = (knight.x, knight.y)
@@ -166,9 +168,11 @@ class Engine:
 
             dead_bodies = fight(knights=self.knights, game_map=self.map)
             for k in dead_bodies:
-                self.circles[k.name][0].remove()
-                self.circles[k.name][1].remove()
-                del self.circles[k.name]
+                k.avatar.color('black')
+                k.avatar_circle.clear()
+                # self.circles[k.name][0].remove()
+                # self.circles[k.name][1].remove()
+                # del self.circles[k.name]
                 self.knights.remove(k)
 
             time.sleep(0.01)

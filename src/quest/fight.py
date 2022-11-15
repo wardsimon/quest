@@ -1,4 +1,5 @@
 def fight(knights, game_map):
+    cooldown = 50
     combats = {}
     dead = []
     for k in knights:
@@ -24,12 +25,12 @@ def fight(knights, game_map):
                 k.health -= red_attack
                 if k.health <= 0:
                     dead.append(k)
-                k.cooldown = 10
+                k.cooldown = cooldown
             for k in combats[key]['red']:
                 k.health -= blue_attack
                 if k.health <= 0:
                     dead.append(k)
-                k.cooldown = 10
+                k.cooldown = cooldown
             print(dead)
             print(combats[key])
             # input('press key')

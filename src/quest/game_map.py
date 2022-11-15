@@ -15,12 +15,14 @@ class Map:
         # self.ax.set_xlim(0, nx)
         # self.ax.set_ylim(0, ny)
         self._make_obstacles()
+        self._make_castles()
         # self._make_gems()
         # self._make_castle()
         # self.fig.show()
 
     def _make_obstacles(self, n=50):
-        posx = np.random.random(n) * self.nx
+        free_zone = 150
+        posx = np.random.random(n) * (self.nx - (2 * free_zone)) + free_zone
         posy = np.random.random(n) * self.ny
         dx = 40
 
@@ -55,16 +57,44 @@ class Map:
             self.array[posx[i], posy[i]] = 2
         self.ax.plot(posx, posy, '^')
 
-    def _make_castle(self):
+    def _make_castles(self):
         dx = 80
-        posx = np.random.random() * 0.5 * dx + 0.5 * dx
-        posy = np.random.random() * self.ny
+        thickness = 10
+        direction = np.random.choice([0, 1, 2, 3])
 
-        rect = patches.Rectangle((posx, posy),
-                                 dx,
-                                 dx,
-                                 linewidth=1.5,
-                                 edgecolor='k',
-                                 facecolor='r',
-                                 alpha=0.8)
-        self.ax.add_patch(rect)
+        x = []
+        y = []
+
+        for i in range(2):
+            posx = np.random.random() * 0.5 * dx + dx
+            if i == 1:
+                posx = self.nx - posx
+            posy = np.random.random() * (self.ny - (2 * dx)) + dx
+
+            self.array[int(posx - 0.5 * dx):int(posx + 0.5 * dx),
+                       int(posy - 0.5 * dx):int(posy + 0.5 * dx)] = 1
+            self.array[int(posx - 0.5 * dx) +
+                       (thickness * int(direction != 2)):int(posx + 0.5 * dx) -
+                       (thickness * int(direction != 0)),
+                       int(posy - 0.5 * dx) +
+                       (thickness * int(direction != 3)):int(posy + 0.5 * dx) -
+                       (thickness * int(direction != 1))] = 0
+            x.append(posx)
+            y.append(posy)
+        fig, ax = plt.subplots()
+        ax.imshow(self.array.T)
+        fig.show()
+
+        self._castles = {
+            'dx': dx,
+            'thickness': thickness,
+            'direction': direction,
+            'red': {
+                'x': x[0],
+                'y': y[0],
+            },
+            'blue': {
+                'x': x[1],
+                'y': y[1],
+            }
+        }

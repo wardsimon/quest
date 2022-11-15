@@ -14,6 +14,17 @@ class Knight:
         self.avatar.speed(0)
         self.avatar.penup()
 
+        self.avatar_circle = turtle.Turtle()
+        self.avatar_circle.speed(0)
+        self.avatar_circle.penup()
+        self.avatar_circle.hideturtle()
+        self.avatar_circle.setheading(270)
+
+        self.avatar_name = turtle.Turtle()
+        self.avatar_name.speed(0)
+        self.avatar_name.penup()
+        self.avatar_name.hideturtle()
+
         self.avatar.setx(x)
         self.avatar.sety(y)
         self.heading = heading
@@ -25,6 +36,9 @@ class Knight:
         self.name = name
         self.cooldown = 0
         self.view_radius = 100
+        self.avatar.color(self.team)
+        self.avatar_circle.color(self.team)
+        self.avatar_name.color(self.team)
 
     def __repr__(self):
         return f'{self.name}: {self.health}% {self.attack} {self.speed} at {self.x}, {self.y}'
@@ -79,8 +93,23 @@ class Knight:
     def advance_dt(self, time, dt):
         self.cooldown = max(self.cooldown - dt, 0)
 
-    def forward(self, dt):
+    def move(self, dt):
         self.avatar.forward(self.speed * dt)
+
+        self.avatar_circle.clear()
+        self.avatar_circle.goto(self.x - self.view_radius, self.y)
+        self.avatar_circle.pendown()
+        self.avatar_circle.circle(self.view_radius)
+        self.avatar_circle.penup()
+
+        self.avatar_name.clear()
+        self.avatar_name.goto(self.x, self.y)
+        self.avatar_name.pendown()
+        self.avatar_name.write(self.name,
+                               move=False,
+                               align="center",
+                               font=('Arial', 12, 'normal'))
+        self.avatar_name.penup()
 
     def execute(self, time):
         # if self.cooldown >= 8:
@@ -89,7 +118,7 @@ class Knight:
         #     self.direction = np.random.choice([-1, 1],
         #                                       size=2) * np.random.random(2)
         if all(self.position == self.previous_position) or (self.cooldown >=
-                                                            9):
+                                                            49):
             # self.vector = np.random.choice([-1, 1],
             #                                size=2) * np.random.random(2)
             self.heading = np.random.random() * 360.0
