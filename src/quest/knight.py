@@ -45,7 +45,10 @@ class Knight:
         self.fountain = fountain
 
     def __repr__(self):
-        return f'{self.name}: {self.health}% {self.attack} {self.speed} at {self.x}, {self.y}'
+        return f'{self.name}: H:{self.health}/{self.max_health} A:{self.attack} S:{self.speed} at {self.x}, {self.y}'
+
+    def __str__(self):
+        return repr(self)
 
     @property
     def x(self):

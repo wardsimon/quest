@@ -139,25 +139,27 @@ class Engine:
                 if kind == 0:
                     k.attack += bonus
                 elif kind == 1:
-                    k.health += bonus
+                    k.max_health += bonus
                 elif kind == 2:
                     k.speed += bonus
+                print("picked up gem:", k)
 
     def move(self, knight, time, dt):
         pos = knight.next_position(dt=dt)
         # print(pos)
         if (pos[0] >= 0) and (pos[0] < self.map.nx) and (pos[1] >= 0) and (
-                pos[1] < self.map.ny) and (self.map.array[pos[0], pos[1]] !=
-                                           1):
-            # knight.position = pos
-            knight.move(dt)
-            # self.graphics.move_knight(knight)
+                pos[1] < self.map.ny):
+            if (self.map.array[pos[0], pos[1]] != 1):
+                knight.move(dt)
 
         # self.circles[knight.name][0].center = (knight.x, knight.y)
         # self.circles[knight.name][1].center = (knight.x, knight.y)
-        # if self.map.array[pos[0], pos[1]] == 2:
-        #     self.pickup_gem(x=pos[0], y=pos[1], team=knight.team)
-        #     self.map.array[pos[0], pos[1]] == 0
+        x = knight.x
+        y = knight.y
+        if self.map.array[x, y] == 2:
+            self.pickup_gem(x=x, y=y, team=knight.team)
+            self.map.array[x, y] = 0
+            self.graphics.erase_gem(x=x, y=y)
 
     def run(self):
 
@@ -193,6 +195,6 @@ class Engine:
                 # del self.circles[k.name]
                 self.knights.remove(k)
 
-            self.graphics.update(time=t, knights=knights)
+            self.graphics.update(time=t, knights=self.knights)
 
             time.sleep(0.01)
