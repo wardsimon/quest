@@ -32,8 +32,8 @@ class Engine:
     def __init__(self):
 
         self.ng = 32
-        self.nx = self.ng * 56  # 1920
-        self.ny = self.ng * 32  # 1080
+        self.nx = self.ng * 56
+        self.ny = self.ng * 30
         self.graphics = Graphics(nx=self.nx, ny=self.ny, ng=self.ng)
         self.map = Map(nx=self.nx, ny=self.ny, ng=self.ng)
 
@@ -54,8 +54,8 @@ class Engine:
         #     Knight(x=1, y=100, direction=[1, 0.5], name='Lancelot')
         # ]
         team_names = {
-            'red': ['Arthur', 'Galahad', 'Winalot'],
-            'blue': ['Lancelot', 'Achiles', 'Melchior']
+            'red': ['Arthur', 'Galahad', 'Lancelot'],
+            'blue': ['Caspar', 'Balthazar', 'Melchior']
         }
 
         self.knights = []
@@ -183,7 +183,6 @@ class Engine:
                 #     k.position = pos
                 # self.circles[k.name][0].center = (k.x, k.y)
                 # self.circles[k.name][1].center = (k.x, k.y)
-            self.graphics.update(time=t)
 
             dead_bodies = fight(knights=self.knights, game_map=self.map)
             for k in dead_bodies:
@@ -193,5 +192,7 @@ class Engine:
                 # self.circles[k.name][1].remove()
                 # del self.circles[k.name]
                 self.knights.remove(k)
+
+            self.graphics.update(time=t, knights=knights)
 
             time.sleep(0.01)

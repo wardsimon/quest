@@ -3,7 +3,7 @@ import turtle
 
 class Graphics:
 
-    def __init__(self, nx, ny, ng):
+    def __init__(self, nx, ny, ng, topbar=100):
         self.nx = nx
         self.ny = ny
         self.ng = ng
@@ -14,10 +14,10 @@ class Graphics:
 
         # set screen size
         # self.screen.setup(width=int(self.nx * 1.2), height=int(self.ny * 1.2))
-        self.screen.setup(width=self.nx, height=self.ny)
+        self.screen.setup(width=self.nx, height=self.ny + topbar)
         # self.screen.setup(width=self.nx + 500, height=self.ny + 500)
         # self.screen.screensize(self.nx, self.ny)
-        self.screen.setworldcoordinates(0, 0, self.nx, self.ny)
+        self.screen.setworldcoordinates(0, 0, self.nx, self.ny + topbar)
 
         cv = self.screen.getcanvas()
         cv.adjustScrolls()
@@ -39,12 +39,12 @@ class Graphics:
         self.pen.speed(0)
         self.pen.hideturtle()
 
-        self.time_pen = turtle.Turtle()
-        self.time_pen.hideturtle()
-        self.time_pen.speed(0)
-        self.time_pen.penup()
-        self.time_pen.goto(self.nx // 2, self.ny)
-        self.time_pen.pendown()
+        self.score_pen = turtle.Turtle()
+        self.score_pen.hideturtle()
+        self.score_pen.speed(0)
+        self.score_pen.penup()
+        self.score_pen.goto(self.nx // 2, self.ny)
+        self.score_pen.pendown()
 
         self.add_grid()
         self.add_border()
@@ -75,7 +75,7 @@ class Graphics:
         self.pen.goto(0, 0)
         self.pen.setheading(0)
         self.pen.pendown()
-        for i in range(self.nx // self.ng):
+        for i in range(self.ny // self.ng):
             self.pen.forward(self.nx)
             if i % 2 == 0:
                 self.pen.left(90)
@@ -217,14 +217,41 @@ class Graphics:
     #     # self.knights[knight.name].pendown()
     #     # self.knights[knight.name].dot(10)
 
-    def update(self, time):
+    def draw_scoreboard(time, knights):
+        self.score_pen.clear()
+
+        self.score_pen.color('black')
+        self.score_pen.pensize(1)
+        self.score_pen.penup()
+        self.score_pen.goto(self.nx // 2, self.ny + self.topbar - 30)
+        self.score_pen.pendown()
+        self.score_pen.write(f"Time = {time}",
+                             move=False,
+                             align="center",
+                             font=('Arial', 18, 'normal'))
+
+        centerbar_dx = 200
+        centerbar_dy = 200
+        self.score_pen.penup()
+        self.score_pen.pensize(2)
+        self.score_pen.goto(self.nx // 2 - centerbar_width // 2, self.ny + 10)
+        self.score_pen.pendown()
+        self.score_pen.begin_fill()
+        self.score_pen.setheading(0)
+        self.score_pen.forward(centerbar_width)
+
+        # self.pen.penup()
+        # self.screen.update()
+
+    def update(self, time, knights):
         # self.pen.penup()
         # self.pen.goto(self.nx // 2, self.ny)
         # self.pen.pendown()
-        self.time_pen.clear()
-        self.time_pen.write(f"Time = {time}",
-                            move=False,
-                            align="center",
-                            font=('Arial', 18, 'normal'))
+        # self.time_pen.clear()
+        # self.time_pen.write(f"Time = {time}",
+        #                     move=False,
+        #                     align="center",
+        #                     font=('Arial', 18, 'normal'))
         # self.pen.penup()
+        self.draw_scoreboard(time=time, knights=knights)
         self.screen.update()
