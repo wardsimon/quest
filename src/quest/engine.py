@@ -76,6 +76,8 @@ class Engine:
                         castle=self.map._castles[team],
                         fountain=self.map._fountains[team]))
 
+        self.graphics.initialize_scoreboard(knights=self.knights)
+
         sec = input('Let us wait for user input.')
 
         #     Knight(x=10,

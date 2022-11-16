@@ -272,37 +272,89 @@ class Graphics:
     #     # self.knights[knight.name].pendown()
     #     # self.knights[knight.name].dot(10)
 
-    def draw_scoreboard(self, time, knights):
+    def initialize_scoreboard(self, knights):
+        self.pen.setheading(0)
+        self.pen.color('black')
+        self.pen.pensize(1)
+        self.pen.penup()
+        self.pen.goto(self.nx // 2, self.ny + self.topbar - 25)
+        self.pen.pendown()
+        self.pen.write("Time =",
+                       move=False,
+                       align="center",
+                       font=('Arial', 18, 'normal'))
+
+        centerbar_dx = 400
+        centerbar_dy = 20
+        # self.score_pen.penup()
+        # self.pen.pensize(2)
+
+        healthbar_dx = 300
+        healthbar_dy = 15
+        counts = {'red': 0, 'blue': 0}
+        for knight in knights:
+            self.pen.pensize(2)
+            if knight.team == 'red':
+                x = 0
+            else:
+                x = self.nx - healthbar_dx
+            y = self.ny + 10 + (counts[knight.team] * (healthbar_dy + 15))
+            rectangle(self.pen,
+                      x=x,
+                      y=y,
+                      dx=healthbar_dx,
+                      dy=healthbar_dy,
+                      color='black',
+                      fill=False)
+
+            self.pen.pensize(1)
+            self.pen.penup()
+            self.pen.goto(
+                x + healthbar_dx + 10 if knight.team == 'red' else x - 10, y)
+            self.pen.pendown()
+            self.pen.write(knight.name,
+                           move=False,
+                           align="left" if knight.team == 'red' else "right",
+                           font=('Arial', 10, 'normal'))
+            counts[knight.team] += 1
+        self.pen.pensize(1)
+        self.pen.penup()
+
+    def update_scoreboard(self, time, knights):
         self.score_pen.clear()
         self.score_pen.setheading(0)
 
         self.score_pen.color('black')
         self.score_pen.pensize(1)
         self.score_pen.penup()
-        self.score_pen.goto(self.nx // 2, self.ny + self.topbar - 25)
+        self.score_pen.goto(self.nx // 2 + 100, self.ny + self.topbar - 25)
         self.score_pen.pendown()
-        self.score_pen.write(f"Time = {time}",
+        self.score_pen.write(str(time),
                              move=False,
                              align="center",
                              font=('Arial', 18, 'normal'))
 
-        centerbar_dx = 400
-        centerbar_dy = 20
-        # self.score_pen.penup()
-        self.score_pen.pensize(2)
-        rectangle(self.score_pen,
-                  x=self.nx // 2 - centerbar_dx // 2,
-                  y=self.ny + 10,
-                  dx=centerbar_dx,
-                  dy=centerbar_dy,
-                  color='black')
+        # centerbar_dx = 400
+        # centerbar_dy = 20
+        # # self.score_pen.penup()
+        # self.score_pen.pensize(2)
+        # for k in knights:
+        #     if k.team == 'red':
+        #         red_speed = k.speed
+        #         red_speed = k.speed
+        # rectangle(self.score_pen,
+        #           x=self.nx // 2 - centerbar_dx // 2,
+        #           y=self.ny + 10,
+        #           dx=centerbar_dx,
+        #           dy=centerbar_dy,
+        #           color='black')
 
-        rectangle(self.score_pen,
-                  x=self.nx // 2 - centerbar_dx // 2,
-                  y=self.ny + 40,
-                  dx=centerbar_dx,
-                  dy=centerbar_dy,
-                  color='black')
+        # rectangle(self.score_pen,
+        #           x=self.nx // 2 - centerbar_dx // 2,
+        #           y=self.ny + 40,
+        #           dx=centerbar_dx,
+        #           dy=centerbar_dy,
+        #           color='black')
 
         healthbar_dx = 300
         healthbar_dy = 15
@@ -322,20 +374,20 @@ class Graphics:
             else:
                 fill = 'gold'
             rectangle(self.score_pen,
-                      x=x,
-                      y=y,
-                      dx=healthbar_dx * perc,
-                      dy=healthbar_dy,
+                      x=x + 1,
+                      y=y + 2,
+                      dx=healthbar_dx * perc - 3,
+                      dy=healthbar_dy - 3,
                       color=fill,
                       fill=True)
-            self.score_pen.pensize(2)
-            rectangle(self.score_pen,
-                      x=x,
-                      y=y,
-                      dx=healthbar_dx,
-                      dy=healthbar_dy,
-                      color='black',
-                      fill=False)
+            # self.score_pen.pensize(2)
+            # rectangle(self.score_pen,
+            #           x=x,
+            #           y=y,
+            #           dx=healthbar_dx,
+            #           dy=healthbar_dy,
+            #           color='black',
+            #           fill=False)
 
             self.score_pen.pensize(1)
             self.score_pen.goto(x + 0.99 * healthbar_dx, y)
@@ -345,15 +397,15 @@ class Graphics:
                                  move=False,
                                  align="right",
                                  font=('Arial', 10, 'normal'))
-            self.score_pen.penup()
-            self.score_pen.goto(
-                x + healthbar_dx + 10 if knight.team == 'red' else x - 10, y)
-            self.score_pen.pendown()
-            self.score_pen.write(
-                knight.name,
-                move=False,
-                align="left" if knight.team == 'red' else "right",
-                font=('Arial', 10, 'normal'))
+            # self.score_pen.penup()
+            # self.score_pen.goto(
+            #     x + healthbar_dx + 10 if knight.team == 'red' else x - 10, y)
+            # self.score_pen.pendown()
+            # self.score_pen.write(
+            #     knight.name,
+            #     move=False,
+            #     align="left" if knight.team == 'red' else "right",
+            #     font=('Arial', 10, 'normal'))
 
             counts[knight.team] += 1
 
@@ -371,7 +423,7 @@ class Graphics:
         #                     font=('Arial', 18, 'normal'))
         # self.pen.penup()
         if time % 5 == 0:
-            self.draw_scoreboard(time=time, knights=knights)
+            self.update_scoreboard(time=time, knights=knights)
         self.screen.update()
 
     def announce_winner(self, winner):
