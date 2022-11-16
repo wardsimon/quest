@@ -187,7 +187,7 @@ class Engine:
                     k.max_health += int(bonus)
                 elif kind == 2:
                     k.speed = min(k.speed + bonus, 20)  # cap on max speed
-                print("picked up gem:", k)
+                # print("picked up gem:", k)
 
     def move(self, knight, time, dt, intel):
         pos = knight.next_position(dt=dt)
@@ -210,14 +210,17 @@ class Engine:
             if knight.get_distance(gem) < 5.0:
                 x = gem[0]
                 y = gem[1]
-                print(knight.name, "found gem at", x, y)
+                # print(knight.name, "found gem at", x, y)
                 self.pickup_gem(x=x, y=y, team=knight.team)
                 self.map.array[x, y] = 0
                 self.graphics.erase_gem(x=x, y=y)
 
         opposing_team = 'red' if knight.team == 'blue' else 'blue'
         if knight.get_distance(self.map._flags[opposing_team]) < 5.0:
-            self.graphics.announce_winner
+            self.graphics.announce_winner(knight.team)
+            print(knight.team, 'team wins!')
+            return knight.team
+        return None
 
     def run(self):
 
@@ -234,7 +237,9 @@ class Engine:
                 k.advance_dt(time=t, dt=dt)
                 intel = self.get_intel(knight=k)
                 k.execute(time=t, intel=intel)
-                self.move(knight=k, time=t, dt=dt, intel=intel)
+                winner = self.move(knight=k, time=t, dt=dt, intel=intel)
+                if winner is not None:
+                    return winner
                 # # local_env=get_local_environment(knight=k, ))
                 # pos = k.next_position(dt=dt)
                 # # print(pos)

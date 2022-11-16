@@ -141,17 +141,17 @@ class Knight:
         elif len(intel['flags']) == 2:
             enemy_team = 'red' if self.team == 'blue' else 'blue'
             flag_pos = intel['flags'][enemy_team]
-            print(self, 'going to capture', enemy_team, 'flag at', flag_pos)
+            # print(self, 'going to capture', enemy_team, 'flag at', flag_pos)
             self.goto(*flag_pos)
 
         elif len(intel['enemies']) > 0:
             name = list(intel['enemies'].keys())[0]
             target = intel['enemies'][name]
-            print(self, 'going to kill', name)
+            # print(self, 'going to kill', name)
             self.goto(target['x'], target['y'])
 
         elif len(intel['gems']) > 0:
-            print(self, 'going to pick up gem at', intel['gems'][0])
+            # print(self, 'going to pick up gem at', intel['gems'][0])
             self.goto(*intel['gems'][0])
 
         # if self.name == 'Arthur':
