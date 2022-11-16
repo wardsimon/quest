@@ -223,6 +223,7 @@ class Graphics:
             self.pen.penup()
             self.pen.goto(params['x'] - 0.5 * star_size,
                           params['y'] - 0.25 * star_size)
+            self.pen.setheading(0)
             self.pen.pendown()
             self.pen.begin_fill()
             for i in range(5):
@@ -372,3 +373,12 @@ class Graphics:
         if time % 5 == 0:
             self.draw_scoreboard(time=time, knights=knights)
         self.screen.update()
+
+    def announce_winner(self, winner):
+        self.pen.penup()
+        self.pen.goto(self.nx // 2, self.ny // 2)
+        self.pen.pendown()
+        self.pen.write(f"Team {winner} wins!",
+                       move=False,
+                       align="center",
+                       font=('Arial', 100, 'normal'))
