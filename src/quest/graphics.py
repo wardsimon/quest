@@ -378,6 +378,7 @@ class Graphics:
         self.pen.penup()
         self.pen.goto(self.nx // 2, self.ny // 2)
         self.pen.pendown()
+        self.pen.color(winner)
         self.pen.write(f"Team {winner} wins!",
                        move=False,
                        align="center",
