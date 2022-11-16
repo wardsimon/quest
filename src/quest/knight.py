@@ -32,7 +32,7 @@ class Knight:
         self.previous_position = [0, 0]
         self.max_health = 100
         self.health = self.max_health
-        self.attack = 50
+        self.attack = 33
         self.team = team
         self.name = name
         self.cooldown = 0
@@ -91,11 +91,12 @@ class Knight:
         # print(np.linalg.norm(self.speed * vec * dt))
         # print(np.linalg.norm(vec), vec)
         # print(self.position, self.speed, self.vector, dt)
-        new_pos = self.position + self.speed * self.vector * dt
+        new_pos = np.array(
+            self.avatar.position()) + self.speed * self.vector * dt
         return new_pos.astype(int)
 
     def get_distance(self, pos):
-        return np.sqrt((pos[0] - self._x)**2 + (pos[1] - self._y)**2)
+        return np.sqrt((pos[0] - self.x)**2 + (pos[1] - self.y)**2)
 
     def advance_dt(self, time, dt):
         self.cooldown = max(self.cooldown - dt, 0)
@@ -121,7 +122,11 @@ class Knight:
                                font=('Arial', 12, 'normal'))
         self.avatar_name.penup()
 
-    def execute(self, time):
+    def goto(self, x, y):
+        angle = self.avatar.towards(x, y)
+        self.heading = angle
+
+    def execute(self, time, intel):
         # if self.cooldown >= 8:
         #     self.direction = -self.direction
         # elif all(self.position == self.previous_position):
@@ -132,4 +137,24 @@ class Knight:
             # self.vector = np.random.choice([-1, 1],
             #                                size=2) * np.random.random(2)
             self.heading = np.random.random() * 360.0
+
+        elif len(intel['flags']) == 2:
+            enemy_team = 'red' if self.team == 'blue' else 'blue'
+            flag_pos = intel['flags'][enemy_team]
+            print(self, 'going to capture', enemy_team, 'flag at', flag_pos)
+            self.goto(*flag_pos)
+
+        elif len(intel['enemies']) > 0:
+            name = list(intel['enemies'].keys())[0]
+            target = intel['enemies'][name]
+            print(self, 'going to kill', name)
+            self.goto(target['x'], target['y'])
+
+        elif len(intel['gems']) > 0:
+            print(self, 'going to pick up gem at', intel['gems'][0])
+            self.goto(*intel['gems'][0])
+
+        # if self.name == 'Arthur':
+        #     self.goto(10, 500)
+
         self.previous_position = self.position

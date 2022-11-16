@@ -180,7 +180,7 @@ class Graphics:
         # dx = obstacles['dx']
         dx = castles['dx']
         thickness = castles['thickness']
-        direction = castles['direction']
+        star_size = int(castles['dx'] / 3)
 
         # x = [dx // 2]
         # y = [dx // 2]
@@ -188,16 +188,17 @@ class Graphics:
             params = castles[team]
             self.pen.color(team)
             self.pen.penup()
-            if direction == 0:
+            d = params['direction']
+            if d == 0:
                 self.pen.goto(params['x'] + 0.5 * dx, params['y'] + 0.5 * dx)
                 self.pen.setheading(180)
-            elif direction == 1:
+            elif d == 1:
                 self.pen.goto(params['x'] - 0.5 * dx, params['y'] + 0.5 * dx)
                 self.pen.setheading(270)
-            elif direction == 2:
+            elif d == 2:
                 self.pen.goto(params['x'] - 0.5 * dx, params['y'] - 0.5 * dx)
                 self.pen.setheading(0)
-            elif direction == 3:
+            elif d == 3:
                 self.pen.goto(params['x'] + 0.5 * dx, params['y'] - 0.5 * dx)
                 self.pen.setheading(90)
             self.pen.pendown()
@@ -217,6 +218,16 @@ class Graphics:
             self.pen.forward(dx - thickness)
             self.pen.left(90)
             self.pen.forward(thickness)
+            self.pen.end_fill()
+
+            self.pen.penup()
+            self.pen.goto(params['x'] - 0.5 * star_size,
+                          params['y'] - 0.25 * star_size)
+            self.pen.pendown()
+            self.pen.begin_fill()
+            for i in range(5):
+                self.pen.forward(star_size)
+                self.pen.left(360 / 2.5)
             self.pen.end_fill()
 
     def add_fountains(self, fountains):
@@ -302,9 +313,9 @@ class Graphics:
                 x = 0
             else:
                 x = self.nx - healthbar_dx
-            y = self.ny + 10 + (counts[knight.team] * (healthbar_dy + 5))
+            y = self.ny + 10 + (counts[knight.team] * (healthbar_dy + 15))
             if perc > 0.5:
-                fill = 'green'
+                fill = 'lime'
             elif perc < 0.2:
                 fill = 'red'
             else:
@@ -326,13 +337,22 @@ class Graphics:
                       fill=False)
 
             self.score_pen.pensize(1)
-            self.score_pen.goto(x + 0.75 * healthbar_dx, y)
+            self.score_pen.goto(x + 0.99 * healthbar_dx, y)
             self.score_pen.color('black')
             self.score_pen.pendown()
             self.score_pen.write(f"{knight.health} / {knight.max_health}",
                                  move=False,
-                                 align="center",
+                                 align="right",
                                  font=('Arial', 10, 'normal'))
+            self.score_pen.penup()
+            self.score_pen.goto(
+                x + healthbar_dx + 10 if knight.team == 'red' else x - 10, y)
+            self.score_pen.pendown()
+            self.score_pen.write(
+                knight.name,
+                move=False,
+                align="left" if knight.team == 'red' else "right",
+                font=('Arial', 10, 'normal'))
 
             counts[knight.team] += 1
 
@@ -349,5 +369,6 @@ class Graphics:
         #                     align="center",
         #                     font=('Arial', 18, 'normal'))
         # self.pen.penup()
-        self.draw_scoreboard(time=time, knights=knights)
+        if time % 5 == 0:
+            self.draw_scoreboard(time=time, knights=knights)
         self.screen.update()

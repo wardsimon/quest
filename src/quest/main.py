@@ -9,8 +9,17 @@ import matplotlib.pyplot as plt
 if __name__ == '__main__':
     # mpl.use('TkAgg')
 
-    engine = Engine()
-    engine.run()
+    best_of = 5
+    first_to = 3
+
+    match_score = {'red': 0, 'blue': 0}
+    for n in range(best_of):
+        engine = Engine(score=match_score)
+        winner = engine.run()
+        match_score[winner] += 1
+        for team in match_score:
+            if match_score[team] == first_to:
+                break
 
     # ng = 32
     # nx = ng * 56  # 1920
