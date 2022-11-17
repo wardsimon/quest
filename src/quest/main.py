@@ -16,10 +16,12 @@ if __name__ == '__main__':
     for n in range(best_of):
         engine = Engine(score=match_score)
         winner = engine.run()
-        match_score[winner] += 1
+        if winner is not None:
+            match_score[winner] += 1
         for team in match_score:
             if match_score[team] == first_to:
                 break
+        input('start next match')
 
     # ng = 32
     # nx = ng * 56  # 1920

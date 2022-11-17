@@ -32,6 +32,7 @@ class Graphics:
         # create a screen object
         self.screen = turtle.Screen()
         # print(self.nx, self.ny)
+        self.screen.clearscreen()
 
         # set screen size
         # self.screen.setup(width=int(self.nx * 1.2), height=int(self.ny * 1.2))
@@ -272,14 +273,22 @@ class Graphics:
     #     # self.knights[knight.name].pendown()
     #     # self.knights[knight.name].dot(10)
 
-    def initialize_scoreboard(self, knights):
+    def initialize_scoreboard(self, knights, score):
         self.pen.setheading(0)
         self.pen.color('black')
         self.pen.pensize(1)
         self.pen.penup()
-        self.pen.goto(self.nx // 2, self.ny + self.topbar - 25)
+        self.pen.goto(self.nx // 2 + 5, self.ny + self.topbar - 25)
         self.pen.pendown()
         self.pen.write("Time =",
+                       move=False,
+                       align="right",
+                       font=('Arial', 18, 'normal'))
+
+        self.pen.penup()
+        self.pen.goto(self.nx // 2, self.ny + 30)
+        self.pen.pendown()
+        self.pen.write(f"{score['red']} - {score['blue']}",
                        move=False,
                        align="center",
                        font=('Arial', 18, 'normal'))
@@ -307,15 +316,6 @@ class Graphics:
                       color='black',
                       fill=False)
 
-            self.pen.pensize(1)
-            self.pen.penup()
-            self.pen.goto(
-                x + healthbar_dx + 10 if knight.team == 'red' else x - 10, y)
-            self.pen.pendown()
-            self.pen.write(knight.name,
-                           move=False,
-                           align="left" if knight.team == 'red' else "right",
-                           font=('Arial', 10, 'normal'))
             counts[knight.team] += 1
         self.pen.pensize(1)
         self.pen.penup()
@@ -327,34 +327,12 @@ class Graphics:
         self.score_pen.color('black')
         self.score_pen.pensize(1)
         self.score_pen.penup()
-        self.score_pen.goto(self.nx // 2 + 100, self.ny + self.topbar - 25)
+        self.score_pen.goto(self.nx // 2 + 50, self.ny + self.topbar - 25)
         self.score_pen.pendown()
         self.score_pen.write(str(time),
                              move=False,
                              align="center",
                              font=('Arial', 18, 'normal'))
-
-        # centerbar_dx = 400
-        # centerbar_dy = 20
-        # # self.score_pen.penup()
-        # self.score_pen.pensize(2)
-        # for k in knights:
-        #     if k.team == 'red':
-        #         red_speed = k.speed
-        #         red_speed = k.speed
-        # rectangle(self.score_pen,
-        #           x=self.nx // 2 - centerbar_dx // 2,
-        #           y=self.ny + 10,
-        #           dx=centerbar_dx,
-        #           dy=centerbar_dy,
-        #           color='black')
-
-        # rectangle(self.score_pen,
-        #           x=self.nx // 2 - centerbar_dx // 2,
-        #           y=self.ny + 40,
-        #           dx=centerbar_dx,
-        #           dy=centerbar_dy,
-        #           color='black')
 
         healthbar_dx = 300
         healthbar_dy = 15
@@ -380,32 +358,30 @@ class Graphics:
                       dy=healthbar_dy - 3,
                       color=fill,
                       fill=True)
-            # self.score_pen.pensize(2)
-            # rectangle(self.score_pen,
-            #           x=x,
-            #           y=y,
-            #           dx=healthbar_dx,
-            #           dy=healthbar_dy,
-            #           color='black',
-            #           fill=False)
 
+            if knight.team == 'red':
+                x = 0.77 * healthbar_dx
+                text = (
+                    f"{knight.health} / {knight.max_health}    "
+                    f"attack={knight.attack}  speed={round(knight.speed, 1)}  {knight.name}"
+                )
+                align = 'left'
+            else:
+                x = self.nx - 5
+                text = (
+                    f"{knight.name}  speed={round(knight.speed, 1)}  attack={knight.attack}"
+                    "                                  "
+                    f" {knight.health} / {knight.max_health}")
+                align = 'right'
             self.score_pen.pensize(1)
-            self.score_pen.goto(x + 0.99 * healthbar_dx, y)
+            self.score_pen.penup()
+            self.score_pen.goto(x, y)
             self.score_pen.color('black')
             self.score_pen.pendown()
-            self.score_pen.write(f"{knight.health} / {knight.max_health}",
+            self.score_pen.write(text,
                                  move=False,
-                                 align="right",
+                                 align=align,
                                  font=('Arial', 10, 'normal'))
-            # self.score_pen.penup()
-            # self.score_pen.goto(
-            #     x + healthbar_dx + 10 if knight.team == 'red' else x - 10, y)
-            # self.score_pen.pendown()
-            # self.score_pen.write(
-            #     knight.name,
-            #     move=False,
-            #     align="left" if knight.team == 'red' else "right",
-            #     font=('Arial', 10, 'normal'))
 
             counts[knight.team] += 1
 
@@ -413,15 +389,6 @@ class Graphics:
         # self.screen.update()
 
     def update(self, time, knights):
-        # self.pen.penup()
-        # self.pen.goto(self.nx // 2, self.ny)
-        # self.pen.pendown()
-        # self.time_pen.clear()
-        # self.time_pen.write(f"Time = {time}",
-        #                     move=False,
-        #                     align="center",
-        #                     font=('Arial', 18, 'normal'))
-        # self.pen.penup()
         if time % 5 == 0:
             self.update_scoreboard(time=time, knights=knights)
         self.screen.update()
@@ -430,8 +397,16 @@ class Graphics:
         self.pen.penup()
         self.pen.goto(self.nx // 2, self.ny // 2)
         self.pen.pendown()
-        self.pen.color(winner)
-        self.pen.write(f"Team {winner} wins!",
-                       move=False,
-                       align="center",
-                       font=('Arial', 100, 'normal'))
+        if winner is None:
+            self.pen.color('black')
+            self.pen.write(f"It's a draw",
+                           move=False,
+                           align="center",
+                           font=('Arial', 100, 'normal'))
+        else:
+            self.pen.color(winner)
+            self.pen.write(f"Team {winner} wins!",
+                           move=False,
+                           align="center",
+                           font=('Arial', 100, 'normal'))
+        self.screen.update()
