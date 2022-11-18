@@ -286,12 +286,37 @@ class Graphics:
                        font=('Arial', 18, 'normal'))
 
         self.pen.penup()
-        self.pen.goto(self.nx // 2, self.ny + 30)
+        self.pen.goto(self.nx // 2, self.ny + 40)
+        self.pen.pendown()
+        self.pen.write(f"Match number {score['count']}",
+                       move=False,
+                       align="center",
+                       font=('Arial', 18, 'normal'))
+
+        self.pen.penup()
+        self.pen.goto(self.nx // 2, self.ny + 10)
         self.pen.pendown()
         self.pen.write(f"{score['red']} - {score['blue']}",
                        move=False,
                        align="center",
                        font=('Arial', 18, 'normal'))
+
+        # self.pen.penup()
+        # self.pen.goto(self.nx // 2 - 160, self.ny + 40)
+        # self.pen.pendown()
+        # self.pen.color('red')
+        # self.pen.write(f"Team {red_creator}",
+        #                move=False,
+        #                align="right",
+        #                font=('Arial', 22, 'normal'))
+        # self.pen.penup()
+        # self.pen.goto(self.nx // 2 + 160, self.ny + 40)
+        # self.pen.pendown()
+        # self.pen.color('blue')
+        # self.pen.write(f"Team {blue_creator}",
+        #                move=False,
+        #                align="left",
+        #                font=('Arial', 22, 'normal'))
 
         centerbar_dx = 400
         centerbar_dy = 20
@@ -315,6 +340,16 @@ class Graphics:
                       dy=healthbar_dy,
                       color='black',
                       fill=False)
+
+            self.pen.penup()
+            self.pen.goto(
+                self.nx // 2 + 260 * (1 - 2 * int(knight.team == 'red')), y)
+            self.pen.pendown()
+            self.pen.color(knight.team)
+            self.pen.write(knight.creator,
+                           move=False,
+                           align="left",
+                           font=('Arial', 10, 'normal'))
 
             counts[knight.team] += 1
         self.pen.pensize(1)

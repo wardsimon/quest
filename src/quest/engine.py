@@ -1,6 +1,5 @@
 from game_map import Map
 from graphics import Graphics
-from knight import Knight
 from fight import fight
 
 from dataclasses import dataclass
@@ -29,7 +28,7 @@ import time
 
 class Engine:
 
-    def __init__(self, score):
+    def __init__(self, score, red_team, blue_team):
 
         self.ng = 32
         self.nx = self.ng * 56
@@ -53,21 +52,28 @@ class Engine:
         #     Knight(x=nx - 1, y=800, direction=[-1, -0.5], name='Arthur'),
         #     Knight(x=1, y=100, direction=[1, 0.5], name='Lancelot')
         # ]
-        team_names = {
-            'red': ['Arthur', 'Galahad', 'Lancelot'],
-            'blue': ['Caspar', 'Balthazar', 'Melchior']
-        }
+        # team_names = {
+        #     'red': ['Arthur', 'Galahad', 'Lancelot'],
+        #     'blue': ['Caspar', 'Balthazar', 'Melchior']
+        # }
+
+        team_knights = {'red': red_team, 'blue': blue_team}
+
+        # team_names = {
+        #     'red': ['Arthur', 'Galahad', 'Lancelot'],
+        #     'blue': ['Caspar', 'Balthazar', 'Melchior']
+        # }
 
         self.team_counts = {
-            'red': len(team_names['red']),
-            'blue': len(team_names['blue'])
+            'red': len(team_knights['red']),
+            'blue': len(team_knights['blue'])
         }
 
         self.knights = []
-        for team, names in team_names.items():
-            for n, name in enumerate(names):
+        for team, names in team_knights.items():
+            for n, (name, Kind) in enumerate(names.items()):
                 self.knights.append(
-                    Knight(
+                    Kind(
                         x=self.map._castles[team]['x'] +
                         self.map._castles['dx'] * 0.75 *
                         (1 - 2.0 * (int(team == 'blue'))),
@@ -112,14 +118,24 @@ class Engine:
         # # m.ax.add_patch(circle)
         # sec = input('Let us wait for user input.')
     def get_local_map(self, x, y, radius):
-        return self.map.array[x - radius:x + radius, y - radius:y + radius]
+        xmin = max(x - radius, 0)
+        xmax = min(x + radius + 1, self.nx - 1)
+        ymin = max(y - radius, 0)
+        ymax = min(y + radius + 1, self.ny - 1)
+        local_map = self.map.array[xmin:xmax, ymin:ymax].copy()
+        xm, ym = np.meshgrid(np.arange(xmin, xmax),
+                             np.arange(ymin, ymax),
+                             indexing='ij')
+        dist_map = np.sqrt((xm - x)**2 + (ym - y)**2)
+        invalid = dist_map > radius
+        local_map[invalid] = -1
+        return local_map
 
     def get_intel(self, knight):
-        dx = knight.view_radius
+        r = knight.view_radius
         # local_map = self.map.array[knight.x - dx:knight.x + dx,
         #                            knight.y - dx:knight.y + dx].copy()
-        local_map = self.get_local_map(x=knight.x, y=knight.y,
-                                       radius=dx).copy()
+        local_map = self.get_local_map(x=knight.x, y=knight.y, radius=r)
         friends = {}
         enemies = {}
         for k in self.knights:
@@ -168,13 +184,19 @@ class Engine:
         #                 'view_radius': k.view_radius
         #             }
 
+        gems = {}
         gem_inds = np.where(local_map == 2)
-        gems = []
-        for i in range(len(gem_inds[0])):
-            pos = (gem_inds[0][i] + knight.x - dx,
-                   gem_inds[1][i] + knight.y - dx)
-            if knight.get_distance(pos) < knight.view_radius:
-                gems.append(pos)
+        # print(knight.name, 'gem_inds', gem_inds)
+        if len(gem_inds[0]) > 0:
+            gems = {
+                'x': gem_inds[0] + max(knight.x - r, 0),
+                'y': gem_inds[1] + max(knight.y - r, 0)
+            }
+        # for i in range(len(gem_inds[0])):
+        #     pos = (gem_inds[0][i] + max(knight.x - dx, 0),
+        #            gem_inds[1][i] + max(knight.y - dx, 0))
+        #     if knight.get_distance(pos) < knight.view_radius:
+        #         gems.append(pos)
 
         return {
             'local_map': local_map,
@@ -197,9 +219,10 @@ class Engine:
                     k.max_health += int(bonus)
                 elif kind == 2:
                     k.speed = min(k.speed + bonus, 10)  # cap on max speed
-                # print("picked up gem:", k)
+        # print("picked up gem:", x, y, team)
 
     def move(self, knight, time, dt, intel):
+
         pos = knight.next_position(dt=dt)
         # print(knight.name, 'Before position', knight.x, knight.y, knight.)
         # print(knight.name, 'Next position', pos)
@@ -209,6 +232,29 @@ class Engine:
             if (self.map.array[pos[0], pos[1]] !=
                     1) and (self.map.array[pos2[0], pos2[1]] != 1):
                 # if (self.map.array[pos[0], pos[1]] != 1):
+
+                if intel['gems']:
+                    for x, y in zip(intel['gems']['x'], intel['gems']['y']):
+                        # x = intel['gems']['x'][igem]
+                        # y = intel['gems']['y'][igem]
+                        # print(
+                        #     knight.name, 'gem distance',
+                        #     knight.get_distance((x, y)), (knight.speed * dt),
+                        #     knight.get_distance((x, y)) <= (knight.speed * dt))
+                        if (knight.get_distance((x, y)) <=
+                            (knight.speed * dt)) and (abs(
+                                abs(
+                                    knight.avatar.towards(x, y) -
+                                    knight.avatar.heading() - 180) - 180) <
+                                                      10):
+                            # x = gem[0]
+                            # y = gem[1]
+                            # print(knight.name, "found gem at", x, y)
+                            self.pickup_gem(x=x, y=y, team=knight.team)
+                            self.map.array[x, y] = 0
+                            self.graphics.erase_gem(x=x, y=y)
+                            break
+
                 knight.move(dt)
 
         # self.circles[knight.name][0].center = (knight.x, knight.y)
@@ -216,14 +262,19 @@ class Engine:
         # print(knight.name, 'After position', knight.x, knight.y)
         # x = knight.x
         # y = knight.y
-        for gem in intel['gems']:
-            if knight.get_distance(gem) < 10.0:
-                x = gem[0]
-                y = gem[1]
-                # print(knight.name, "found gem at", x, y)
-                self.pickup_gem(x=x, y=y, team=knight.team)
-                self.map.array[x, y] = 0
-                self.graphics.erase_gem(x=x, y=y)
+        # for gem in intel['gems']:
+        #     x = gem[0]
+        #     y = gem[1]
+        #     if (knight.get_distance(gem) <= (knight.speed * dt)) and (abs(
+        #             abs(
+        #                 knight.avatar.towards(x, y) - knight.avatar.heading() -
+        #                 180) - 180) < 10):
+        #         # x = gem[0]
+        #         # y = gem[1]
+        #         # print(knight.name, "found gem at", x, y)
+        #         self.pickup_gem(x=x, y=y, team=knight.team)
+        #         self.map.array[x, y] = 0
+        #         self.graphics.erase_gem(x=x, y=y)
 
         opposing_team = 'red' if knight.team == 'blue' else 'blue'
         if knight.get_distance(self.map._flags[opposing_team]) < 5.0:
