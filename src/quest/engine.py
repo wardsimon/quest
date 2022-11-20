@@ -133,6 +133,19 @@ class Engine:
         local_map[invalid] = -1
         return local_map
 
+    def make_properties_dict(self, knight):
+        return {
+            'x': knight.x,
+            'y': knight.y,
+            'attack': knight.attack,
+            'health': knight.health,
+            'speed': knight.speed,
+            'heading': knight.heading,
+            'vector': knight.vector,
+            'cooldown': knight.cooldown,
+            'view_radius': knight.view_radius
+        }
+
     def get_info(self, knight):
         r = knight.view_radius
         # local_map = self.map.array[knight.x - dx:knight.x + dx,
@@ -141,22 +154,26 @@ class Engine:
         friends = {}
         enemies = {}
         for k in self.knights:
+            props = make_properties_dict(k)
             if (k.team != knight.team):
                 dist = knight.get_distance(k.position)
                 if dist < knight.view_radius:
-                    enemies[k.name] = {
-                        'x': k.x,
-                        'y': k.y,
-                        'attack': k.attack,
-                        'health': k.health,
-                        'speed': k.speed,
-                        'heading': k.heading,
-                        'vector': k.vector,
-                        'cooldown': k.cooldown,
-                        'view_radius': k.view_radius
-                    }
+                    enemies[k.name] = props
+                    # {
+                    #     'x': k.x,
+                    #     'y': k.y,
+                    #     'attack': k.attack,
+                    #     'health': k.health,
+                    #     'speed': k.speed,
+                    #     'heading': k.heading,
+                    #     'vector': k.vector,
+                    #     'cooldown': k.cooldown,
+                    #     'view_radius': k.view_radius
+                    # }
             elif k.name != knight.name:
-                friends[k.name] = k
+                friends[k.name] = props
+            else:
+                my_props = props
 
         flags = {}
         for team in ('red', 'blue'):
@@ -205,7 +222,8 @@ class Engine:
             'friends': friends,
             'enemies': enemies,
             'gems': gems,
-            'flags': flags
+            'flags': flags,
+            'me': my_props
         }
 
     def pickup_gem(self, x, y, team):
@@ -305,7 +323,7 @@ class Engine:
             for k in self.knights:
                 info = self.get_info(knight=k)
                 k.advance_dt(t=t, dt=dt, info=info)
-                k.execute(t=t, info=info)
+                k.ai.run(t=t, info=info)
                 winner = self.move(knight=k, t=t, dt=dt, info=info)
                 if winner is not None:
                     return winner

@@ -7,7 +7,7 @@ import turtle
 class Knight:
 
     def __init__(self, x, y, name, heading, team, castle, fountain, creator,
-                 number):
+                 number, AI):
         # self._x = int(x)
         # self._y = int(y)
         # self.vector = vector
@@ -41,6 +41,8 @@ class Knight:
         self.castle = castle
         self.fountain = fountain
         self.number = number
+
+        self.ai = AI()
 
     def __repr__(self):
         return f'{self.name}: H:{self.health}/{self.max_health} A:{self.attack} S:{self.speed} at {self.x}, {self.y}'
