@@ -88,8 +88,9 @@ class NeilScout(BaseAI):
             # print(self, 'going to kill', name)
             # self.goto = [target['x'], target['y']]
             self.heading = (self.towards(target['x'], target['y']) + 180) % 360
-            print(me['name'], me['x'], me['y'], 'evading enemy at',
-                  target['x'], target['y'], 'with heading', self.heading)
+            # print(me['name'], me['x'], me['y'], 'evading enemy at',
+            #       target['x'], target['y'], 'with heading', self.heading)
+            # input('enter')
 
         elif info['gems']:
             # print(self, 'going to pick up gem at', info['gems']['x'][0],

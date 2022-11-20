@@ -28,7 +28,8 @@ class BaseAI:
         if y is None:
             y = x[1]
             x = x[0]
-        return ((np.arctan2(y, x) * 180 / np.pi) + 360) % 360
+        return ((np.arctan2(y - self._params['y'], x - self._params['x']) *
+                 180 / np.pi) + 360) % 360
         # if angle < 0:
         #     angle += 360
         # return angle

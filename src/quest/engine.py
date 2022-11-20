@@ -29,6 +29,7 @@ import time
 
 def make_properties_dict(knight):
     return {
+        'name': knight.name,
         'x': knight.x,
         'y': knight.y,
         'position': knight.position,
