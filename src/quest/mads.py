@@ -9,7 +9,7 @@ class MadsWarrior(Warrior):
         self.previous_position = [0, 0]
         self.previous_health = self.health
 
-    def execute(self, time, info):
+    def execute(self, t, info):
         # if self.cooldown >= 8:
         #     self.direction = -self.direction
         # elif all(self.position == self.previous_position):

@@ -28,7 +28,7 @@ import time
 
 class Engine:
 
-    def __init__(self, score, red_team, blue_team):
+    def __init__(self, score, red_team, blue_team, speedup=1.0):
 
         self.ng = 32
         self.nx = self.ng * 56
@@ -36,6 +36,7 @@ class Engine:
         self.graphics = Graphics(nx=self.nx, ny=self.ny, ng=self.ng)
         self.map = Map(nx=self.nx, ny=self.ny, ng=self.ng)
         # self.score = score
+        self.speedup = speedup
 
         self.graphics.add_obstacles(self.map._obstacles)
         self.graphics.add_castles(self.map._castles)
@@ -90,7 +91,7 @@ class Engine:
 
         self.graphics.initialize_scoreboard(knights=self.knights, score=score)
 
-        sec = input('Let us wait for user input.')
+        # sec = input('Let us wait for user input.')
 
         #     Knight(x=10,
         #            y=800,
@@ -208,7 +209,7 @@ class Engine:
         }
 
     def pickup_gem(self, x, y, team):
-        kind_mapping = {0: ('attack', 3), 1: ('health', 5), 2: ('speed', 0.5)}
+        kind_mapping = {0: ('attack', 3), 1: ('health', 5), 2: ('speed', 0.3)}
         kind = np.random.choice([0, 1, 2])
         # kind = 1
         bonus = np.random.random() * kind_mapping[kind][1]
@@ -222,7 +223,7 @@ class Engine:
                     k.speed = min(k.speed + bonus, k.max_speed)
         # print("picked up gem:", x, y, team)
 
-    def move(self, knight, time, dt, info):
+    def move(self, knight, t, dt, info):
 
         pos = knight.next_position(dt=dt)
         # print(knight.name, 'Before position', knight.x, knight.y, knight.)
@@ -286,9 +287,16 @@ class Engine:
     def run(self):
 
         # time = 0
-        dt = 1.0
-        sec = True
-        for t in range(3000):
+        # speedup = 1.0
+        # sec = True
+        t = 0
+        # start_time = time.time()
+        time_limit = 4000
+        dt = 1.0 * self.speedup
+        # for t in range(time_limit):
+        dt_count = 0
+        while t < time_limit:
+            # dt_start = time.time()
             # vec = k.direction / np.linalg.norm(k.direction)
             # new_pos = k.position + k.speed * vec
             # ix = int(new_pos[0])
@@ -296,9 +304,9 @@ class Engine:
             # self.map.ax.set_title(f'time = {time}')
             for k in self.knights:
                 info = self.get_info(knight=k)
-                k.advance_dt(time=t, dt=dt, info=info)
-                k.execute(time=t, info=info)
-                winner = self.move(knight=k, time=t, dt=dt, info=info)
+                k.advance_dt(t=t, dt=dt, info=info)
+                k.execute(t=t, info=info)
+                winner = self.move(knight=k, t=t, dt=dt, info=info)
                 if winner is not None:
                     return winner
                 # # local_env=get_local_environment(knight=k, ))
@@ -325,7 +333,12 @@ class Engine:
                     self.graphics.announce_winner(winner)
                     return winner
 
-            self.graphics.update(time=t, knights=self.knights)
+            self.graphics.update(t=t, dt_count=dt_count, knights=self.knights)
+            # input('step')
 
-            time.sleep(0.01)
+            time.sleep(0.02)
+            # dt_end = time.time()
+            # dt = dt_end - dt_start
+            t += dt
+            dt_count += 1
         self.graphics.announce_winner(None)

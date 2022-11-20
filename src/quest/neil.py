@@ -9,7 +9,7 @@ class NeilWarrior(Warrior):
         self.previous_position = [0, 0]
         self.previous_health = self.health
 
-    def execute(self, time, info):
+    def execute(self, t, info):
         # if self.cooldown >= 8:
         #     self.direction = -self.direction
         # elif all(self.position == self.previous_position):
@@ -55,7 +55,7 @@ class NeilScout(Scout):
         self.previous_position = [0, 0]
         self.previous_health = self.health
 
-    def execute(self, time, info):
+    def execute(self, t, info):
         if all(self.position == self.previous_position) or (
                 self.health < self.previous_health):
             # self.vector = np.random.choice([-1, 1],
@@ -99,7 +99,7 @@ class NeilHealer(Healer):
         self.previous_position = [0, 0]
         self.previous_health = self.health
 
-    def execute(self, time, info):
+    def execute(self, t, info):
         # if self.cooldown >= 8:
         #     self.direction = -self.direction
         # elif all(self.position == self.previous_position):

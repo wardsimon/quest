@@ -72,6 +72,7 @@ class Graphics:
         self.add_border()
 
         self.knights = {}
+        self.previous_update = -10
 
     def add_grid(self):
 
@@ -242,6 +243,14 @@ class Graphics:
             self.pen.pendown()
             self.pen.setheading(270)
             self.pen.circle(params['size'])
+            self.pen.penup()
+            self.pen.goto(params['x'], params['y'])
+            self.pen.pendown()
+            self.pen.setheading(0)
+            self.pen.write("Fountain",
+                           move=False,
+                           align="center",
+                           font=('Arial', 12, 'normal'))
 
     def add_gems(self, gems):
         x = gems['x']
@@ -355,7 +364,7 @@ class Graphics:
         self.pen.pensize(1)
         self.pen.penup()
 
-    def update_scoreboard(self, time, knights):
+    def update_scoreboard(self, t, knights):
         self.score_pen.clear()
         self.score_pen.setheading(0)
 
@@ -364,7 +373,7 @@ class Graphics:
         self.score_pen.penup()
         self.score_pen.goto(self.nx // 2 + 50, self.ny + self.topbar - 25)
         self.score_pen.pendown()
-        self.score_pen.write(str(time),
+        self.score_pen.write(str(int(t)),
                              move=False,
                              align="center",
                              font=('Arial', 18, 'normal'))
@@ -423,10 +432,12 @@ class Graphics:
         # self.pen.penup()
         # self.screen.update()
 
-    def update(self, time, knights):
-        if time % 5 == 0:
-            self.update_scoreboard(time=time, knights=knights)
+    def update(self, t, dt_count, knights):
+        if dt_count % 5 == 0:
+            self.update_scoreboard(t=t, knights=knights)
+        # if (t - self.previous_update) > (1.0 / 30.0):
         self.screen.update()
+        # self.previous_update = t
 
     def announce_winner(self, winner):
         self.pen.penup()

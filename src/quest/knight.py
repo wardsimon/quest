@@ -96,7 +96,7 @@ class Knight:
     def get_distance(self, pos):
         return np.sqrt((pos[0] - self.x)**2 + (pos[1] - self.y)**2)
 
-    def advance_dt(self, time, dt, info):
+    def advance_dt(self, t, dt, info):
         self.cooldown = max(self.cooldown - dt, 0)
         if self.avatar.distance(self.fountain['x'],
                                 self.fountain['y']) <= self.fountain['size']:
@@ -141,7 +141,7 @@ class Scout(Knight):
 
     def __init__(self, *args, **kwargs):
         self.speed = 1.5
-        self.max_speed = 5
+        self.max_speed = 3
         self.max_health = 70
         self.attack = 20
         self.view_radius = 150
@@ -152,7 +152,7 @@ class Warrior(Knight):
 
     def __init__(self, *args, **kwargs):
         self.speed = 2.0
-        self.max_speed = 7
+        self.max_speed = 4  # 5
         self.max_health = 100
         self.attack = 30
         self.view_radius = 100
@@ -163,14 +163,14 @@ class Healer(Knight):
 
     def __init__(self, *args, **kwargs):
         self.speed = 2.0
-        self.max_speed = 10
+        self.max_speed = 5  # 7
         self.max_health = 100
         self.attack = 10
         self.view_radius = 100
         super().__init__(*args, **kwargs)
 
-    def advance_dt(self, time, dt, info):
-        super().advance_dt(time, dt, info)
+    def advance_dt(self, t, dt, info):
+        super().advance_dt(t, dt, info)
         for friend in info['friends'].values():
             if self.get_distance(friend.position) < self.view_radius:
                 friend.heal(dt)
