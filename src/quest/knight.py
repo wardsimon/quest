@@ -6,16 +6,8 @@ import turtle
 
 class Knight:
 
-    def __init__(self,
-                 x,
-                 y,
-                 name,
-                 heading,
-                 team,
-                 castle,
-                 fountain,
-                 creator,
-                 kind=None):
+    def __init__(self, x, y, name, heading, team, castle, fountain, creator,
+                 number):
         # self._x = int(x)
         # self._y = int(y)
         # self.vector = vector
@@ -37,7 +29,6 @@ class Knight:
         self.avatar.setx(x)
         self.avatar.sety(y)
         self.heading = heading
-        self.previous_position = [0, 0]
         self.health = self.max_health
         self.team = team
         self.name = name
@@ -49,6 +40,7 @@ class Knight:
 
         self.castle = castle
         self.fountain = fountain
+        self.number = number
 
     def __repr__(self):
         return f'{self.name}: H:{self.health}/{self.max_health} A:{self.attack} S:{self.speed} at {self.x}, {self.y}'
@@ -104,11 +96,14 @@ class Knight:
     def get_distance(self, pos):
         return np.sqrt((pos[0] - self.x)**2 + (pos[1] - self.y)**2)
 
-    def advance_dt(self, time, dt):
+    def advance_dt(self, time, dt, info):
         self.cooldown = max(self.cooldown - dt, 0)
         if self.avatar.distance(self.fountain['x'],
                                 self.fountain['y']) <= self.fountain['size']:
-            self.health = min(self.max_health, self.health + dt)
+            self.heal(dt)
+
+    def heal(self, value):
+        self.health = min(self.max_health, self.health + value)
 
     def move(self, dt):
         self.avatar.forward(self.speed * dt)
@@ -145,7 +140,8 @@ class Knight:
 class Scout(Knight):
 
     def __init__(self, *args, **kwargs):
-        self.speed = 2.0
+        self.speed = 1.5
+        self.max_speed = 5
         self.max_health = 70
         self.attack = 20
         self.view_radius = 150
@@ -156,7 +152,25 @@ class Warrior(Knight):
 
     def __init__(self, *args, **kwargs):
         self.speed = 2.0
+        self.max_speed = 7
         self.max_health = 100
-        self.attack = 33
+        self.attack = 30
         self.view_radius = 100
         super().__init__(*args, **kwargs)
+
+
+class Healer(Knight):
+
+    def __init__(self, *args, **kwargs):
+        self.speed = 2.0
+        self.max_speed = 10
+        self.max_health = 100
+        self.attack = 10
+        self.view_radius = 100
+        super().__init__(*args, **kwargs)
+
+    def advance_dt(self, time, dt, info):
+        super().advance_dt(time, dt, info)
+        for friend in info['friends'].values():
+            if self.get_distance(friend.position) < self.view_radius:
+                friend.heal(dt)

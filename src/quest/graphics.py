@@ -325,14 +325,14 @@ class Graphics:
 
         healthbar_dx = 300
         healthbar_dy = 15
-        counts = {'red': 0, 'blue': 0}
+        # counts = {'red': 0, 'blue': 0}
         for knight in knights:
             self.pen.pensize(2)
             if knight.team == 'red':
                 x = 0
             else:
                 x = self.nx - healthbar_dx
-            y = self.ny + 10 + (counts[knight.team] * (healthbar_dy + 15))
+            y = self.ny + 10 + (knight.number * (healthbar_dy + 15))
             rectangle(self.pen,
                       x=x,
                       y=y,
@@ -351,7 +351,7 @@ class Graphics:
                            align="left",
                            font=('Arial', 10, 'normal'))
 
-            counts[knight.team] += 1
+            # counts[knight.team] += 1
         self.pen.pensize(1)
         self.pen.penup()
 
@@ -371,7 +371,7 @@ class Graphics:
 
         healthbar_dx = 300
         healthbar_dy = 15
-        counts = {'red': 0, 'blue': 0}
+        # counts = {'red': 0, 'blue': 0}
         for knight in knights:
             self.score_pen.pensize(1)
             perc = knight.health / knight.max_health
@@ -379,7 +379,7 @@ class Graphics:
                 x = 0
             else:
                 x = self.nx - healthbar_dx
-            y = self.ny + 10 + (counts[knight.team] * (healthbar_dy + 15))
+            y = self.ny + 10 + (knight.number * (healthbar_dy + 15))
             if perc > 0.5:
                 fill = 'lime'
             elif perc < 0.2:
@@ -418,7 +418,7 @@ class Graphics:
                                  align=align,
                                  font=('Arial', 10, 'normal'))
 
-            counts[knight.team] += 1
+            # counts[knight.team] += 1
 
         # self.pen.penup()
         # self.screen.update()
