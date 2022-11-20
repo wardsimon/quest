@@ -3,11 +3,17 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import turtle
 
+SPEED = {'scout': 1.5, 'warrior': 2.0, 'healer': 2.0}
+MAX_SPEED = {'scout': 3, 'warrior': 5, 'healer': 7}
+MAX_HEALTH = {'scout': 70, 'warrior': 100, 'healer': 100}
+ATTACK = {'scout': 20, 'warrior': 30, 'healer': 10}
+VIEW_RADIUS = {'scout': 150, 'warrior': 100, 'healer': 100}
+
 
 class Knight:
 
-    def __init__(self, x, y, name, heading, team, castle, fountain, creator,
-                 number, AI):
+    def __init__(self, x, y, name, heading, team, castle, fountain, number,
+                 AI):
         # self._x = int(x)
         # self._y = int(y)
         # self.vector = vector
@@ -29,10 +35,9 @@ class Knight:
         self.avatar.setx(x)
         self.avatar.sety(y)
         self.heading = heading
-        self.health = self.max_health
         self.team = team
         self.name = name
-        self.creator = creator
+        # self.creator = creator
         self.cooldown = 0
         self.avatar.color(self.team)
         self.avatar_circle.color(self.team)
@@ -42,7 +47,14 @@ class Knight:
         self.fountain = fountain
         self.number = number
 
-        self.ai = AI()
+        self.ai = AI(team=team)
+
+        self.speed = SPEED[self.ai.kind]
+        self.max_speed = MAX_SPEED[self.ai.kind]
+        self.max_health = MAX_HEALTH[self.ai.kind]
+        self.attack = ATTACK[self.ai.kind]
+        self.view_radius = VIEW_RADIUS[self.ai.kind]
+        self.health = self.max_health
 
     def __repr__(self):
         return f'{self.name}: H:{self.health}/{self.max_health} A:{self.attack} S:{self.speed} at {self.x}, {self.y}'
@@ -103,6 +115,21 @@ class Knight:
         if self.avatar.distance(self.fountain['x'],
                                 self.fountain['y']) <= self.fountain['size']:
             self.heal(dt)
+        if self.ai.kind == 'healer':
+            for friend in info['friends'].values():
+                if self.get_distance(friend.position) < self.view_radius:
+                    friend.heal(dt)
+
+    def execute_ai(self, t, dt, info):
+        self.ai.run(t, dt, info)
+        if None not in (self.ai.heading, self.ai.goto):
+            print(
+                'Warning, both heading and goto are set in AI, results may be unpredictable!'
+            )
+        if self.ai.heading is not None:
+            self.heading = self.ai.heading
+        if self.ai.goto is not None:
+            self.goto(*self.ai.goto)
 
     def heal(self, value):
         self.health = min(self.max_health, self.health + value)
@@ -139,40 +166,38 @@ class Knight:
         self.avatar.left(angle)
 
 
-class Scout(Knight):
+# class Scout(Knight):
 
-    def __init__(self, *args, **kwargs):
-        self.speed = 1.5
-        self.max_speed = 3
-        self.max_health = 70
-        self.attack = 20
-        self.view_radius = 150
-        super().__init__(*args, **kwargs)
+#     def __init__(self, *args, **kwargs):
+#         self.speed = 1.5
+#         self.max_speed = 3
+#         self.max_health = 70
+#         self.attack = 20
+#         self.view_radius = 150
+#         super().__init__(*args, **kwargs)
 
+# class Warrior(Knight):
 
-class Warrior(Knight):
+#     def __init__(self, *args, **kwargs):
+#         self.speed = 2.0
+#         self.max_speed = 4  # 5
+#         self.max_health = 100
+#         self.attack = 30
+#         self.view_radius = 100
+#         super().__init__(*args, **kwargs)
 
-    def __init__(self, *args, **kwargs):
-        self.speed = 2.0
-        self.max_speed = 4  # 5
-        self.max_health = 100
-        self.attack = 30
-        self.view_radius = 100
-        super().__init__(*args, **kwargs)
+# class Healer(Knight):
 
+#     def __init__(self, *args, **kwargs):
+#         self.speed = 2.0
+#         self.max_speed = 5  # 7
+#         self.max_health = 100
+#         self.attack = 10
+#         self.view_radius = 100
+#         super().__init__(*args, **kwargs)
 
-class Healer(Knight):
-
-    def __init__(self, *args, **kwargs):
-        self.speed = 2.0
-        self.max_speed = 5  # 7
-        self.max_health = 100
-        self.attack = 10
-        self.view_radius = 100
-        super().__init__(*args, **kwargs)
-
-    def advance_dt(self, t, dt, info):
-        super().advance_dt(t, dt, info)
-        for friend in info['friends'].values():
-            if self.get_distance(friend.position) < self.view_radius:
-                friend.heal(dt)
+#     def advance_dt(self, t, dt, info):
+#         super().advance_dt(t, dt, info)
+#         for friend in info['friends'].values():
+#             if self.get_distance(friend.position) < self.view_radius:
+#                 friend.heal(dt)

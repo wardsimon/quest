@@ -1,6 +1,7 @@
 from game_map import Map
 from graphics import Graphics
 from fight import fight
+from knight import Knight
 
 from dataclasses import dataclass
 import matplotlib.patches as patches
@@ -24,6 +25,23 @@ import time
 #     for i in range(n):
 #         array[inds[i] % game_map.nx, inds[i] // game_map.nx] = kind[i]
 #     return array
+
+
+def make_properties_dict(knight):
+    return {
+        'x': knight.x,
+        'y': knight.y,
+        'position': knight.position,
+        'attack': knight.attack,
+        'health': knight.health,
+        'speed': knight.speed,
+        'heading': knight.heading,
+        'vector': knight.vector,
+        'cooldown': knight.cooldown,
+        'view_radius': knight.view_radius,
+        'max_health': knight.max_health,
+        'message': knight.ai.message
+    }
 
 
 class Engine:
@@ -72,11 +90,11 @@ class Engine:
 
         self.knights = []
         for team, names in team_knights.items():
-            for n, (name, Knight) in enumerate(names.items()):
+            for n, (name, ai) in enumerate(names.items()):
                 self.knights.append(
                     Knight(
                         x=self.map._castles[team]['x'] +
-                        self.map._castles['dx'] * 0.75 *
+                        self.map._castles['dx'] * 0.7 *
                         (1 - 2.0 * (int(team == 'blue'))),
                         y=int(self.map._castles[team]['y'] -
                               0.5 * self.map._castles['dx'] +
@@ -87,7 +105,8 @@ class Engine:
                         team=team,
                         castle=self.map._castles[team],
                         fountain=self.map._fountains[team],
-                        number=n))
+                        number=n,
+                        AI=ai))
 
         self.graphics.initialize_scoreboard(knights=self.knights, score=score)
 
@@ -133,20 +152,7 @@ class Engine:
         local_map[invalid] = -1
         return local_map
 
-    def make_properties_dict(self, knight):
-        return {
-            'x': knight.x,
-            'y': knight.y,
-            'attack': knight.attack,
-            'health': knight.health,
-            'speed': knight.speed,
-            'heading': knight.heading,
-            'vector': knight.vector,
-            'cooldown': knight.cooldown,
-            'view_radius': knight.view_radius
-        }
-
-    def get_info(self, knight):
+    def get_info(self, knight, friends_as_dict=False):
         r = knight.view_radius
         # local_map = self.map.array[knight.x - dx:knight.x + dx,
         #                            knight.y - dx:knight.y + dx].copy()
@@ -171,7 +177,10 @@ class Engine:
                     #     'view_radius': k.view_radius
                     # }
             elif k.name != knight.name:
-                friends[k.name] = props
+                if friends_as_dict:
+                    friends[k.name] = props
+                else:
+                    friends[k.name] = k
             else:
                 my_props = props
 
@@ -275,7 +284,8 @@ class Engine:
                             self.graphics.erase_gem(x=x, y=y)
                             break
 
-                knight.move(dt)
+                if not knight.ai.stop:
+                    knight.move(dt)
 
         # self.circles[knight.name][0].center = (knight.x, knight.y)
         # self.circles[knight.name][1].center = (knight.x, knight.y)
@@ -299,7 +309,7 @@ class Engine:
         opposing_team = 'red' if knight.team == 'blue' else 'blue'
         if knight.get_distance(self.map._flags[opposing_team]) < 5.0:
             self.graphics.announce_winner(knight.team)
-            print(knight.team, 'team wins!')
+            # print(knight.team, 'team wins!')
             return knight.team
 
     def run(self):
@@ -321,9 +331,10 @@ class Engine:
             # iy = int(new_pos[1])
             # self.map.ax.set_title(f'time = {time}')
             for k in self.knights:
-                info = self.get_info(knight=k)
-                k.advance_dt(t=t, dt=dt, info=info)
-                k.ai.run(t=t, info=info)
+                k.advance_dt(t=t, dt=dt, info=self.get_info(knight=k))
+                # need to update into after advance step
+                info = self.get_info(knight=k, friends_as_dict=True)
+                k.execute_ai(t=t, dt=dt, info=info)
                 winner = self.move(knight=k, t=t, dt=dt, info=info)
                 if winner is not None:
                     return winner
@@ -354,7 +365,7 @@ class Engine:
             self.graphics.update(t=t, dt_count=dt_count, knights=self.knights)
             # input('step')
 
-            time.sleep(0.02)
+            time.sleep(0.015)
             # dt_end = time.time()
             # dt = dt_end - dt_start
             t += dt

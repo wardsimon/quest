@@ -355,7 +355,7 @@ class Graphics:
                 self.nx // 2 + 260 * (1 - 2 * int(knight.team == 'red')), y)
             self.pen.pendown()
             self.pen.color(knight.team)
-            self.pen.write(knight.creator,
+            self.pen.write(knight.ai.creator,
                            move=False,
                            align="left",
                            font=('Arial', 10, 'normal'))
@@ -450,8 +450,9 @@ class Graphics:
                            align="center",
                            font=('Arial', 100, 'normal'))
         else:
+            print(winner, 'team wins!')
             self.pen.color(winner)
-            self.pen.write(f"Team {winner} wins!",
+            self.pen.write(f"{winner} team wins!",
                            move=False,
                            align="center",
                            font=('Arial', 100, 'normal'))

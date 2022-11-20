@@ -22,7 +22,7 @@ class Map:
         # self.fig.show()
 
     def _make_obstacles(self, n=50):
-        free_zone = 180
+        free_zone = 190
         posx = np.random.random(n) * (self.nx - (2 * free_zone)) + free_zone
         posy = np.random.random(n) * self.ny
         dx = 40
