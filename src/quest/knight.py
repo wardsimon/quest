@@ -37,16 +37,12 @@ class Knight:
         self.avatar.setx(x)
         self.avatar.sety(y)
         self.heading = heading
-        self.speed = 2.0
         self.previous_position = [0, 0]
-        self.max_health = 100
         self.health = self.max_health
-        self.attack = 33
         self.team = team
         self.name = name
         self.creator = creator
         self.cooldown = 0
-        self.view_radius = 100
         self.avatar.color(self.team)
         self.avatar_circle.color(self.team)
         self.avatar_name.color(self.team)
@@ -145,35 +141,22 @@ class Knight:
     def left(self, angle):
         self.avatar.left(angle)
 
-    # def execute(self, time, intel):
-    #     # if self.cooldown >= 8:
-    #     #     self.direction = -self.direction
-    #     # elif all(self.position == self.previous_position):
-    #     #     self.direction = np.random.choice([-1, 1],
-    #     #                                       size=2) * np.random.random(2)
-    #     if all(self.position == self.previous_position) or (self.cooldown >=
-    #                                                         49):
-    #         # self.vector = np.random.choice([-1, 1],
-    #         #                                size=2) * np.random.random(2)
-    #         self.heading = np.random.random() * 360.0
 
-    #     elif len(intel['flags']) == 2:
-    #         enemy_team = 'red' if self.team == 'blue' else 'blue'
-    #         flag_pos = intel['flags'][enemy_team]
-    #         # print(self, 'going to capture', enemy_team, 'flag at', flag_pos)
-    #         self.goto(*flag_pos)
+class Scout(Knight):
 
-    #     elif len(intel['enemies']) > 0:
-    #         name = list(intel['enemies'].keys())[0]
-    #         target = intel['enemies'][name]
-    #         # print(self, 'going to kill', name)
-    #         self.goto(target['x'], target['y'])
+    def __init__(self, *args, **kwargs):
+        self.speed = 2.0
+        self.max_health = 70
+        self.attack = 20
+        self.view_radius = 150
+        super().__init__(*args, **kwargs)
 
-    #     elif len(intel['gems']) > 0:
-    #         # print(self, 'going to pick up gem at', intel['gems'][0])
-    #         self.goto(*intel['gems'][0])
 
-    #     # if self.name == 'Arthur':
-    #     #     self.goto(10, 500)
+class Warrior(Knight):
 
-    #     self.previous_position = self.position
+    def __init__(self, *args, **kwargs):
+        self.speed = 2.0
+        self.max_health = 100
+        self.attack = 33
+        self.view_radius = 100
+        super().__init__(*args, **kwargs)
