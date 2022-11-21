@@ -10,7 +10,7 @@ from fight import fight
 from engine import Engine
 
 from neilAI import team as NeilTeam
-# from mads import team as MadsTeam
+from mads import team as MadsTeam
 
 
 def generate_match_list(participants):
@@ -92,7 +92,7 @@ def start_match(red_team, blue_team, round_number, starting_score, speedup):
 if __name__ == '__main__':
     participants = {
         'Neil': NeilTeam,
-        'Mads': NeilTeam,
+        'Mads': MadsTeam,
         # 'Greg': NeilTeam,
         # 'Drew': MadsTeam
     }

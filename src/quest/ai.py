@@ -6,7 +6,7 @@ class BaseAI:
     def __init__(self, team, kind, creator=None):
         self.team = team
         self.opposing_team = 'red' if self.team == 'blue' else 'blue'
-        self.kind = kind
+        self.kind = kind.lower()
         self.heading = None
         self.goto = None
         self.message = None
