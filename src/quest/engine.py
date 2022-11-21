@@ -233,7 +233,8 @@ class Engine:
             'enemies': enemies,
             'gems': gems,
             'flags': flags,
-            'me': my_props
+            'me': my_props,
+            'fountain': self._fountains[knight.team]
         }
 
     def pickup_gem(self, x, y, team):
