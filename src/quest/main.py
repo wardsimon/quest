@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 from itertools import combinations
 from random import shuffle
+import turtle
 
 from game_map import Map
 from knight import Knight
@@ -48,9 +49,7 @@ def starting_match_index_and_score(match_list):
         return 0, -1, {'red': 0, 'blue': 0}
 
 
-def end_match():
-    with open('score.txt', 'a') as f:
-        f.write(':END\n')
+def show_scores():
     with open('score.txt', 'r') as f:
         scores = f.readlines()
     participants = {}
@@ -80,11 +79,31 @@ def end_match():
             participants[blue_team]['victories'] += blue_victory
 
     print('======= SCORES =======')
+    text = ''
     for k, v in sorted(participants.items(),
                        key=lambda item:
                        (item[1]['points'], item[1]['victories']),
                        reverse=True):
-        print(f"{k}: points={v['points']}, victories={v['victories']}")
+        string = f"{k}: points={v['points']}, victories={v['victories']}"
+        print(string)
+        text += string + '\n'
+    screen = turtle.Screen()
+    screen.clearscreen()
+    screen.tracer(0)
+    pen = turtle.Turtle()
+    pen.speed(0)
+    pen.hideturtle()
+    pen.penup()
+    pen.goto(500, 800)
+    pen.pendown()
+    pen.write(string, move=False, align="left", font=('Arial', 14, 'normal'))
+    pen.penup()
+
+
+def end_match():
+    with open('score.txt', 'a') as f:
+        f.write(':END\n')
+    show_scores()
 
 
 def start_match(red_team, blue_team, round_number, starting_score, speedup):
@@ -147,3 +166,5 @@ if __name__ == '__main__':
                     starting_score=score,
                     speedup=3.0)
         end_match()
+
+    input('End of tournament!')
