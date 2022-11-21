@@ -8,6 +8,7 @@ from game_map import Map
 from knight import Knight
 from fight import fight
 from engine import Engine
+# from plot import plot_score
 
 from neilAI import team as NeilTeam
 from mads import team as MadsTeam
@@ -50,11 +51,45 @@ def starting_match_index_and_score(match_list):
 def end_match():
     with open('score.txt', 'a') as f:
         f.write(':END\n')
+    with open('score.txt', 'r') as f:
+        scores = f.readlines()
+    participants = {}
+    for line in scores:
+        final_score = line.split('|')[-1].split(':')
+        red_team = final_score[2]
+        red_score = final_score[3]
+        blue_team = final_score[4]
+        blue_score = final_score[5]
+        red_victory = int(red_score > blue_score)
+        blue_victory = int(blue_score > red_score)
+        if red_team not in participants:
+            participants[red_team] = {
+                'points': red_score,
+                'victories': red_victory
+            }
+        else:
+            participants[red_team]['points'] += red_score
+            participants[red_team]['victories'] += red_victory
+        if blue_team not in participants:
+            participants[blue_team] = {
+                'points': blue_score,
+                'victories': blue_victory
+            }
+        else:
+            participants[blue_team]['points'] += blue_score
+            participants[blue_team]['victories'] += blue_victory
+
+    print('======= SCORES =======')
+    for k, v in sorted(participants.items(),
+                       key=lambda item:
+                       (item[1]['points'], item[1]['victories']),
+                       reverse=True):
+        print(f"{k}: points={v['points']}, victories={v['victories']}")
 
 
 def start_match(red_team, blue_team, round_number, starting_score, speedup):
     best_of = 5
-    first_to = 3
+    first_to = 1
 
     match_score = {
         'red': starting_score['red'],
@@ -77,12 +112,13 @@ def start_match(red_team, blue_team, round_number, starting_score, speedup):
             f.write(
                 f"|Round:{match_score['count']}:{red_team[0]}:{match_score['red']}:{blue_team[0]}:{match_score['blue']}"
             )
+        # plot_score()
         for team in ('red', 'blue'):
             if match_score[team] == first_to:
                 # end_match()
                 # print('score first_to was reached', team, match_score[team])
                 return
-        input('start next round')
+        # input('start next round')
     # end_match()
     # with open('score.txt', 'a') as f:
     #     f.write(':END\n')
@@ -104,10 +140,10 @@ if __name__ == '__main__':
     for i in range(match_index, len(match_list)):
         red = match_list[i][0]
         blue = match_list[i][1]
-        # print(red, blue)
+        input(f'Next match is: red={red} VS blue={blue}')
         start_match(red_team=(red, participants[red]),
                     blue_team=(blue, participants[blue]),
                     round_number=round_number,
                     starting_score=score,
-                    speedup=1.0)
+                    speedup=3.0)
         end_match()

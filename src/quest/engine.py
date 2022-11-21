@@ -140,6 +140,10 @@ class Engine:
         # # m.ax.add_patch(circle)
         # sec = input('Let us wait for user input.')
     def get_local_map(self, x, y, radius):
+        # xmin = max(x - radius, 0)
+        # xmax = min(x + radius + 1, self.nx - 1)
+        # ymin = max(y - radius, 0)
+        # ymax = min(y + radius + 1, self.ny - 1)
         xmin = max(x - radius, 0)
         xmax = min(x + radius + 1, self.nx - 1)
         ymin = max(y - radius, 0)
@@ -234,7 +238,7 @@ class Engine:
             'gems': gems,
             'flags': flags,
             'me': my_props,
-            'fountain': self._fountains[knight.team]
+            'fountain': self.map._fountains[knight.team]
         }
 
     def pickup_gem(self, x, y, team):
