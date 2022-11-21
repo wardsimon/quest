@@ -395,6 +395,8 @@ class Graphics:
                 fill = 'red'
             else:
                 fill = 'gold'
+            if knight.cooldown > 0:
+                fill = 'cyan'
             rectangle(self.score_pen,
                       x=x + 1,
                       y=y + 2,

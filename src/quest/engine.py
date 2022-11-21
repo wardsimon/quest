@@ -95,7 +95,7 @@ class Engine:
                 self.knights.append(
                     Knight(
                         x=self.map._castles[team]['x'] +
-                        self.map._castles['dx'] * 0.7 *
+                        self.map._castles['dx'] * 0.6 *
                         (1 - 2.0 * (int(team == 'blue'))),
                         y=int(self.map._castles[team]['y'] -
                               0.5 * self.map._castles['dx'] +

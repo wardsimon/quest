@@ -114,11 +114,11 @@ class Knight:
         self.cooldown = max(self.cooldown - dt, 0)
         if self.avatar.distance(self.fountain['x'],
                                 self.fountain['y']) <= self.fountain['size']:
-            self.heal(dt)
+            self.heal(0.5 * dt)
         if self.ai.kind == 'healer':
             for friend in info['friends'].values():
                 if self.get_distance(friend.position) < self.view_radius:
-                    friend.heal(dt)
+                    friend.heal(0.5 * dt)
 
     def execute_ai(self, t, dt, info):
         self.ai.run(t, dt, info)
