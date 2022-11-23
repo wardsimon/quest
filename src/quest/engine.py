@@ -386,8 +386,13 @@ class Engine:
                 # del self.circles[k.name]
                 self.knights.remove(k)
                 self.team_counts[k.team] -= 1
-                if self.team_counts[k.team] == 0:
-                    winner = 'red' if k.team == 'blue' else 'blue'
+            if self.team_counts['red'] + self.team_counts['blue'] == 0:
+                winner = None
+                self.graphics.announce_winner(winner)
+                return winner
+            for team in ('red', 'blue'):
+                if self.team_counts[team] == 0:
+                    winner = 'red' if team == 'blue' else 'blue'
                     self.graphics.announce_winner(winner)
                     return winner
 
