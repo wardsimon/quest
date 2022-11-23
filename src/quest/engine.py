@@ -258,40 +258,47 @@ class Engine:
 
     def move(self, knight, t, dt, info):
 
-        pos = knight.next_position(dt=dt)
-        # print(knight.name, 'Before position', knight.x, knight.y, knight.)
-        # print(knight.name, 'Next position', pos)
-        if (pos[0] >= 0) and (pos[0] < self.map.nx) and (pos[1] >= 0) and (
-                pos[1] < self.map.ny):
-            pos2 = knight.next_position(dt=1.01 * np.sqrt(2.0) / knight.speed)
-            if (self.map.array[pos[0], pos[1]] !=
-                    1) and (self.map.array[pos2[0], pos2[1]] != 1):
-                # if (self.map.array[pos[0], pos[1]] != 1):
+        if info['gems']:
+            for x, y in zip(info['gems']['x'], info['gems']['y']):
+                # x = info['gems']['x'][igem]
+                # y = info['gems']['y'][igem]
+                # print(
+                #     knight.name, 'gem distance',
+                #     knight.get_distance((x, y)), (knight.speed * dt),
+                #     knight.get_distance((x, y)) <= (knight.speed * dt))
+                if (knight.get_distance((x, y)) <=
+                    (knight.speed * dt)) and (abs(
+                        abs(
+                            knight.avatar.towards(x, y) -
+                            knight.avatar.heading() - 180) - 180) < 10):
+                    # x = gem[0]
+                    # y = gem[1]
+                    # print(knight.name, "found gem at", x, y)
+                    self.pickup_gem(x=x, y=y, team=knight.team)
+                    self.map.array[x, y] = 0
+                    self.graphics.erase_gem(x=x, y=y)
+                    break
 
-                if info['gems']:
-                    for x, y in zip(info['gems']['x'], info['gems']['y']):
-                        # x = info['gems']['x'][igem]
-                        # y = info['gems']['y'][igem]
-                        # print(
-                        #     knight.name, 'gem distance',
-                        #     knight.get_distance((x, y)), (knight.speed * dt),
-                        #     knight.get_distance((x, y)) <= (knight.speed * dt))
-                        if (knight.get_distance((x, y)) <=
-                            (knight.speed * dt)) and (abs(
-                                abs(
-                                    knight.avatar.towards(x, y) -
-                                    knight.avatar.heading() - 180) - 180) <
-                                                      10):
-                            # x = gem[0]
-                            # y = gem[1]
-                            # print(knight.name, "found gem at", x, y)
-                            self.pickup_gem(x=x, y=y, team=knight.team)
-                            self.map.array[x, y] = 0
-                            self.graphics.erase_gem(x=x, y=y)
-                            break
+        pos = knight.ray_trace(dt=dt)
+        above_xmin = np.amin(pos[0]) >= 0
+        below_xmax = np.amax(pos[0]) < self.map.nx
+        above_ymin = np.amin(pos[1]) >= 0
+        below_ymax = np.amax(pos[1]) < self.map.ny
+        xpos = np.minimum(np.maximum(pos[0], 0), self.map.nx - 1)
+        ypos = np.minimum(np.maximum(pos[1], 0), self.map.ny - 1)
+        no_obstacles = (np.sum(self.map.array[(xpos, ypos)] == 1)) == 0
+        if (above_xmin and below_xmax and above_ymin and below_ymax
+                and no_obstacles and (not knight.ai.stop)):
+            # # print(knight.name, 'Before position', knight.x, knight.y, knight.)
+            # # print(knight.name, 'Next position', pos)
+            # if (pos[0] >= 0) and (pos[0] < self.map.nx) and (pos[1] >= 0) and (
+            #         pos[1] < self.map.ny):
+            #     pos2 = knight.next_position(dt=1.01 * np.sqrt(2.0) / knight.speed)
+            #     if (self.map.array[pos[0], pos[1]] !=
+            #             1) and (self.map.array[pos2[0], pos2[1]] != 1):
+            #         # if (self.map.array[pos[0], pos[1]] != 1):
 
-                if not knight.ai.stop:
-                    knight.move(dt)
+            knight.move(dt)
 
         # self.circles[knight.name][0].center = (knight.x, knight.y)
         # self.circles[knight.name][1].center = (knight.x, knight.y)
@@ -313,7 +320,21 @@ class Engine:
         #         self.graphics.erase_gem(x=x, y=y)
 
         opposing_team = 'red' if knight.team == 'blue' else 'blue'
-        if knight.get_distance(self.map._flags[opposing_team]) < 5.0:
+
+        # for x, y in zip(info['gems']['x'], info['gems']['y']):
+        # x = info['gems']['x'][igem]
+        # y = info['gems']['y'][igem]
+        # print(
+        #     knight.name, 'gem distance',
+        #     knight.get_distance((x, y)), (knight.speed * dt),
+        #     knight.get_distance((x, y)) <= (knight.speed * dt))
+        # if knight.get_distance(self.map._flags[opposing_team]) < 5.0:
+        x, y = self.map._flags[opposing_team]
+        if (knight.get_distance((x, y)) <= (knight.speed * dt)) and (abs(
+                abs(
+                    knight.avatar.towards(x, y) - knight.avatar.heading() -
+                    180) - 180) < 10):
+            # x = gem[0]
             self.graphics.announce_winner(knight.team)
             # print(knight.team, 'team wins!')
             return knight.team
@@ -371,7 +392,7 @@ class Engine:
             self.graphics.update(t=t, dt_count=dt_count, knights=self.knights)
             # input('step')
 
-            time.sleep(0.015)
+            time.sleep(0.01)
             # dt_end = time.time()
             # dt = dt_end - dt_start
             t += dt

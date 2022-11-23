@@ -98,14 +98,19 @@ class Knight:
         h = self.heading * np.pi / 180.0
         return np.array([np.cos(h), np.sin(h)])
 
-    def next_position(self, dt):
+    def ray_trace(self, dt):
         # vec = self.vector / np.linalg.norm(self.vector)
         # print(np.linalg.norm(self.speed * vec * dt))
         # print(np.linalg.norm(vec), vec)
         # print(self.position, self.speed, self.vector, dt)
-        new_pos = np.array(
-            self.avatar.position()) + self.speed * self.vector * dt
-        return new_pos.astype(int)
+        # new_pos = np.array(
+        #     self.avatar.position()) + self.speed * self.vector * dt
+
+        vt = self.speed * dt
+        ray = self.vector.reshape((2, 1)) * np.linspace(1, vt, int(vt) + 1)
+        return (np.array(self.avatar.position()).reshape(
+            (2, 1)) + ray).astype(int)
+        # return new_pos.astype(int)
 
     def get_distance(self, pos):
         return np.sqrt((pos[0] - self.x)**2 + (pos[1] - self.y)**2)
