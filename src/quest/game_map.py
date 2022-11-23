@@ -21,7 +21,7 @@ class Map:
         # self._make_castle()
         # self.fig.show()
 
-    def _make_obstacles(self, n=50):
+    def _make_obstacles(self, n=100):
         free_zone = 200
         posx = np.random.random(n) * (self.nx - (2 * free_zone)) + free_zone
         posy = np.random.random(n) * self.ny

@@ -41,7 +41,8 @@ def make_properties_dict(knight):
         'cooldown': knight.cooldown,
         'view_radius': knight.view_radius,
         'max_health': knight.max_health,
-        'message': knight.ai.message
+        'message': knight.ai.message,
+        'team': knight.team
     }
 
 
@@ -242,7 +243,7 @@ class Engine:
         }
 
     def pickup_gem(self, x, y, team):
-        kind_mapping = {0: ('attack', 3), 1: ('health', 5), 2: ('speed', 0.3)}
+        kind_mapping = {0: ('attack', 2), 1: ('health', 5), 2: ('speed', 0.3)}
         kind = np.random.choice([0, 1, 2])
         # kind = 1
         bonus = np.random.random() * kind_mapping[kind][1]
@@ -335,7 +336,7 @@ class Engine:
                     knight.avatar.towards(x, y) - knight.avatar.heading() -
                     180) - 180) < 10):
             # x = gem[0]
-            self.graphics.announce_winner(knight.team)
+            # self.graphics.announce_winner(knight.team)
             # print(knight.team, 'team wins!')
             return knight.team
 
@@ -364,6 +365,7 @@ class Engine:
                 k.execute_ai(t=t, dt=dt, info=info)
                 winner = self.move(knight=k, t=t, dt=dt, info=info)
                 if winner is not None:
+                    self.graphics.announce_winner(winner)
                     return winner
                 # # local_env=get_local_environment(knight=k, ))
                 # pos = k.next_position(dt=dt)

@@ -49,7 +49,7 @@ def starting_match_index_and_score(match_list):
         return 0, -1, {'red': 0, 'blue': 0}
 
 
-def show_scores():
+def show_scores(next_match=None):
     with open('score.txt', 'r') as f:
         scores = f.readlines()
     participants = {}
@@ -63,30 +63,31 @@ def show_scores():
         blue_victory = int(blue_score > red_score)
         if red_team not in participants:
             participants[red_team] = {
-                'points': red_score,
-                'victories': red_victory
+                'rounds': red_score,
+                'matches': red_victory
             }
         else:
-            participants[red_team]['points'] += red_score
-            participants[red_team]['victories'] += red_victory
+            participants[red_team]['rounds'] += red_score
+            participants[red_team]['matches'] += red_victory
         if blue_team not in participants:
             participants[blue_team] = {
-                'points': blue_score,
-                'victories': blue_victory
+                'rounds': blue_score,
+                'matches': blue_victory
             }
         else:
-            participants[blue_team]['points'] += blue_score
-            participants[blue_team]['victories'] += blue_victory
+            participants[blue_team]['rounds'] += blue_score
+            participants[blue_team]['matches'] += blue_victory
 
-    print('======= SCORES =======')
-    text = ''
+    text = '======= SCORES =======\n'
     for k, v in sorted(participants.items(),
                        key=lambda item:
-                       (item[1]['points'], item[1]['victories']),
+                       (item[1]['rounds'], item[1]['matches']),
                        reverse=True):
-        string = f"{k}: points={v['points']}, victories={v['victories']}"
-        print(string)
+        string = f"{k}: rounds won={v['rounds']}, matches won={v['matches']}"
         text += string + '\n'
+    print(text)
+    if next_match is not None:
+        text += next_match + '\n'
     screen = turtle.Screen()
     screen.clearscreen()
     screen.tracer(0)
@@ -96,19 +97,19 @@ def show_scores():
     pen.penup()
     pen.goto(500, 800)
     pen.pendown()
-    pen.write(string, move=False, align="left", font=('Arial', 14, 'normal'))
+    pen.write(text, move=False, align="left", font=('Arial', 18, 'normal'))
     pen.penup()
 
 
-def end_match():
+def end_match(next_match=None):
     with open('score.txt', 'a') as f:
         f.write(':END\n')
-    show_scores()
+    show_scores(next_match=next_match)
 
 
 def start_match(red_team, blue_team, round_number, starting_score, speedup):
     best_of = 5
-    first_to = 1
+    first_to = 3
 
     match_score = {
         'red': starting_score['red'],
@@ -137,7 +138,9 @@ def start_match(red_team, blue_team, round_number, starting_score, speedup):
                 # end_match()
                 # print('score first_to was reached', team, match_score[team])
                 return
-        # input('start next round')
+        input(
+            f"Current score: red={match_score['red']} blue={match_score['blue']}. Start next round"
+        )
     # end_match()
     # with open('score.txt', 'a') as f:
     #     f.write(':END\n')
@@ -165,6 +168,10 @@ if __name__ == '__main__':
                     round_number=round_number,
                     starting_score=score,
                     speedup=3.0)
-        end_match()
+        next_match = None
+        if i < len(match_list) - 1:
+            next_match = f'Next match is: red={match_list[i+1][0]} VS blue={match_list[i+1][1]}'
+        end_match(next_match=next_match)
 
+    show_scores()
     input('End of tournament!')

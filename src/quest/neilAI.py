@@ -46,6 +46,19 @@ class NeilWarrior(BaseAI):
             # input('enter')
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
 
+        elif t % 5 == 0:
+            if me['team'] == 'red':
+                if me['x'] > 56 * 32 - 200:
+                    head = np.random.random() * 360.0
+                else:
+                    head = 0
+            else:
+                if me['x'] < 200:
+                    head = np.random.random() * 360.0
+                else:
+                    head = 180
+            self.heading = head
+
         self.previous_position = me['position']
         self.previous_health = me['health']
 
@@ -97,6 +110,19 @@ class NeilScout(BaseAI):
             #       info['gems']['y'][0])
             # input('enter')
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
+
+        elif t % 5 == 0:
+            if me['team'] == 'red':
+                if me['x'] > 56 * 32 - 200:
+                    head = np.random.random() * 360.0
+                else:
+                    head = 0
+            else:
+                if me['x'] < 200:
+                    head = np.random.random() * 360.0
+                else:
+                    head = 180
+            self.heading = head
 
         self.previous_position = me['position']
         self.previous_health = me['health']
@@ -157,6 +183,18 @@ class NeilHealer(BaseAI):
             #       info['gems']['y'][0])
             # input('enter')
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
+        elif t % 5 == 0:
+            if me['team'] == 'red':
+                if me['x'] > (56 * 32) - 200:
+                    head = np.random.random() * 360.0
+                else:
+                    head = 0
+            else:
+                if me['x'] < 200:
+                    head = np.random.random() * 360.0
+                else:
+                    head = 180
+            self.heading = head
 
         self.previous_position = me['position']
         self.previous_health = me['health']
