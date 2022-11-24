@@ -107,7 +107,14 @@ def end_match(next_match=None):
     show_scores(next_match=next_match)
 
 
-def start_match(red_team, blue_team, round_number, starting_score, speedup):
+def start_match(red_team,
+                blue_team,
+                round_number=-1,
+                starting_score={
+                    'red': 0,
+                    'blue': 0
+                },
+                speedup=1.0):
     best_of = 5
     first_to = 3
 
@@ -167,7 +174,7 @@ if __name__ == '__main__':
                     blue_team=(blue, participants[blue]),
                     round_number=round_number,
                     starting_score=score,
-                    speedup=3.0)
+                    speedup=1.0)
         next_match = None
         if i < len(match_list) - 1:
             next_match = f'Next match is: red={match_list[i+1][0]} VS blue={match_list[i+1][1]}'
