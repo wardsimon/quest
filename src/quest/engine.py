@@ -3,9 +3,6 @@ from graphics import Graphics
 from fight import fight
 from knight import Knight
 
-from dataclasses import dataclass
-import matplotlib.patches as patches
-import matplotlib.pyplot as plt
 import numpy as np
 import time
 

@@ -20,14 +20,10 @@ class NeilWarrior(BaseAI):
 
         if all(me['position'] == self.previous_position) or (
                 me['health'] < self.previous_health):
-            # self.vector = np.random.choice([-1, 1],
-            #                                size=2) * np.random.random(2)
             self.heading = np.random.random() * 360.0
 
         elif len(info['flags']) == 2:
-            # enemy_team = 'red' if self.team == 'blue' else 'blue'
             flag_pos = info['flags'][self.opposing_team]
-            # print(self, 'going to capture', enemy_team, 'flag at', flag_pos)
             self.goto = flag_pos
             # self.message = {'flag': flag_pos}
 
@@ -37,13 +33,9 @@ class NeilWarrior(BaseAI):
         elif len(info['enemies']) > 0 and (me['cooldown'] == 0):
             name = list(info['enemies'].keys())[0]
             target = info['enemies'][name]
-            # print(self, 'going to kill', name)
             self.goto = [target['x'], target['y']]
 
         elif info['gems']:
-            # print(self, 'going to pick up gem at', info['gems']['x'][0],
-            #       info['gems']['y'][0])
-            # input('enter')
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
 
         elif t % 5 == 0:
@@ -81,14 +73,10 @@ class NeilScout(BaseAI):
 
         if all(me['position'] == self.previous_position) or (
                 me['health'] < self.previous_health):
-            # self.vector = np.random.choice([-1, 1],
-            #                                size=2) * np.random.random(2)
             self.heading = np.random.random() * 360.0
 
         elif len(info['flags']) == 2:
-            # enemy_team = 'red' if self.team == 'blue' else 'blue'
             flag_pos = info['flags'][self.opposing_team]
-            # print(self, 'going to capture', enemy_team, 'flag at', flag_pos)
             self.goto = flag_pos
             # self.message = {'flag': flag_pos}
 
@@ -98,17 +86,9 @@ class NeilScout(BaseAI):
         elif len(info['enemies']) > 0:
             name = list(info['enemies'].keys())[0]
             target = info['enemies'][name]
-            # print(self, 'going to kill', name)
-            # self.goto = [target['x'], target['y']]
             self.heading = (self.towards(target['x'], target['y']) + 180) % 360
-            # print(me['name'], me['x'], me['y'], 'evading enemy at',
-            #       target['x'], target['y'], 'with heading', self.heading)
-            # input('enter')
 
         elif info['gems']:
-            # print(self, 'going to pick up gem at', info['gems']['x'][0],
-            #       info['gems']['y'][0])
-            # input('enter')
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
 
         elif t % 5 == 0:
@@ -154,14 +134,10 @@ class NeilHealer(BaseAI):
 
         if all(me['position'] == self.previous_position) or (
                 me['health'] < self.previous_health):
-            # self.vector = np.random.choice([-1, 1],
-            #                                size=2) * np.random.random(2)
             self.heading = np.random.random() * 360.0
 
         elif len(info['flags']) == 2:
-            # enemy_team = 'red' if self.team == 'blue' else 'blue'
             flag_pos = info['flags'][self.opposing_team]
-            # print(self, 'going to capture', enemy_team, 'flag at', flag_pos)
             self.goto = flag_pos
             # self.message = {'flag': flag_pos}
 
@@ -175,14 +151,9 @@ class NeilHealer(BaseAI):
         elif len(info['enemies']) > 0 and (me['cooldown'] == 0):
             name = list(info['enemies'].keys())[0]
             target = info['enemies'][name]
-            # print(self, 'going to kill', name)
             self.goto = [target['x'], target['y']]
-            # self.heading = (self.towards(target['x'], target['y']) + 180) % 360
 
         elif info['gems']:
-            # print(self, 'going to pick up gem at', info['gems']['x'][0],
-            #       info['gems']['y'][0])
-            # input('enter')
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
         elif t % 5 == 0:
             if me['team'] == 'red':

@@ -1,6 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import turtle
 
 SPEED = {'scout': 1.5, 'warrior': 2.0, 'healer': 2.0}
@@ -53,7 +51,8 @@ class Knight:
         self.health = self.max_health
 
     def __repr__(self):
-        return f'{self.name}: H:{self.health}/{self.max_health} A:{self.attack} S:{self.speed} at {self.x}, {self.y}'
+        return (f'{self.name}: H:{self.health}/{self.max_health} '
+                f'A:{self.attack} S:{self.speed} at {self.x}, {self.y}')
 
     def __str__(self):
         return repr(self)
@@ -105,9 +104,8 @@ class Knight:
     def execute_ai(self, t, dt, info):
         self.ai.run(t, dt, info)
         if None not in (self.ai.heading, self.ai.goto):
-            print(
-                'Warning, both heading and goto are set in AI, results may be unpredictable!'
-            )
+            print('Warning, both heading and goto are set in AI, '
+                  'results may be unpredictable!')
         if self.ai.heading is not None:
             self.heading = self.ai.heading
         if self.ai.goto is not None:

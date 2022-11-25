@@ -306,15 +306,15 @@ class Graphics:
                 x = 0.77 * healthbar_dx
                 text = (
                     f"{knight.health} / {knight.max_health}    "
-                    f"attack={knight.attack}  speed={round(knight.speed, 1)}  {knight.name}"
-                )
+                    f"attack={knight.attack}  speed={round(knight.speed, 1)}  "
+                    f"{knight.name}")
                 align = 'left'
             else:
                 x = self.nx - 5
-                text = (
-                    f"{knight.name}  speed={round(knight.speed, 1)}  attack={knight.attack}"
-                    "                                  "
-                    f" {knight.health} / {knight.max_health}")
+                text = (f"{knight.name}  speed={round(knight.speed, 1)}  "
+                        f"attack={knight.attack}"
+                        "                                  "
+                        f" {knight.health} / {knight.max_health}")
                 align = 'right'
             self.score_pen.pensize(1)
             self.score_pen.penup()
@@ -337,7 +337,7 @@ class Graphics:
         self.pen.pendown()
         if winner is None:
             self.pen.color('black')
-            self.pen.write(f"It's a draw",
+            self.pen.write("It's a draw",
                            move=False,
                            align="center",
                            font=('Arial', 100, 'normal'))

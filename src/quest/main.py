@@ -1,13 +1,7 @@
-import os
-import sys
 from pathlib import Path
 from itertools import combinations
 from random import shuffle
 import turtle
-
-from game_map import Map
-from knight import Knight
-from fight import fight
 from engine import Engine
 
 from neilAI import team as NeilTeam
@@ -135,14 +129,13 @@ def start_match(red_team,
         # Write score to file
         with open('score.txt', 'a') as f:
             f.write(
-                f"|Round:{match_score['count']}:{red_team[0]}:{match_score['red']}:{blue_team[0]}:{match_score['blue']}"
-            )
+                f"|Round:{match_score['count']}:{red_team[0]}:"
+                f"{match_score['red']}:{blue_team[0]}:{match_score['blue']}")
         for team in ('red', 'blue'):
             if match_score[team] == first_to:
                 return
-        input(
-            f"Current score: red={match_score['red']} blue={match_score['blue']}. Start next round"
-        )
+        input(f"Current score: red={match_score['red']} "
+              f"blue={match_score['blue']}. Start next round")
 
 
 if __name__ == '__main__':
@@ -167,7 +160,8 @@ if __name__ == '__main__':
                     show_messages=False)
         next_match = None
         if i < len(match_list) - 1:
-            next_match = f'Next match is: red={match_list[i+1][0]} VS blue={match_list[i+1][1]}'
+            next_match = (f'Next match is: red={match_list[i+1][0]} '
+                          f'VS blue={match_list[i+1][1]}')
         end_match(next_match=next_match)
 
     show_scores()
