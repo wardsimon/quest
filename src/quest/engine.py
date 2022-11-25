@@ -48,7 +48,12 @@ def make_properties_dict(knight):
 
 class Engine:
 
-    def __init__(self, score, red_team, blue_team, speedup=1.0):
+    def __init__(self,
+                 score,
+                 red_team,
+                 blue_team,
+                 speedup=1.0,
+                 show_messages=False):
 
         self.ng = 32
         self.nx = self.ng * 56
@@ -57,6 +62,7 @@ class Engine:
         self.map = Map(nx=self.nx, ny=self.ny, ng=self.ng)
         # self.score = score
         self.speedup = speedup
+        self._show_messages = show_messages
 
         self.graphics.add_obstacles(self.map._obstacles)
         self.graphics.add_castles(self.map._castles)
@@ -243,7 +249,7 @@ class Engine:
         }
 
     def pickup_gem(self, x, y, team):
-        kind_mapping = {0: ('attack', 2), 1: ('health', 5), 2: ('speed', 0.3)}
+        kind_mapping = {0: ('attack', 3), 1: ('health', 5), 2: ('speed', 0.3)}
         kind = np.random.choice([0, 1, 2])
         # kind = 1
         bonus = np.random.random() * kind_mapping[kind][1]
@@ -299,7 +305,7 @@ class Engine:
             #             1) and (self.map.array[pos2[0], pos2[1]] != 1):
             #         # if (self.map.array[pos[0], pos[1]] != 1):
 
-            knight.move(dt)
+            knight.move(dt, show_messages=self._show_messages)
 
         # self.circles[knight.name][0].center = (knight.x, knight.y)
         # self.circles[knight.name][1].center = (knight.x, knight.y)

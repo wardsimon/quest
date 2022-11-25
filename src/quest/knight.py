@@ -139,7 +139,7 @@ class Knight:
     def heal(self, value):
         self.health = min(self.max_health, self.health + value)
 
-    def move(self, dt):
+    def move(self, dt, show_messages=False):
         self.avatar.forward(self.speed * dt)
 
         self.avatar_circle.clear()
@@ -152,7 +152,7 @@ class Knight:
         self.avatar_name.goto(self.x, self.y)
         self.avatar_name.pendown()
         text = self.name
-        if self.ai.message is not None:
+        if self.ai.message is not None and show_messages:
             message = str(self.ai.message)
             if len(message) >= 50:
                 message = message[:50]

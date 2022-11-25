@@ -114,7 +114,8 @@ def start_match(red_team,
                     'red': 0,
                     'blue': 0
                 },
-                speedup=1.0):
+                speedup=1.0,
+                show_messages=False):
     best_of = 5
     first_to = 3
 
@@ -130,7 +131,8 @@ def start_match(red_team,
         engine = Engine(score=match_score,
                         red_team=red_team[1],
                         blue_team=blue_team[1],
-                        speedup=speedup)
+                        speedup=speedup,
+                        show_messages=show_messages)
         winner = engine.run()
         if winner is not None:
             match_score[winner] += 1
@@ -174,7 +176,8 @@ if __name__ == '__main__':
                     blue_team=(blue, participants[blue]),
                     round_number=round_number,
                     starting_score=score,
-                    speedup=1.0)
+                    speedup=1.0,
+                    show_messages=False)
         next_match = None
         if i < len(match_list) - 1:
             next_match = f'Next match is: red={match_list[i+1][0]} VS blue={match_list[i+1][1]}'
