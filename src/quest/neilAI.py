@@ -126,6 +126,7 @@ class NeilScout(BaseAI):
 
         self.previous_position = me['position']
         self.previous_health = me['health']
+        self.message = "I will end you!"
 
 
 class NeilHealer(BaseAI):

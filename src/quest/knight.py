@@ -151,7 +151,13 @@ class Knight:
         self.avatar_name.clear()
         self.avatar_name.goto(self.x, self.y)
         self.avatar_name.pendown()
-        self.avatar_name.write(self.name,
+        text = self.name
+        if self.ai.message is not None:
+            message = str(self.ai.message)
+            if len(message) >= 50:
+                message = message[:50]
+            text += '\nsays: ' + message
+        self.avatar_name.write(text,
                                move=False,
                                align="center",
                                font=('Arial', 12, 'normal'))
