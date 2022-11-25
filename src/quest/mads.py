@@ -25,14 +25,10 @@ class MadsWarrior(BaseAI):
         elif len(info['enemies']) > 0:
             name = list(info['enemies'].keys())[0]
             target = info['enemies'][name]
-            # print(self, 'going to kill', name)
             self.goto = [target['x'], target['y']]
 
         elif info['gems']:
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
-
-        # if self.name == 'Arthur':
-        #     self.goto(10, 500)
 
         self.previous_position = me['position']
         self.previous_health = me['health']

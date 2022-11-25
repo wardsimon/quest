@@ -14,9 +14,6 @@ class Knight:
 
     def __init__(self, x, y, name, heading, team, castle, fountain, number,
                  AI):
-        # self._x = int(x)
-        # self._y = int(y)
-        # self.vector = vector
         self.avatar = turtle.Turtle()
         self.avatar.speed(0)
         self.avatar.penup()
@@ -37,7 +34,6 @@ class Knight:
         self.heading = heading
         self.team = team
         self.name = name
-        # self.creator = creator
         self.cooldown = 0
         self.avatar.color(self.team)
         self.avatar_circle.color(self.team)
@@ -72,21 +68,10 @@ class Knight:
 
     @property
     def position(self):
-        # print(np.array(self.avatar.position()).astype(int))
-        # print(type(np.array(self.avatar.position()).astype(int)))
         return np.array(self.avatar.position()).astype(int)
-
-    # @position.setter
-    # def position(self, pos):
-    #     self._x = int(pos[0])
-    #     self._y = int(pos[1])
 
     @property
     def heading(self):
-        # head = np.arccos(np.dot(self.position, [1, 0])) * 180. / np.pi
-        # print(head)
-        # head = (np.arctan2(self.vector[1], self.vector[0]) * 180. / np.pi +
-        #         360) % 360
         return self.avatar.heading()
 
     @heading.setter
@@ -99,18 +84,10 @@ class Knight:
         return np.array([np.cos(h), np.sin(h)])
 
     def ray_trace(self, dt):
-        # vec = self.vector / np.linalg.norm(self.vector)
-        # print(np.linalg.norm(self.speed * vec * dt))
-        # print(np.linalg.norm(vec), vec)
-        # print(self.position, self.speed, self.vector, dt)
-        # new_pos = np.array(
-        #     self.avatar.position()) + self.speed * self.vector * dt
-
         vt = self.speed * dt
         ray = self.vector.reshape((2, 1)) * np.linspace(1, vt, int(vt) + 1)
         return (np.array(self.avatar.position()).reshape(
             (2, 1)) + ray).astype(int)
-        # return new_pos.astype(int)
 
     def get_distance(self, pos):
         return np.sqrt((pos[0] - self.x)**2 + (pos[1] - self.y)**2)
@@ -175,40 +152,3 @@ class Knight:
 
     def left(self, angle):
         self.avatar.left(angle)
-
-
-# class Scout(Knight):
-
-#     def __init__(self, *args, **kwargs):
-#         self.speed = 1.5
-#         self.max_speed = 3
-#         self.max_health = 70
-#         self.attack = 20
-#         self.view_radius = 150
-#         super().__init__(*args, **kwargs)
-
-# class Warrior(Knight):
-
-#     def __init__(self, *args, **kwargs):
-#         self.speed = 2.0
-#         self.max_speed = 4  # 5
-#         self.max_health = 100
-#         self.attack = 30
-#         self.view_radius = 100
-#         super().__init__(*args, **kwargs)
-
-# class Healer(Knight):
-
-#     def __init__(self, *args, **kwargs):
-#         self.speed = 2.0
-#         self.max_speed = 5  # 7
-#         self.max_health = 100
-#         self.attack = 10
-#         self.view_radius = 100
-#         super().__init__(*args, **kwargs)
-
-#     def advance_dt(self, t, dt, info):
-#         super().advance_dt(t, dt, info)
-#         for friend in info['friends'].values():
-#             if self.get_distance(friend.position) < self.view_radius:
-#                 friend.heal(dt)

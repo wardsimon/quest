@@ -9,7 +9,6 @@ from game_map import Map
 from knight import Knight
 from fight import fight
 from engine import Engine
-# from plot import plot_score
 
 from neilAI import team as NeilTeam
 from mads import team as MadsTeam
@@ -37,7 +36,6 @@ def starting_match_index_and_score(match_list):
         with open(score_file, 'r') as f:
             scores = f.readlines()
         last_score = scores[-1].split('|')[-1].split(':')
-        # round_number = last_score[1]
         ind = len(scores)
         if not scores[-1].strip().endswith('END'):
             ind -= 1
@@ -124,9 +122,7 @@ def start_match(red_team,
         'blue': starting_score['blue'],
         'count': 0
     }
-    # print(round_number, match_score)
     for n in range(round_number + 1, best_of):
-        # match_score['count'] += 1
         match_score['count'] = n + 1
         engine = Engine(score=match_score,
                         red_team=red_team[1],
@@ -141,19 +137,12 @@ def start_match(red_team,
             f.write(
                 f"|Round:{match_score['count']}:{red_team[0]}:{match_score['red']}:{blue_team[0]}:{match_score['blue']}"
             )
-        # plot_score()
         for team in ('red', 'blue'):
             if match_score[team] == first_to:
-                # end_match()
-                # print('score first_to was reached', team, match_score[team])
                 return
         input(
             f"Current score: red={match_score['red']} blue={match_score['blue']}. Start next round"
         )
-    # end_match()
-    # with open('score.txt', 'a') as f:
-    #     f.write(':END\n')
-    # print('end of rounds', n, round_number, round_number + 1, best_of)
 
 
 if __name__ == '__main__':
@@ -164,10 +153,8 @@ if __name__ == '__main__':
         # 'Drew': MadsTeam
     }
     match_list = generate_match_list(participants)
-    # print(match_list)
     match_index, round_number, score = starting_match_index_and_score(
         match_list)
-    # print('starting index', match_index, round_number, score)
     for i in range(match_index, len(match_list)):
         red = match_list[i][0]
         blue = match_list[i][1]

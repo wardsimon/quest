@@ -3,7 +3,6 @@ def fight(knights, game_map):
     combats = {}
     dead = []
     for k in knights:
-        # if k.cooldown == 0:
         igrid = k.x // game_map.ng
         jgrid = k.y // game_map.ng
         key = f'{igrid},{jgrid}'
@@ -13,12 +12,8 @@ def fight(knights, game_map):
             combats[key][k.team] = [k]
         else:
             combats[key][k.team].append(k)
-    # print(combats)
-    # input('preeeees')
     for key in combats:
         if set(combats[key]) == {'blue', 'red'}:
-            # print("Fight in cell", key)
-            # print(combats[key])
             blue_attack = sum([
                 k.attack if k.cooldown == 0 else 0
                 for k in combats[key]['blue']
@@ -27,20 +22,15 @@ def fight(knights, game_map):
                 k.attack if k.cooldown == 0 else 0 for k in combats[key]['red']
             ])
             for k in combats[key]['blue']:
-                # print('blue', k.attack, k.cooldown, blue_attack)
                 k.health -= red_attack / len(combats[key]['blue'])
                 if k.health <= 0:
                     dead.append(k)
                 if k.cooldown == 0:
                     k.cooldown = cooldown
             for k in combats[key]['red']:
-                # print('red', k.attack, k.cooldown, red_attack)
                 k.health -= blue_attack / len(combats[key]['red'])
                 if k.health <= 0:
                     dead.append(k)
                 if k.cooldown == 0:
                     k.cooldown = cooldown
-            # print(dead)
-            # print(combats[key])
-            # input('press key')
     return dead

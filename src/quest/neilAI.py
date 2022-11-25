@@ -201,6 +201,4 @@ class NeilHealer(BaseAI):
         self.previous_health = me['health']
 
 
-# team = {'Arthur': NeilWarrior, 'Galahad': NeilWarrior, 'Lancelot': NeilWarrior}
 team = {'Arthur': NeilWarrior, 'Galahad': NeilHealer, 'Lancelot': NeilScout}
-# team = {'Arthur': Warrior}

@@ -10,16 +10,10 @@ class Map:
         self.ny = ny
         self.ng = ng
         self.array = np.zeros((nx, ny), dtype=int)
-        # self.fig, self.ax = plt.subplots()
-        # self.ax.set_aspect('equal')
-        # self.ax.set_xlim(0, nx)
-        # self.ax.set_ylim(0, ny)
         self._make_obstacles()
         self._make_castles()
         self._make_fountains()
         self._make_gems()
-        # self._make_castle()
-        # self.fig.show()
 
     def _make_obstacles(self, n=100):
         free_zone = 200
@@ -35,20 +29,6 @@ class Map:
                 for j in range(max(int(jc - 0.5 * dx), 0),
                                min(int(jc + 0.5 * dx), self.ny)):
                     self.array[i, j] = 1
-
-            # rect = patches.Rectangle((posx[i], posy[i]),
-            #                          dx,
-            #                          dx,
-            #                          linewidth=1.5,
-            #                          edgecolor='k',
-            #                          facecolor='C0',
-            #                          alpha=0.5)
-            # self.ax.add_patch(rect)
-        # self.ax.pcolormesh(np.arange(self.nx + 1),
-        #                    np.arange(self.ny + 1),
-        #                    self.map,
-        #                    shading='auto')
-        # self.im = self.ax.imshow(self.array.T, origin='lower')
         self._obstacles = {'x': posx, 'y': posy, 'dx': dx}
 
     def _make_gems(self, n=100):
@@ -65,7 +45,6 @@ class Map:
                     posy[i] = y
                     not_good = False
         self._gems = {'x': posx, 'y': posy}
-        # self.ax.plot(posx, posy, '^')
 
     def _make_castles(self):
         dx = 80
@@ -93,9 +72,6 @@ class Map:
                        (thickness * int(d[i] != 1))] = 0
             x.append(posx)
             y.append(posy)
-        # fig, ax = plt.subplots()
-        # ax.imshow(self.array.T, origin='lower')
-        # fig.show()
 
         self._castles = {
             'dx': dx,
