@@ -12,11 +12,16 @@ class BaseAI:
         self.message = None
         self.creator = creator
         self.stop = False
+        self.left = None
+        self.right = None
 
     def run(self, t, dt, info):
         self.heading = None
         self.goto = None
+        self.left = None
+        self.right = None
         self._params = info['me']
+        self.run(t=t, dt=dt, info=info)
 
     def get_distance(self, x, y=None):
         if y is None:
@@ -30,3 +35,10 @@ class BaseAI:
             x = x[0]
         return ((np.arctan2(y - self._params['y'], x - self._params['x']) *
                  180 / np.pi) + 360) % 360
+
+    def heading_from_vector(vec):
+        return ((np.arctan2(vec[1], vec[0]) * 180 / np.pi) + 360) % 360
+
+    def vector_from_heading(heading):
+        h = heading * np.pi / 180.0
+        return np.array([np.cos(h), np.sin(h)])

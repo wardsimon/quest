@@ -96,6 +96,7 @@ class Engine:
         for k in self.knights:
             props = make_properties_dict(k)
             if (k.team != knight.team):
+                del props['message']
                 dist = knight.get_distance(k.position)
                 if dist < knight.view_radius:
                     enemies[k.name] = props
@@ -211,7 +212,10 @@ class Engine:
                     self.graphics.announce_winner(winner)
                     return winner
 
-            self.graphics.update(t=t, dt_count=dt_count, knights=self.knights)
+            self.graphics.update(t=t,
+                                 dt_count=dt_count,
+                                 knights=self.knights,
+                                 time_limit=time_limit)
 
             time.sleep(0.01)
             t += dt

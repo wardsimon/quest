@@ -10,7 +10,6 @@ class NeilWarrior(BaseAI):
         self.previous_health = 0
 
     def run(self, t, dt, info):
-        super().run(t, dt, info)
         me = info['me']
         # flag_found = None
         # for friend in info['friends'].values():
@@ -40,16 +39,16 @@ class NeilWarrior(BaseAI):
 
         elif t % 5 == 0:
             if me['team'] == 'red':
-                if me['x'] > 56 * 32 - 200:
-                    head = np.random.random() * 360.0
-                else:
-                    head = 0
+                if me['x'] < 56 * 32 - 200:
+                    #     head = np.random.random() * 360.0
+                    # else:
+                    self.heading = 0
             else:
-                if me['x'] < 200:
-                    head = np.random.random() * 360.0
-                else:
-                    head = 180
-            self.heading = head
+                if me['x'] > 200:
+                    #     head = np.random.random() * 360.0
+                    # else:
+                    self.heading = 180
+            # self.heading = head
 
         self.previous_position = me['position']
         self.previous_health = me['health']
@@ -93,16 +92,16 @@ class NeilScout(BaseAI):
 
         elif t % 5 == 0:
             if me['team'] == 'red':
-                if me['x'] > 56 * 32 - 200:
-                    head = np.random.random() * 360.0
-                else:
-                    head = 0
+                if me['x'] < 56 * 32 - 200:
+                    #     head = np.random.random() * 360.0
+                    # else:
+                    self.heading = 0
             else:
-                if me['x'] < 200:
-                    head = np.random.random() * 360.0
-                else:
-                    head = 180
-            self.heading = head
+                if me['x'] > 200:
+                    #     head = np.random.random() * 360.0
+                    # else:
+                    self.heading = 180
+            # self.heading = head
 
         self.previous_position = me['position']
         self.previous_health = me['health']
@@ -157,16 +156,16 @@ class NeilHealer(BaseAI):
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
         elif t % 5 == 0:
             if me['team'] == 'red':
-                if me['x'] > (56 * 32) - 200:
-                    head = np.random.random() * 360.0
-                else:
-                    head = 0
+                if me['x'] < 56 * 32 - 200:
+                    #     head = np.random.random() * 360.0
+                    # else:
+                    self.heading = 0
             else:
-                if me['x'] < 200:
-                    head = np.random.random() * 360.0
-                else:
-                    head = 180
-            self.heading = head
+                if me['x'] > 200:
+                    #     head = np.random.random() * 360.0
+                    # else:
+                    self.heading = 180
+            # self.heading = head
 
         self.previous_position = me['position']
         self.previous_health = me['health']

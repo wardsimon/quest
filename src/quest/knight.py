@@ -102,14 +102,23 @@ class Knight:
                     friend.heal(0.5 * dt)
 
     def execute_ai(self, t, dt, info):
-        self.ai.run(t, dt, info)
-        if None not in (self.ai.heading, self.ai.goto):
-            print('Warning, both heading and goto are set in AI, '
+        self.ai.exec(t, dt, info)
+        if sum([
+                bool(self.ai.heading),
+                bool(self.ai.goto),
+                bool(self.ai.left),
+                bool(self.ai.right)
+        ]) > 1:
+            print('Warning, more than one AI property is set, '
                   'results may be unpredictable!')
         if self.ai.heading is not None:
             self.heading = self.ai.heading
         if self.ai.goto is not None:
             self.goto(*self.ai.goto)
+        if self.ai.left is not None:
+            self.left(self.ai.left)
+        if self.ai.right is not None:
+            self.right(self.ai.right)
 
     def heal(self, value):
         self.health = min(self.max_health, self.health + value)

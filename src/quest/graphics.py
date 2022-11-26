@@ -212,7 +212,7 @@ class Graphics:
         self.pen.penup()
         self.pen.goto(self.nx // 2 + 5, self.ny + self.topbar - 25)
         self.pen.pendown()
-        self.pen.write("Time =",
+        self.pen.write("Time left =",
                        move=False,
                        align="right",
                        font=('Arial', 18, 'normal'))
@@ -262,7 +262,7 @@ class Graphics:
         self.pen.pensize(1)
         self.pen.penup()
 
-    def update_scoreboard(self, t, knights):
+    def update_scoreboard(self, t, knights, time_limit):
         self.score_pen.clear()
         self.score_pen.setheading(0)
 
@@ -271,7 +271,7 @@ class Graphics:
         self.score_pen.penup()
         self.score_pen.goto(self.nx // 2 + 50, self.ny + self.topbar - 25)
         self.score_pen.pendown()
-        self.score_pen.write(str(int(t)),
+        self.score_pen.write(str(int(time_limit - t)),
                              move=False,
                              align="center",
                              font=('Arial', 18, 'normal'))
@@ -326,9 +326,9 @@ class Graphics:
                                  align=align,
                                  font=('Arial', 10, 'normal'))
 
-    def update(self, t, dt_count, knights):
+    def update(self, t, dt_count, knights, time_limit):
         if dt_count % 5 == 0:
-            self.update_scoreboard(t=t, knights=knights)
+            self.update_scoreboard(t=t, knights=knights, time_limit=time_limit)
         self.screen.update()
 
     def announce_winner(self, winner):
