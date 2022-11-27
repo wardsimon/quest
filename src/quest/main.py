@@ -166,3 +166,41 @@ if __name__ == '__main__':
 
     show_scores()
     input('End of tournament!')
+
+    # # Second phase:
+    # participants = [
+    #     'Neil', 'Mads', 'Drew', 'Greg', 'JanLukas', 'Simon', 'Afonso'
+    # ]
+
+    # n_per_round = 6
+    # matches_per_participant = 4
+
+    # l = participants * matches_per_participant
+
+    # sets = []
+    # match_list = []
+
+    # while len(l) > 0:
+    #     possibles = list(set(l))
+    #     this_round = []
+    #     print('possibles', possibles)
+    #     if len(possibles) < n_per_round:
+    #         div = len(possibles) // 2
+    #         red = possibles[:div]
+    #         blue = possibles[div:]
+    #         l.clear()
+    #     else:
+    #         for i in range(n_per_round):
+    #             ind = np.random.choice(range(len(possibles)))
+    #             this_round.append(possibles.pop(ind))
+    #         red = set(this_round[:3])
+    #         blue = set(this_round[3:])
+    #     if (red not in sets) and (blue not in sets):
+    #         match_list.append([red, blue])
+    #         sets += [red, blue]
+    #         for name in this_round:
+    #             l.remove(name)
+    #     print("sets", sets)
+    #     print('match_list', match_list)
+    #     print('list', l)
+    #     print('============')
