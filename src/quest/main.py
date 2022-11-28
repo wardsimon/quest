@@ -13,23 +13,27 @@ def generate_match_list(participants):
     match_list_file = Path("match_list.txt")
     if match_list_file.exists():
         with open(match_list_file, 'r') as f:
-            match_list = f.readlines()
-        return [match.strip().split(':') for match in match_list]
+            matches = f.readlines()
+        n = 0
+        count = True
+        match_list = []
+        for match in matches:
+            if ':' in match:
+                match_list.append(match.strip().split(':'))
+                if count:
+                    n += 1
+            if 'Second phase' in match:
+                count = False
+        return match_list, n
     else:
         matches = list(combinations(participants.keys(), 2))
         shuffle(matches)
         first_phase = [[[match[0]] * 3, [match[1]] * 3] for match in matches]
         with open(match_list_file, 'w') as f:
+            f.write('First phase\n')
             for match in first_phase:
                 f.write(':'.join(match[0]) + ':' + ':'.join(match[1]) + '\n')
         #         # f.write(f'{match[0]}:{match[1]}\n')
-        # first_phase = []
-        # for match in matches
-
-        # # Second phase:
-        # participants = [
-        #     'Neil', 'Mads', 'Drew', 'Greg', 'JanLukas', 'Simon', 'Afonso'
-        # ]
 
         n_per_round = 6
         matches_per_participant = 4
@@ -53,17 +57,18 @@ def generate_match_list(participants):
                 red = set(this_round[:3])
                 blue = set(this_round[3:])
             if (red not in sets) and (blue not in sets):
-                second_phase.append([red, blue])
+                second_phase.append([list(red), list(blue)])
                 sets += [red, blue]
                 for name in this_round:
                     l.remove(name)
         with open(match_list_file, 'a') as f:
+            f.write('Second phase\n')
             for match in second_phase:
                 f.write(
                     ':'.join([item for sublist in match
                               for item in sublist]) + '\n')
 
-        return first_phase + second_phase
+        return first_phase + second_phase, len(first_phase)
 
 
 def starting_match_index_and_score(match_list):
@@ -192,21 +197,36 @@ if __name__ == '__main__':
         'Afonso': MadsTeam,
         'Tony': MadsTeam
     }
-    match_list = generate_match_list(participants)
-    print(match_list)
-    exit()
+    match_list, first_phase_len = generate_match_list(participants)
+    # print(match_list)
+    # exit()
     match_index, round_number, score = starting_match_index_and_score(
         match_list)
+    match_index = 28
     for i in range(match_index, len(match_list)):
-        if len(match_list[i]) > 2:
-            red = '+'.join(match_list[i][:3])
-            red = '+'.join(match_list[i][:3])
-
-        else:
-            red = match_list[i][0]
-            blue = match_list[i][1]
+        if i < first_phase_len:
+            red = match_list[i][0][0]
+            blue = match_list[i][1][0]
             red_team = (red, participants[red])
             blue_team = (blue, participants[blue])
+        else:
+            # print(match_list[i][:3])
+            red = '+'.join(match_list[i][0])
+            blue = '+'.join(match_list[i][1])
+            red_knights = {}
+            for author in match_list[i][0]:
+                d = participants[author]
+                key = list(d.keys())[0]
+                red_knights[key] = d[key]
+            red_team = (red, red_knights)
+            blue_knights = {}
+            for author in match_list[i][1]:
+                d = participants[author]
+                key = list(d.keys())[0]
+                blue_knights[key] = d[key]
+            blue_team = (blue, blue_knights)
+        print(red_team)
+        print(blue_team)
         input(f'Next match is: red={red} VS blue={blue}')
         start_match(red_team=red_team,
                     blue_team=blue_team,
