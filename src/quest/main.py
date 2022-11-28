@@ -1,5 +1,6 @@
 from pathlib import Path
 from itertools import combinations
+import numpy as np
 from random import shuffle
 import turtle
 from engine import Engine
@@ -15,12 +16,54 @@ def generate_match_list(participants):
             match_list = f.readlines()
         return [match.strip().split(':') for match in match_list]
     else:
-        match_list = list(combinations(participants.keys(), 2))
-        shuffle(match_list)
+        matches = list(combinations(participants.keys(), 2))
+        shuffle(matches)
+        first_phase = [[[match[0]] * 3, [match[1]] * 3] for match in matches]
         with open(match_list_file, 'w') as f:
-            for match in match_list:
-                f.write(f'{match[0]}:{match[1]}\n')
-        return match_list
+            for match in first_phase:
+                f.write(':'.join(match[0]) + ':' + ':'.join(match[1]) + '\n')
+        #         # f.write(f'{match[0]}:{match[1]}\n')
+        # first_phase = []
+        # for match in matches
+
+        # # Second phase:
+        # participants = [
+        #     'Neil', 'Mads', 'Drew', 'Greg', 'JanLukas', 'Simon', 'Afonso'
+        # ]
+
+        n_per_round = 6
+        matches_per_participant = 4
+
+        l = list(participants.keys()) * matches_per_participant
+        sets = []
+        second_phase = []
+        while len(l) > 0:
+            possibles = list(set(l))
+            this_round = []
+            # print('possibles', possibles)
+            if len(possibles) < n_per_round:
+                div = len(possibles) // 2
+                red = possibles[:div]
+                blue = possibles[div:]
+                l.clear()
+            else:
+                for i in range(n_per_round):
+                    ind = np.random.choice(range(len(possibles)))
+                    this_round.append(possibles.pop(ind))
+                red = set(this_round[:3])
+                blue = set(this_round[3:])
+            if (red not in sets) and (blue not in sets):
+                second_phase.append([red, blue])
+                sets += [red, blue]
+                for name in this_round:
+                    l.remove(name)
+        with open(match_list_file, 'a') as f:
+            for match in second_phase:
+                f.write(
+                    ':'.join([item for sublist in match
+                              for item in sublist]) + '\n')
+
+        return first_phase + second_phase
 
 
 def starting_match_index_and_score(match_list):
@@ -142,18 +185,31 @@ if __name__ == '__main__':
     participants = {
         'Neil': NeilTeam,
         'Mads': MadsTeam,
-        # 'Greg': NeilTeam,
-        # 'Drew': MadsTeam
+        'Greg': NeilTeam,
+        'Drew': MadsTeam,
+        'Simon': MadsTeam,
+        'JanLukas': MadsTeam,
+        'Afonso': MadsTeam,
+        'Tony': MadsTeam
     }
     match_list = generate_match_list(participants)
+    print(match_list)
+    exit()
     match_index, round_number, score = starting_match_index_and_score(
         match_list)
     for i in range(match_index, len(match_list)):
-        red = match_list[i][0]
-        blue = match_list[i][1]
+        if len(match_list[i]) > 2:
+            red = '+'.join(match_list[i][:3])
+            red = '+'.join(match_list[i][:3])
+
+        else:
+            red = match_list[i][0]
+            blue = match_list[i][1]
+            red_team = (red, participants[red])
+            blue_team = (blue, participants[blue])
         input(f'Next match is: red={red} VS blue={blue}')
-        start_match(red_team=(red, participants[red]),
-                    blue_team=(blue, participants[blue]),
+        start_match(red_team=red_team,
+                    blue_team=blue_team,
                     round_number=round_number,
                     starting_score=score,
                     speedup=1.0,
