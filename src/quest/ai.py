@@ -15,7 +15,7 @@ class BaseAI:
         self.left = None
         self.right = None
 
-    def run(self, t, dt, info):
+    def exec(self, t, dt, info):
         self.heading = None
         self.goto = None
         self.left = None

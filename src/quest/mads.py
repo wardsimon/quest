@@ -10,7 +10,7 @@ class MadsWarrior(BaseAI):
         self.previous_health = 0
 
     def run(self, t, dt, info):
-        super().run(t, dt, info)
+        # super().run(t, dt, info)
         me = info['me']
 
         if all(me['position'] == self.previous_position) or (

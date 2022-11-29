@@ -213,17 +213,17 @@ if __name__ == '__main__':
             # print(match_list[i][:3])
             red = '+'.join(match_list[i][0])
             blue = '+'.join(match_list[i][1])
-            red_knights = {}
+            red_knights = []
             for author in match_list[i][0]:
                 d = participants[author]
                 key = list(d.keys())[0]
-                red_knights[key] = d[key]
+                red_knights.append((key, d[key]))
             red_team = (red, red_knights)
-            blue_knights = {}
+            blue_knights = []
             for author in match_list[i][1]:
                 d = participants[author]
                 key = list(d.keys())[0]
-                blue_knights[key] = d[key]
+                blue_knights.append((key, d[key]))
             blue_team = (blue, blue_knights)
         print(red_team)
         print(blue_team)

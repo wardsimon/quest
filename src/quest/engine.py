@@ -4,6 +4,7 @@ from fight import fight
 from knight import Knight
 
 import numpy as np
+from copy import copy
 import time
 
 
@@ -56,7 +57,7 @@ class Engine:
 
         self.knights = []
         for team, names in team_knights.items():
-            for n, (name, ai) in enumerate(names.items()):
+            for n, (name, ai) in enumerate(names):
                 self.knights.append(
                     Knight(x=self.map._castles[team]['x'] +
                            self.map._castles['dx'] * 0.6 *
@@ -70,7 +71,7 @@ class Engine:
                            castle=self.map._castles[team],
                            fountain=self.map._fountains[team],
                            number=n,
-                           AI=ai))
+                           AI=copy(ai)))
 
         self.graphics.initialize_scoreboard(knights=self.knights, score=score)
 
