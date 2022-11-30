@@ -327,7 +327,7 @@ class Graphics:
                                  font=('Arial', 10, 'normal'))
 
     def update(self, t, dt_count, knights, time_limit):
-        if dt_count % 5 == 0:
+        if dt_count % 10 == 0:
             self.update_scoreboard(t=t, knights=knights, time_limit=time_limit)
         self.screen.update()
 
