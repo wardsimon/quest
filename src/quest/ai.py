@@ -3,7 +3,7 @@ import numpy as np
 
 class BaseAI:
 
-    def __init__(self, team, kind, creator=None):
+    def __init__(self, kind, creator, team=None):
         self.team = team
         self.opposing_team = 'red' if self.team == 'blue' else 'blue'
         self.kind = kind.lower()

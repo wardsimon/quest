@@ -58,7 +58,7 @@ class Engine:
         self.knights = []
         for team, groups in team_knights.items():
             for n, group in enumerate(groups):
-                print(group)
+                # print(group)
                 name, ai = group
                 # this_ai = copy(ai)(team=team)
                 # print(this_ai)
@@ -189,7 +189,7 @@ class Engine:
     def run(self):
 
         t = 0
-        time_limit = 4000
+        time_limit = 3000
         dt = 1.0 * self.speedup
         dt_count = 0
         while t < time_limit:

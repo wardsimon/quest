@@ -1,11 +1,13 @@
 import numpy as np
 from ai import BaseAI
 
+CREATOR = 'Neil'
+
 
 class NeilWarrior(BaseAI):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, creator='Neil', kind='warrior', **kwargs)
+        super().__init__(*args, creator=CREATOR, kind='warrior', **kwargs)
         self.previous_position = [0, 0]
         self.previous_health = 0
 
@@ -58,7 +60,7 @@ class NeilWarrior(BaseAI):
 class NeilScout(BaseAI):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, creator='Neil', kind='scout', **kwargs)
+        super().__init__(*args, creator=CREATOR, kind='scout', **kwargs)
         self.previous_position = [0, 0]
         self.previous_health = 0
 
@@ -113,7 +115,7 @@ class NeilScout(BaseAI):
 class NeilHealer(BaseAI):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, creator='Neil', kind='healer', **kwargs)
+        super().__init__(*args, creator=CREATOR, kind='healer', **kwargs)
         self.previous_position = [0, 0]
         self.previous_health = 0
 

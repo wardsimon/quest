@@ -43,7 +43,7 @@ def generate_match_list(participants):
         #         # f.write(f'{match[0]}:{match[1]}\n')
 
         n_per_round = 6
-        matches_per_participant = 4
+        matches_per_participant = len(participants) - 1
 
         l = list(participants.keys()) * matches_per_participant
         sets = []
@@ -194,33 +194,34 @@ def start_match(red_team,
 
 
 if __name__ == '__main__':
-    participants = {
-        'Neil': NeilTeam,
-        'Mads': MadsTeam,
-        'Greg': GregTeam,
-        'Drew': DrewTeam,
-        'Simon': SimonTeam,
-        'JanLukas': JanTeam,
-        'Afonso': AfonsoTeam,
-        'Tony': TonyTeam
-    }
+
+    teams = [
+        NeilTeam, MadsTeam, GregTeam, DrewTeam, SimonTeam, JanTeam, AfonsoTeam,
+        TonyTeam
+    ]
+
+    participants = {}
+    for team in teams:
+        creator = list(team.values())[0]().creator
+        participants[creator] = team
+
     match_list, first_phase_len = generate_match_list(participants)
-    print(match_list)
-    print('==================')
+    # print(match_list)
+    # print('==================')
     # exit()
     match_index, round_number, score = starting_match_index_and_score(
         match_list)
-    print('match_index')
-    print(match_index)
-    print('round_number')
-    print(round_number)
-    print('score')
-    print(score)
+    # print('match_index')
+    # print(match_index)
+    # print('round_number')
+    # print(round_number)
+    # print('score')
+    # print(score)
     # exit()
     # match_index = 28
     for i in range(match_index, len(match_list)):
         if i < first_phase_len:
-            print('match_list[i]', match_list[i])
+            # print('match_list[i]', match_list[i])
             red = match_list[i][0][0]
             blue = match_list[i][1][0]
             red_team = (red, [(k, v) for k, v in participants[red].items()])
@@ -230,7 +231,7 @@ if __name__ == '__main__':
             red = '+'.join(match_list[i][0])
             blue = '+'.join(match_list[i][1])
             red_knights = []
-            print(match_list[i])
+            # print(match_list[i])
             for author in match_list[i][0]:
                 d = participants[author]
                 key = list(d.keys())[0]
@@ -242,8 +243,8 @@ if __name__ == '__main__':
                 key = list(d.keys())[0]
                 blue_knights.append((key, d[key]))
             blue_team = (blue, blue_knights)
-        print(red_team)
-        print(blue_team)
+        # print(red_team)
+        # print(blue_team)
         input(f'Next match is: red={red} VS blue={blue}')
         start_match(red_team=red_team,
                     blue_team=blue_team,
