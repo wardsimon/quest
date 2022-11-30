@@ -30,8 +30,9 @@ class NeilWarrior(BaseAI):
         #     self.goto = flag_found
 
         elif len(info['enemies']) > 0 and (me['cooldown'] == 0):
-            name = list(info['enemies'].keys())[0]
-            target = info['enemies'][name]
+            # name = list(info['enemies'].keys())[0]
+            # name = info['enemies'][]
+            target = info['enemies'][0]
             self.goto = [target['x'], target['y']]
 
         elif info['gems']:
@@ -83,8 +84,9 @@ class NeilScout(BaseAI):
         #     self.goto = flag_found
 
         elif len(info['enemies']) > 0:
-            name = list(info['enemies'].keys())[0]
-            target = info['enemies'][name]
+            # name = list(info['enemies'].keys())[0]
+            # target = info['enemies'][name]
+            target = info['enemies'][0]
             self.heading = (self.towards(target['x'], target['y']) + 180) % 360
 
         elif info['gems']:
@@ -126,7 +128,7 @@ class NeilHealer(BaseAI):
 
         min_health = 1000
         friend_in_danger = None
-        for friend in info['friends'].values():
+        for friend in info['friends']:
             if friend['health'] < min_health:
                 friend_in_danger = friend
                 min_health = friend['health']
@@ -148,8 +150,9 @@ class NeilHealer(BaseAI):
             self.goto = [friend_in_danger['x'], friend_in_danger['y']]
 
         elif len(info['enemies']) > 0 and (me['cooldown'] == 0):
-            name = list(info['enemies'].keys())[0]
-            target = info['enemies'][name]
+            # name = list(info['enemies'].keys())[0]
+            # target = info['enemies'][name]
+            target = info['enemies'][0]
             self.goto = [target['x'], target['y']]
 
         elif info['gems']:

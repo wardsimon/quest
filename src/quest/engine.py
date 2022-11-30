@@ -56,22 +56,27 @@ class Engine:
         }
 
         self.knights = []
-        for team, names in team_knights.items():
-            for n, (name, ai) in enumerate(names):
+        for team, groups in team_knights.items():
+            for n, group in enumerate(groups):
+                print(group)
+                name, ai = group
+                # this_ai = copy(ai)(team=team)
+                # print(this_ai)
                 self.knights.append(
-                    Knight(x=self.map._castles[team]['x'] +
-                           self.map._castles['dx'] * 0.6 *
-                           (1 - 2.0 * (int(team == 'blue'))),
-                           y=int(self.map._castles[team]['y'] -
-                                 0.5 * self.map._castles['dx'] +
-                                 (n * 0.5 * self.map._castles['dx'])),
-                           heading=180 - (180 * int(team == 'red')),
-                           name=name,
-                           team=team,
-                           castle=self.map._castles[team],
-                           fountain=self.map._fountains[team],
-                           number=n,
-                           AI=copy(ai)))
+                    Knight(
+                        x=self.map._castles[team]['x'] +
+                        self.map._castles['dx'] * 0.6 *
+                        (1 - 2.0 * (int(team == 'blue'))),
+                        y=int(self.map._castles[team]['y'] -
+                              0.5 * self.map._castles['dx'] +
+                              (n * 0.5 * self.map._castles['dx'])),
+                        heading=180 - (180 * int(team == 'red')),
+                        name=name,  #f'{name} ({this_ai.creator})',
+                        team=team,
+                        castle=self.map._castles[team],
+                        fountain=self.map._fountains[team],
+                        number=n,
+                        AI=ai))
 
         self.graphics.initialize_scoreboard(knights=self.knights, score=score)
 
@@ -92,20 +97,20 @@ class Engine:
     def get_info(self, knight, friends_as_dict=False):
         r = knight.view_radius
         local_map = self.get_local_map(x=knight.x, y=knight.y, radius=r)
-        friends = {}
-        enemies = {}
+        friends = []
+        enemies = []
         for k in self.knights:
             props = make_properties_dict(k)
             if (k.team != knight.team):
                 del props['message']
                 dist = knight.get_distance(k.position)
                 if dist < knight.view_radius:
-                    enemies[k.name] = props
-            elif k.name != knight.name:
+                    enemies.append(props)
+            elif k.id != knight.id:
                 if friends_as_dict:
-                    friends[k.name] = props
+                    friends.append(props)
                 else:
-                    friends[k.name] = k
+                    friends.append(k)
             else:
                 my_props = props
 

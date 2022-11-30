@@ -6,7 +6,13 @@ import turtle
 from engine import Engine
 
 from neilAI import team as NeilTeam
-from mads import team as MadsTeam
+from madsAI import team as MadsTeam
+from gregAI import team as GregTeam
+from drewAI import team as DrewTeam
+from simonAI import team as SimonTeam
+from janAI import team as JanTeam
+from afonsoAI import team as AfonsoTeam
+from tonyAI import team as TonyTeam
 
 
 def generate_match_list(participants):
@@ -19,7 +25,8 @@ def generate_match_list(participants):
         match_list = []
         for match in matches:
             if ':' in match:
-                match_list.append(match.strip().split(':'))
+                li = match.strip().split(':')
+                match_list.append([li[:3], li[3:]])
                 if count:
                     n += 1
             if 'Second phase' in match:
@@ -190,30 +197,40 @@ if __name__ == '__main__':
     participants = {
         'Neil': NeilTeam,
         'Mads': MadsTeam,
-        'Greg': NeilTeam,
-        'Drew': MadsTeam,
-        'Simon': MadsTeam,
-        'JanLukas': MadsTeam,
-        'Afonso': MadsTeam,
-        'Tony': MadsTeam
+        'Greg': GregTeam,
+        'Drew': DrewTeam,
+        'Simon': SimonTeam,
+        'JanLukas': JanTeam,
+        'Afonso': AfonsoTeam,
+        'Tony': TonyTeam
     }
     match_list, first_phase_len = generate_match_list(participants)
-    # print(match_list)
+    print(match_list)
+    print('==================')
     # exit()
     match_index, round_number, score = starting_match_index_and_score(
         match_list)
-    match_index = 28
+    print('match_index')
+    print(match_index)
+    print('round_number')
+    print(round_number)
+    print('score')
+    print(score)
+    # exit()
+    # match_index = 28
     for i in range(match_index, len(match_list)):
         if i < first_phase_len:
+            print('match_list[i]', match_list[i])
             red = match_list[i][0][0]
             blue = match_list[i][1][0]
-            red_team = (red, participants[red])
-            blue_team = (blue, participants[blue])
+            red_team = (red, [(k, v) for k, v in participants[red].items()])
+            blue_team = (blue, [(k, v) for k, v in participants[blue].items()])
         else:
             # print(match_list[i][:3])
             red = '+'.join(match_list[i][0])
             blue = '+'.join(match_list[i][1])
             red_knights = []
+            print(match_list[i])
             for author in match_list[i][0]:
                 d = participants[author]
                 key = list(d.keys())[0]
@@ -239,6 +256,7 @@ if __name__ == '__main__':
             next_match = (f'Next match is: red={match_list[i+1][0]} '
                           f'VS blue={match_list[i+1][1]}')
         end_match(next_match=next_match)
+        round_number = 0
 
     show_scores()
     input('End of tournament!')

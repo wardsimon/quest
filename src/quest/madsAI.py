@@ -23,8 +23,9 @@ class MadsWarrior(BaseAI):
             self.goto = flag_pos
 
         elif len(info['enemies']) > 0:
-            name = list(info['enemies'].keys())[0]
-            target = info['enemies'][name]
+            # name = list(info['enemies'].keys())[0]
+            # target = info['enemies'][name]
+            target = info['enemies'][0]
             self.goto = [target['x'], target['y']]
 
         elif info['gems']:

@@ -1,5 +1,6 @@
 import numpy as np
 import turtle
+import uuid
 
 SPEED = {'scout': 1.5, 'warrior': 2.0, 'healer': 2.0}
 MAX_SPEED = {'scout': 3, 'warrior': 5, 'healer': 7}
@@ -49,6 +50,7 @@ class Knight:
         self.attack = ATTACK[self.ai.kind]
         self.view_radius = VIEW_RADIUS[self.ai.kind]
         self.health = self.max_health
+        self.id = uuid.uuid4().hex
 
     def __repr__(self):
         return (f'{self.name}: H:{self.health}/{self.max_health} '
@@ -97,7 +99,7 @@ class Knight:
                                 self.fountain['y']) <= self.fountain['size']:
             self.heal(0.5 * dt)
         if self.ai.kind == 'healer':
-            for friend in info['friends'].values():
+            for friend in info['friends']:
                 if self.get_distance(friend.position) < self.view_radius:
                     friend.heal(0.5 * dt)
 
