@@ -4,6 +4,7 @@ import numpy as np
 from random import shuffle
 import turtle
 from engine import Engine
+from manager import Manager
 
 from neilAI import team as NeilTeam
 from madsAI import team as MadsTeam
@@ -195,10 +196,15 @@ def start_match(red_team,
 
 if __name__ == '__main__':
 
-    teams = [
-        NeilTeam, MadsTeam, GregTeam, DrewTeam, SimonTeam, JanTeam, AfonsoTeam,
-        TonyTeam
-    ]
+    # teams = [
+    #     NeilTeam, MadsTeam, GregTeam, DrewTeam, SimonTeam, JanTeam, AfonsoTeam,
+    #     TonyTeam
+    # ]
+
+    manager = Manager(NeilTeam, MadsTeam, GregTeam, DrewTeam, SimonTeam,
+                      JanTeam, AfonsoTeam, TonyTeam)
+    manager.save()
+    exit()
 
     participants = {}
     for team in teams:
