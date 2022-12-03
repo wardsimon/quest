@@ -155,28 +155,31 @@ def end_match(next_match=None):
     show_scores(next_match=next_match)
 
 
-def start_match(red_team,
-                blue_team,
-                round_number=-1,
-                starting_score={
-                    'red': 0,
-                    'blue': 0
-                },
-                speedup=1.0,
-                show_messages=False):
+# def start_match(red_team,
+#                 blue_team,
+#                 round_number=-1,
+#                 starting_score={
+#                     'red': 0,
+#                     'blue': 0
+#                 },
+#                 speedup=1.0,
+#                 show_messages=False):
+def play_match(match, speedup=1.0, show_messages=False):
+
     best_of = 5
     first_to = 3
 
-    match_score = {
-        'red': starting_score['red'],
-        'blue': starting_score['blue'],
-        'count': 0
-    }
-    for n in range(round_number + 1, best_of):
+    # match_score = {
+    #     'red': starting_score['red'],
+    #     'blue': starting_score['blue'],
+    #     'count': 0
+    # }
+
+    for n in range(len(match.rounds), best_of):
         match_score['count'] = n + 1
-        engine = Engine(score=match_score,
-                        red_team=red_team[1],
-                        blue_team=blue_team[1],
+        engine = Engine(score=match.score,
+                        red_team=match.red_team,
+                        blue_team=match.blue_team,
                         speedup=speedup,
                         show_messages=show_messages)
         winner = engine.run()
@@ -207,21 +210,15 @@ if __name__ == '__main__':
     # manager.save()
 
     while (match := manager.next_match() is not None):
-        input(
-            f'Next match is: red={match.red_team.key()} VS blue={match.blue_team.key()}'
-        )
-        start_match(red_team=red_team,
-                    blue_team=blue_team,
-                    round_number=round_number,
-                    starting_score=score,
-                    speedup=1.0,
-                    show_messages=False)
-        next_match = None
-        if i < len(match_list) - 1:
-            next_match = (f'Next match is: red={match_list[i+1][0]} '
-                          f'VS blue={match_list[i+1][1]}')
-        end_match(next_match=next_match)
-        round_number = 0
+        input(f'Next match is: red={match.red_team.key()} VS '
+              f'blue={match.blue_team.key()}')
+        play_match(match=match, speedup=1.0, show_messages=False)
+        # next_match = None
+        # if i < len(match_list) - 1:
+        #     next_match = (f'Next match is: red={match_list[i+1][0]} '
+        #                   f'VS blue={match_list[i+1][1]}')
+        # end_match(next_match=next_match)
+        # round_number = 0
 
     show_scores()
     input('End of tournament!')

@@ -35,6 +35,23 @@ class Match:
             'number': self.number
         }
 
+    def update_scores(self, winner):
+        self.rounds.append(winner)
+        if winner == 'red':
+            for p in self.red_team.values():
+                p.rounds_won += 1
+        elif winner == 'blue':
+            for p in self.blue_team.values():
+                p.rounds_won += 1
+
+    @property
+    def score(self):
+        s = {'red': 0, 'blue': 0}
+        for r in self.rounds:
+            if r is not None:
+                s[r] += 1
+        return s
+
 
 # with open('UserDetails.yaml', 'w') as f:
 #     data = yaml.dump(user_details, f, sort_keys=False, default_flow_style=False)
