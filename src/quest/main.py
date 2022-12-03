@@ -203,7 +203,29 @@ if __name__ == '__main__':
 
     manager = Manager(NeilTeam, MadsTeam, GregTeam, DrewTeam, SimonTeam,
                       JanTeam, AfonsoTeam, TonyTeam)
-    manager.save()
+    print([m.to_dict() for m in manager.matches])
+    # manager.save()
+
+    while (match := manager.next_match() is not None):
+        input(
+            f'Next match is: red={match.red_team.key()} VS blue={match.blue_team.key()}'
+        )
+        start_match(red_team=red_team,
+                    blue_team=blue_team,
+                    round_number=round_number,
+                    starting_score=score,
+                    speedup=1.0,
+                    show_messages=False)
+        next_match = None
+        if i < len(match_list) - 1:
+            next_match = (f'Next match is: red={match_list[i+1][0]} '
+                          f'VS blue={match_list[i+1][1]}')
+        end_match(next_match=next_match)
+        round_number = 0
+
+    show_scores()
+    input('End of tournament!')
+
     exit()
 
     participants = {}
