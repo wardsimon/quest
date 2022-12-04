@@ -57,27 +57,22 @@ class Engine:
 
         self.knights = []
         for team, groups in team_knights.items():
-            print('groups', groups)
             for n, group in enumerate(groups):
-                print('group', group)
                 name, ai = group
-                # this_ai = copy(ai)(team=team)
-                # print(this_ai)
                 self.knights.append(
-                    Knight(
-                        x=self.map._castles[team]['x'] +
-                        self.map._castles['dx'] * 0.6 *
-                        (1 - 2.0 * (int(team == 'blue'))),
-                        y=int(self.map._castles[team]['y'] -
-                              0.5 * self.map._castles['dx'] +
-                              (n * 0.5 * self.map._castles['dx'])),
-                        heading=180 - (180 * int(team == 'red')),
-                        name=name,  #f'{name} ({this_ai.creator})',
-                        team=team,
-                        castle=self.map._castles[team],
-                        fountain=self.map._fountains[team],
-                        number=n,
-                        AI=ai))
+                    Knight(x=self.map._castles[team]['x'] +
+                           self.map._castles['dx'] * 0.6 *
+                           (1 - 2.0 * (int(team == 'blue'))),
+                           y=int(self.map._castles[team]['y'] -
+                                 0.5 * self.map._castles['dx'] +
+                                 (n * 0.5 * self.map._castles['dx'])),
+                           heading=180 - (180 * int(team == 'red')),
+                           name=name,
+                           team=team,
+                           castle=self.map._castles[team],
+                           fountain=self.map._fountains[team],
+                           number=n,
+                           AI=ai))
 
         self.graphics.initialize_scoreboard(knights=self.knights, score=score)
 
@@ -190,7 +185,7 @@ class Engine:
     def run(self):
 
         t = 0
-        time_limit = 100  #00
+        time_limit = 3000
         dt = 1.0 * self.speedup
         dt_count = 0
         while t < time_limit:
@@ -228,4 +223,3 @@ class Engine:
             t += dt
             dt_count += 1
         self.graphics.announce_winner(None)
-        return 'red'

@@ -14,16 +14,12 @@ class Match:
         self.red_team = red_team
         self.blue_team = blue_team
         self.number = number
-        # self.rounds = ['red', 'red', None, 'red']
-        # print(self.score)
         self.rounds = [] if rounds is None else rounds
         self.phase = phase
         self.manager = manager
         self.best_of = 5
         self.first_to = self.best_of // 2 + 1
         self.match_winner = winner
-        # print(self.first_to)
-        # input('ll')
 
     def to_dict(self):
         return {
@@ -70,26 +66,11 @@ class Match:
                 p.matches_won += 1
 
     def play(self, speedup=1.0, show_messages=False):
-        # best_of = 5
-        # first_to = 3
-
-        # match_score = {
-        #     'red': starting_score['red'],
-        #     'blue': starting_score['blue'],
-        #     'count': 0
-        # }
-
         for n in range(len(self.rounds), self.best_of):
-            # match_score['count'] = n + 1
 
             if self.phase == 1:
                 red = list(self.red_team.keys())[0]
                 blue = list(self.blue_team.keys())[0]
-                # red_team = (red, [(k, v)
-                #                   for k, v in match.red_team[red].knights.items()])
-                # blue_team = (blue, [
-                #     (k, v) for k, v in match.blue_team[blue].knights.items()
-                # ])
                 red_team = [(k, v)
                             for k, v in self.red_team[red].knights.items()]
                 blue_team = [(k, v)
@@ -113,25 +94,11 @@ class Match:
             self.update_scores(winner)
             self.manager.save()
 
-            # if winner is not None:
-            #     match_score[winner] += 1
-            # # Write score to file
-            # with open('score.txt', 'a') as f:
-            #     f.write(
-            #         f"|Round:{match_score['count']}:{red_team[0]}:"
-            #         f"{match_score['red']}:{blue_team[0]}:{match_score['blue']}")
-            # for team in ('red', 'blue'):
-            #     if match_score[team] == first_to:
-            #         return
             score = self.score
-            print(score)
             a_team_has_won = False
             for team in ('red', 'blue'):
-                # print(team, score[team], self.first_to,
-                #       score[team] == self.first_to)
                 if score[team] == self.first_to:
                     self.update_winner(team)
-                    # print('RETURNING')
                     a_team_has_won = True
             self.manager.save()
             if a_team_has_won:
