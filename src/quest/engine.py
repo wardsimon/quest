@@ -190,7 +190,7 @@ class Engine:
     def run(self):
 
         t = 0
-        time_limit = 3000
+        time_limit = 100  #00
         dt = 1.0 * self.speedup
         dt_count = 0
         while t < time_limit:
@@ -228,3 +228,4 @@ class Engine:
             t += dt
             dt_count += 1
         self.graphics.announce_winner(None)
+        return 'red'

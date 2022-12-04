@@ -226,10 +226,10 @@ if __name__ == '__main__':
     # manager.save()
 
     while ((match := manager.next_match()) is not None):
-        print(match.to_dict())
-        input(f'Next match is: red={match.red_team.keys()} VS '
-              f'blue={match.blue_team.keys()}')
+        # print(match.to_dict())
+        input(f'Next match is: {match.to_string()}')
         match.play(speedup=1.0, show_messages=False)
+        manager.show_scores()
         # next_match = None
         # if i < len(match_list) - 1:
         #     next_match = (f'Next match is: red={match_list[i+1][0]} '

@@ -220,7 +220,7 @@ class Graphics:
         self.pen.penup()
         self.pen.goto(self.nx // 2, self.ny + 40)
         self.pen.pendown()
-        self.pen.write(f"Match number {score['count']}",
+        self.pen.write(f"Round number {score['count']}",
                        move=False,
                        align="center",
                        font=('Arial', 18, 'normal'))
