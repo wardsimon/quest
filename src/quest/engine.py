@@ -57,8 +57,9 @@ class Engine:
 
         self.knights = []
         for team, groups in team_knights.items():
+            print('groups', groups)
             for n, group in enumerate(groups):
-                # print(group)
+                print('group', group)
                 name, ai = group
                 # this_ai = copy(ai)(team=team)
                 # print(this_ai)
