@@ -1,6 +1,9 @@
+import sys
+
+sys.path.extend(['core', 'participants'])
+
 from match import Match
 from manager import Participant
-
 from neilAI import team as NeilTeam
 from madsAI import team as MadsTeam
 
@@ -13,4 +16,4 @@ match = Match(
         blue_team[0]: Participant(name=blue_team[0], knights=blue_team[1])
     })
 
-match.play(speedup=3.0)
+match.play(speedup=1.0)
