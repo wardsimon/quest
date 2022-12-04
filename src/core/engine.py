@@ -4,7 +4,6 @@ from fight import fight
 from knight import Knight
 
 import numpy as np
-from copy import copy
 import time
 
 

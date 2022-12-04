@@ -1,8 +1,3 @@
-from pathlib import Path
-from itertools import combinations
-import numpy as np
-from random import shuffle
-import turtle
 import sys
 
 sys.path.append('../participants')

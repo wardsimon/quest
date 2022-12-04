@@ -56,17 +56,16 @@ class Manager:
         # Phase 2
         n_per_round = 6
         matches_per_participant = len(self.participants) - 1
-        l = list(self.participants.keys()) * matches_per_participant
+        match_list = list(self.participants.keys()) * matches_per_participant
         sets = []
-        second_phase = []
-        while len(l) > 0:
-            possibles = list(set(l))
+        while len(match_list) > 0:
+            possibles = list(set(match_list))
             this_round = []
             if len(possibles) < n_per_round:
                 div = len(possibles) // 2
                 red = possibles[:div]
                 blue = possibles[div:]
-                l.clear()
+                match_list.clear()
             else:
                 for i in range(n_per_round):
                     ind = np.random.choice(range(len(possibles)))
@@ -85,7 +84,7 @@ class Manager:
 
                 sets += [red, blue]
                 for name in this_round:
-                    l.remove(name)
+                    match_list.remove(name)
 
     def load(self):
         with open(self.filename) as f:
