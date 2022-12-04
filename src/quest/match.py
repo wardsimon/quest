@@ -6,8 +6,8 @@ class Match:
     def __init__(self,
                  red_team,
                  blue_team,
-                 number,
-                 phase,
+                 number=1,
+                 phase=1,
                  rounds=None,
                  manager=None,
                  winner=None):
@@ -92,7 +92,6 @@ class Match:
                             show_messages=show_messages)
             winner = engine.run()
             self.update_scores(winner)
-            self.manager.save()
 
             score = self.score
             a_team_has_won = False
@@ -100,7 +99,8 @@ class Match:
                 if score[team] == self.first_to:
                     self.update_winner(team)
                     a_team_has_won = True
-            self.manager.save()
+            if self.manager is not None:
+                self.manager.save()
             if a_team_has_won:
                 return
 

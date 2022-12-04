@@ -1,5 +1,5 @@
 def fight(knights, game_map):
-    cooldown = 50
+    cooldown = 80
     combats = {}
     dead = []
     for k in knights:
@@ -22,13 +22,13 @@ def fight(knights, game_map):
                 k.attack if k.cooldown == 0 else 0 for k in combats[key]['red']
             ])
             for k in combats[key]['blue']:
-                k.health -= red_attack / len(combats[key]['blue'])
+                k.health -= int(red_attack / len(combats[key]['blue']))
                 if k.health <= 0:
                     dead.append(k)
                 if k.cooldown == 0:
                     k.cooldown = cooldown
             for k in combats[key]['red']:
-                k.health -= blue_attack / len(combats[key]['red'])
+                k.health -= int(blue_attack / len(combats[key]['red']))
                 if k.health <= 0:
                     dead.append(k)
                 if k.cooldown == 0:
