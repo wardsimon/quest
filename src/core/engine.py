@@ -184,7 +184,7 @@ class Engine:
     def run(self):
 
         t = 0
-        time_limit = 3000
+        time_limit = 4000
         dt = 1.0 * self.speedup
         dt_count = 0
         while t < time_limit:

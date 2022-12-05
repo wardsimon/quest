@@ -92,7 +92,6 @@ class Manager:
         for n, m in data['matches'].items():
             for r in m['rounds']:
                 if r is not None:
-                    print(m[r])
                     for p in m[r]:
                         self.participants[p].rounds_won += 1
             if m['winner'] is not None:
