@@ -40,7 +40,7 @@ class Engine:
         self.ny = self.ng * 30
         self.graphics = Graphics(nx=self.nx, ny=self.ny, ng=self.ng)
         self.map = Map(nx=self.nx, ny=self.ny, ng=self.ng)
-        self.speedup = speedup
+        self.speedup = int(speedup)
         self._show_messages = show_messages
 
         self.graphics.add_obstacles(self.map._obstacles)
@@ -187,15 +187,15 @@ class Engine:
         # time_limit = 4000
         time_limit = 180
         dt = 1.0 * self.speedup
-        dt_count = 0
+        # dt_count = 0
         frequency = 1. / 30.
         start_time = time.time()
         frame_times = np.linspace(frequency, time_limit,
                                   int(time_limit / frequency))
         frame = 0
         while t < time_limit:
-            t = time.time() - start_time
-            if t >= frame_times[frame]:
+            t = (time.time() - start_time) * self.speedup
+            if (frame < len(frame_times)) and (t >= frame_times[frame]):
                 for k in self.knights:
                     info = self.get_info(knight=k)
                     k.advance_dt(t=t, dt=dt, info=info)
@@ -227,10 +227,9 @@ class Engine:
                         return winner
 
                 self.graphics.update(t=t,
-                                     dt_count=frame,
                                      knights=self.knights,
                                      time_limit=time_limit)
-                frame += 1
+                frame += self.speedup
             # dt_count += 1
 
             # time.sleep(0.01)

@@ -65,7 +65,7 @@ class Match:
             for p in self.blue_team.values():
                 p.matches_won += 1
 
-    def play(self, speedup=1.0, show_messages=False):
+    def play(self, speedup=1, show_messages=False):
         for n in range(len(self.rounds), self.best_of):
 
             if self.phase == 1:

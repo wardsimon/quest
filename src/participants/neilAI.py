@@ -10,6 +10,7 @@ class NeilWarrior(BaseAI):
         super().__init__(*args, creator=CREATOR, kind='warrior', **kwargs)
         self.previous_position = [0, 0]
         self.previous_health = 0
+        self.next_go_straight = 0
 
     def run(self, t, dt, info):
         me = info['me']
@@ -18,6 +19,7 @@ class NeilWarrior(BaseAI):
         #     if (friend['message'] is not None) and ('flag'
         #                                             in friend['message']):
         #         flag_found = friend['message']['flag']
+        # print(t, self.next_go_straight, t >= self.next_go_straight)
 
         if all(me['position'] == self.previous_position) or (
                 me['health'] < self.previous_health):
@@ -40,7 +42,7 @@ class NeilWarrior(BaseAI):
         elif info['gems']:
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
 
-        elif t % 1 < 0.01:
+        elif t >= self.next_go_straight:
             if me['team'] == 'red':
                 if me['x'] < 56 * 32 - 200:
                     #     head = np.random.random() * 360.0
@@ -52,6 +54,7 @@ class NeilWarrior(BaseAI):
                     # else:
                     self.heading = 180
             # self.heading = head
+            self.next_go_straight += 1
 
         self.previous_position = me['position']
         self.previous_health = me['health']
@@ -63,6 +66,7 @@ class NeilScout(BaseAI):
         super().__init__(*args, creator=CREATOR, kind='scout', **kwargs)
         self.previous_position = [0, 0]
         self.previous_health = 0
+        self.next_go_straight = 0
 
     def run(self, t, dt, info):
         # super().run(t, dt, info)
@@ -94,7 +98,7 @@ class NeilScout(BaseAI):
         elif info['gems']:
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
 
-        elif t % 5 == 0:
+        elif t >= self.next_go_straight:
             if me['team'] == 'red':
                 if me['x'] < 56 * 32 - 200:
                     #     head = np.random.random() * 360.0
@@ -106,6 +110,7 @@ class NeilScout(BaseAI):
                     # else:
                     self.heading = 180
             # self.heading = head
+            self.next_go_straight += 1
 
         self.previous_position = me['position']
         self.previous_health = me['health']
@@ -118,6 +123,7 @@ class NeilHealer(BaseAI):
         super().__init__(*args, creator=CREATOR, kind='healer', **kwargs)
         self.previous_position = [0, 0]
         self.previous_health = 0
+        self.next_go_straight = 0
 
     def run(self, t, dt, info):
         # super().run(t, dt, info)
@@ -159,7 +165,7 @@ class NeilHealer(BaseAI):
 
         elif info['gems']:
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
-        elif t % 5 == 0:
+        elif t >= self.next_go_straight:
             if me['team'] == 'red':
                 if me['x'] < 56 * 32 - 200:
                     #     head = np.random.random() * 360.0
@@ -171,6 +177,7 @@ class NeilHealer(BaseAI):
                     # else:
                     self.heading = 180
             # self.heading = head
+            self.next_go_straight += 1
 
         self.previous_position = me['position']
         self.previous_health = me['health']

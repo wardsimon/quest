@@ -58,6 +58,7 @@ class Graphics:
 
         self.knights = {}
         self.previous_update = -10
+        self.next_scoreboard_update = 0
 
     def add_grid(self):
 
@@ -326,8 +327,11 @@ class Graphics:
                                  align=align,
                                  font=('Arial', 10, 'normal'))
 
-    def update(self, t, dt_count, knights, time_limit):
-        if dt_count % 10 == 0:
+    def update(self, t, knights, time_limit):
+        self.next_scoreboard_update += 1
+        if self.next_scoreboard_update % 15 == 0:
+            self.next_scoreboard_update = 0
+            # if dt_count % 10 == 0:
             self.update_scoreboard(t=t, knights=knights, time_limit=time_limit)
         self.screen.update()
 

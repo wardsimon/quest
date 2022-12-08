@@ -143,10 +143,21 @@ class Manager:
             text += (str(n + 1).rjust(2) + '. ' + k.ljust(longest_name) +
                      ':  ' + str(v.rounds_won).rjust(6) + '  ' +
                      str(v.matches_won).rjust(7) + '\n')
-        print(text)
         next_match = self.next_match()
         if next_match is not None:
-            text += f'\nNext match is: {next_match.to_string()}\n'
+            for i, m in enumerate(self.matches):
+                if m.phase == 2:
+                    phase_1_length = i
+                    break
+            phase_2_length = len(self.matches) - phase_1_length
+            number_in_phase = next_match.number
+            ntot_phase = phase_1_length
+            if next_match.phase == 2:
+                next_match.number -= phase_1_length
+                ntot_phase = phase_2_length
+            text += (f'\nNext match is: Phase {next_match.phase} '
+                     f'({number_in_phase}/{ntot_phase}) '
+                     f'{next_match.to_string()}\n')
         screen = turtle.Screen()
         screen.clearscreen()
         screen.tracer(0)

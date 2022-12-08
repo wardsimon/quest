@@ -16,4 +16,4 @@ match = Match(
         blue_team[0]: Participant(name=blue_team[0], knights=blue_team[1])
     })
 
-match.play(speedup=1.0)
+match.play(speedup=1)
