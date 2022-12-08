@@ -21,7 +21,6 @@ if __name__ == '__main__':
     while ((match := manager.next_match()) is not None):
         input(f'Next match is: {match.to_string()}')
         match.play(speedup=1.0, show_messages=False)
-        input('Match over')
         manager.show_scores()
 
     show_scores()

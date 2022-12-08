@@ -131,7 +131,7 @@ class Knight:
         self.avatar_circle.clear()
         self.avatar_circle.goto(self.x - self.view_radius, self.y)
         self.avatar_circle.pendown()
-        self.avatar_circle.circle(self.view_radius)
+        self.avatar_circle.circle(self.view_radius, steps=20)
         self.avatar_circle.penup()
 
         self.avatar_name.clear()

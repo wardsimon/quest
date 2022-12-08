@@ -40,7 +40,7 @@ class NeilWarrior(BaseAI):
         elif info['gems']:
             self.goto = [info['gems']['x'][0], info['gems']['y'][0]]
 
-        elif t % 5 == 0:
+        elif t % 1 < 0.01:
             if me['team'] == 'red':
                 if me['x'] < 56 * 32 - 200:
                     #     head = np.random.random() * 360.0

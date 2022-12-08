@@ -184,41 +184,56 @@ class Engine:
     def run(self):
 
         t = 0
-        time_limit = 4000
+        # time_limit = 4000
+        time_limit = 180
         dt = 1.0 * self.speedup
         dt_count = 0
+        frequency = 1. / 30.
+        start_time = time.time()
+        frame_times = np.linspace(frequency, time_limit,
+                                  int(time_limit / frequency))
+        frame = 0
         while t < time_limit:
-            for k in self.knights:
-                k.advance_dt(t=t, dt=dt, info=self.get_info(knight=k))
-                info = self.get_info(knight=k, friends_as_dict=True)
-                k.execute_ai(t=t, dt=dt, info=info)
-                winner = self.move(knight=k, t=t, dt=dt, info=info)
-                if winner is not None:
+            t = time.time() - start_time
+            if t >= frame_times[frame]:
+                for k in self.knights:
+                    info = self.get_info(knight=k)
+                    k.advance_dt(t=t, dt=dt, info=info)
+                    # info = self.get_info(knight=k, friends_as_dict=True)
+                    info['friends'] = [
+                        make_properties_dict(friend)
+                        for friend in info['friends']
+                    ]
+                    k.execute_ai(t=t, dt=dt, info=info)
+                    winner = self.move(knight=k, t=t, dt=dt, info=info)
+                    if winner is not None:
+                        self.graphics.announce_winner(winner)
+                        return winner
+
+                dead_bodies = fight(knights=self.knights, game_map=self.map)
+                for k in dead_bodies:
+                    k.avatar.color('black')
+                    k.avatar_circle.clear()
+                    self.knights.remove(k)
+                    self.team_counts[k.team] -= 1
+                if self.team_counts['red'] + self.team_counts['blue'] == 0:
+                    winner = None
                     self.graphics.announce_winner(winner)
                     return winner
+                for team in ('red', 'blue'):
+                    if self.team_counts[team] == 0:
+                        winner = 'red' if team == 'blue' else 'blue'
+                        self.graphics.announce_winner(winner)
+                        return winner
 
-            dead_bodies = fight(knights=self.knights, game_map=self.map)
-            for k in dead_bodies:
-                k.avatar.color('black')
-                k.avatar_circle.clear()
-                self.knights.remove(k)
-                self.team_counts[k.team] -= 1
-            if self.team_counts['red'] + self.team_counts['blue'] == 0:
-                winner = None
-                self.graphics.announce_winner(winner)
-                return winner
-            for team in ('red', 'blue'):
-                if self.team_counts[team] == 0:
-                    winner = 'red' if team == 'blue' else 'blue'
-                    self.graphics.announce_winner(winner)
-                    return winner
+                self.graphics.update(t=t,
+                                     dt_count=frame,
+                                     knights=self.knights,
+                                     time_limit=time_limit)
+                frame += 1
+            # dt_count += 1
 
-            self.graphics.update(t=t,
-                                 dt_count=dt_count,
-                                 knights=self.knights,
-                                 time_limit=time_limit)
-
-            time.sleep(0.01)
-            t += dt
-            dt_count += 1
+            # time.sleep(0.01)
+            # t += dt
+            # dt_count += 1
         self.graphics.announce_winner(None)
