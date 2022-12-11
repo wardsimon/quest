@@ -40,6 +40,8 @@ class Graphics:
 
         self.background = '#D3D3D3'
         self.screen.bgcolor(self.background)
+        # self.screen.bgpic('background.png')
+        # cv.itemconfig(self.screen._bgpic, anchor="sw")
         self.screen.tracer(0)
 
         self.pen = turtle.Turtle()
