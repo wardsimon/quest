@@ -340,7 +340,6 @@ class Graphics:
         self.next_scoreboard_update += 1
         if self.next_scoreboard_update % 15 == 0:
             self.next_scoreboard_update = 0
-            # if dt_count % 10 == 0:
             self.update_scoreboard(t=t, knights=knights, time_limit=time_limit)
         self.screen.update()
 

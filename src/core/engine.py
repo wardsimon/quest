@@ -184,10 +184,8 @@ class Engine:
     def run(self, safe: bool = False):
 
         t = 0
-        # time_limit = 4000
         time_limit = 180
         dt = 1.0 * self.speedup
-        # dt_count = 0
         frequency = 1. / 30.
         start_time = time.time()
         frame_times = np.linspace(frequency, time_limit,
@@ -199,7 +197,6 @@ class Engine:
                 for k in self.knights:
                     info = self.get_info(knight=k)
                     k.advance_dt(t=t, dt=dt, info=info)
-                    # info = self.get_info(knight=k, friends_as_dict=True)
                     info['friends'] = [
                         make_properties_dict(friend)
                         for friend in info['friends']
@@ -230,9 +227,5 @@ class Engine:
                                      knights=self.knights,
                                      time_limit=time_limit)
                 frame += self.speedup
-            # dt_count += 1
 
-            # time.sleep(0.01)
-            # t += dt
-            # dt_count += 1
         self.graphics.announce_winner(None)
