@@ -1,6 +1,7 @@
 import numpy as np
 import turtle
 import uuid
+from typing import Any
 
 SPEED = {'scout': 1.5, 'warrior': 2.0, 'healer': 2.0}
 MAX_SPEED = {'scout': 3, 'warrior': 5, 'healer': 7}
@@ -11,8 +12,8 @@ VIEW_RADIUS = {'scout': 150, 'warrior': 100, 'healer': 100}
 
 class Knight:
 
-    def __init__(self, x, y, name, heading, team, castle, fountain, number,
-                 AI):
+    def __init__(self, x: int, y: int, name: str, heading: float, team: str,
+                 castle: dict, fountain: dict, number: int, AI: Any):
         self.avatar = turtle.Turtle()
         self.avatar.speed(0)
         self.avatar.penup()
@@ -52,48 +53,48 @@ class Knight:
         self.health = self.max_health
         self.id = uuid.uuid4().hex
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (f'{self.name}: H:{self.health}/{self.max_health} '
                 f'A:{self.attack} S:{self.speed} at {self.x}, {self.y}')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return repr(self)
 
     @property
-    def x(self):
+    def x(self) -> int:
         return int(self.avatar.xcor())
 
     @property
-    def y(self):
+    def y(self) -> int:
         return int(self.avatar.ycor())
 
     @property
-    def position(self):
+    def position(self) -> np.ndarray:
         return np.array(self.avatar.position()).astype(int)
 
     @property
-    def heading(self):
+    def heading(self) -> float:
         return self.avatar.heading()
 
     @heading.setter
-    def heading(self, angle):
+    def heading(self, angle: float):
         return self.avatar.setheading(angle)
 
     @property
-    def vector(self):
+    def vector(self) -> np.ndarray:
         h = self.heading * np.pi / 180.0
         return np.array([np.cos(h), np.sin(h)])
 
-    def ray_trace(self, dt):
+    def ray_trace(self, dt: float) -> np.ndarray:
         vt = self.speed * dt
         ray = self.vector.reshape((2, 1)) * np.linspace(1, vt, int(vt) + 1)
         return (np.array(self.avatar.position()).reshape(
             (2, 1)) + ray).astype(int)
 
-    def get_distance(self, pos):
+    def get_distance(self, pos: tuple) -> float:
         return np.sqrt((pos[0] - self.x)**2 + (pos[1] - self.y)**2)
 
-    def advance_dt(self, t, dt, info):
+    def advance_dt(self, t: float, dt: float, info: dict):
         self.cooldown = max(self.cooldown - dt, 0)
         if self.avatar.distance(self.fountain['x'],
                                 self.fountain['y']) <= self.fountain['size']:
@@ -103,8 +104,14 @@ class Knight:
                 if self.get_distance(friend.position) < self.view_radius:
                     friend.heal(0.5 * dt)
 
-    def execute_ai(self, t, dt, info):
-        self.ai.exec(t, dt, info)
+    def execute_ai(self, t: float, dt: float, info: dict, safe: bool = False):
+        if safe:
+            try:
+                self.ai.exec(t, dt, info)
+            except:
+                pass
+        else:
+            self.ai.exec(t, dt, info)
         if sum([
                 bool(self.ai.heading),
                 bool(self.ai.goto),
@@ -122,10 +129,10 @@ class Knight:
         if self.ai.right is not None:
             self.right(self.ai.right)
 
-    def heal(self, value):
+    def heal(self, value: float):
         self.health = min(self.max_health, self.health + value)
 
-    def move(self, dt, show_messages=False):
+    def move(self, dt: float, show_messages: bool = False):
         self.avatar.forward(self.speed * dt)
 
         self.avatar_circle.clear()
@@ -152,15 +159,15 @@ class Knight:
                                font=('Arial', 12, 'normal'))
         self.avatar_name.penup()
 
-    def goto(self, x, y):
+    def goto(self, x: float, y: float):
         angle = self.avatar.towards(x, y)
         self.heading = angle
 
-    def towards(self, x, y):
+    def towards(self, x: float, y: float) -> float:
         return self.avatar.towards(x, y)
 
-    def right(self, angle):
+    def right(self, angle: float):
         self.avatar.right(angle)
 
-    def left(self, angle):
+    def left(self, angle: float):
         self.avatar.left(angle)

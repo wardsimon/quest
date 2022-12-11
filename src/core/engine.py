@@ -29,11 +29,11 @@ def make_properties_dict(knight):
 class Engine:
 
     def __init__(self,
-                 score,
-                 red_team,
-                 blue_team,
-                 speedup=1.0,
-                 show_messages=False):
+                 score: dict,
+                 red_team: list,
+                 blue_team: list,
+                 speedup: int = 1,
+                 show_messages: bool = False):
 
         self.ng = 32
         self.nx = self.ng * 56
@@ -75,7 +75,7 @@ class Engine:
 
         self.graphics.initialize_scoreboard(knights=self.knights, score=score)
 
-    def get_local_map(self, x, y, radius):
+    def get_local_map(self, x: float, y: float, radius: float) -> np.ndarray:
         xmin = max(x - radius, 0)
         xmax = min(x + radius + 1, self.nx - 1)
         ymin = max(y - radius, 0)
@@ -89,7 +89,7 @@ class Engine:
         local_map[invalid] = -1
         return local_map
 
-    def get_info(self, knight, friends_as_dict=False):
+    def get_info(self, knight: Knight, friends_as_dict: bool = False):
         r = knight.view_radius
         local_map = self.get_local_map(x=knight.x, y=knight.y, radius=r)
         friends = []
@@ -134,7 +134,7 @@ class Engine:
             'fountain': self.map._fountains[knight.team]
         }
 
-    def pickup_gem(self, x, y, team):
+    def pickup_gem(self, x: float, y: float, team: str):
         kind_mapping = {0: ('attack', 3), 1: ('health', 5), 2: ('speed', 0.3)}
         kind = np.random.choice([0, 1, 2])
         bonus = np.random.random() * kind_mapping[kind][1]
@@ -147,7 +147,7 @@ class Engine:
                 elif kind == 2:
                     k.speed = min(k.speed + bonus, k.max_speed)
 
-    def move(self, knight, t, dt, info):
+    def move(self, knight: Knight, t: float, dt: float, info: dict):
 
         if info['gems']:
             for x, y in zip(info['gems']['x'], info['gems']['y']):
@@ -181,7 +181,7 @@ class Engine:
                     180) - 180) < 10):
             return knight.team
 
-    def run(self):
+    def run(self, safe: bool = False):
 
         t = 0
         # time_limit = 4000
@@ -204,7 +204,7 @@ class Engine:
                         make_properties_dict(friend)
                         for friend in info['friends']
                     ]
-                    k.execute_ai(t=t, dt=dt, info=info)
+                    k.execute_ai(t=t, dt=dt, info=info, safe=safe)
                     winner = self.move(knight=k, t=t, dt=dt, info=info)
                     if winner is not None:
                         self.graphics.announce_winner(winner)

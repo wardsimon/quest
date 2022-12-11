@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     while ((match := manager.next_match()) is not None):
         input(f'Next match is: {match.to_string()}')
-        match.play(speedup=1, show_messages=False)
+        match.play(speedup=3, show_messages=False, safe=True)
         manager.show_scores()
 
     manager.show_scores()

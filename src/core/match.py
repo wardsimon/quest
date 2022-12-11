@@ -1,16 +1,17 @@
 from engine import Engine
+from typing import Any
 
 
 class Match:
 
     def __init__(self,
-                 red_team,
-                 blue_team,
-                 number=1,
-                 phase=1,
-                 rounds=None,
-                 manager=None,
-                 winner=None):
+                 red_team: dict,
+                 blue_team: dict,
+                 number: int = 1,
+                 phase: int = 1,
+                 rounds: int = None,
+                 manager: Any = None,
+                 winner: str = None):
         self.red_team = red_team
         self.blue_team = blue_team
         self.number = number
@@ -21,7 +22,7 @@ class Match:
         self.first_to = self.best_of // 2 + 1
         self.match_winner = winner
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             'phase': self.phase,
             'red': list(self.red_team.keys()),
@@ -31,11 +32,11 @@ class Match:
             'winner': self.match_winner
         }
 
-    def to_string(self):
+    def to_string(self) -> str:
         return (f'red={list(self.red_team.keys())} VS '
                 f'blue={list(self.blue_team.keys())}')
 
-    def update_scores(self, winner):
+    def update_scores(self, winner: str):
         self.rounds.append(winner)
         if winner == 'red':
             for p in self.red_team.values():
@@ -45,18 +46,18 @@ class Match:
                 p.rounds_won += 1
 
     @property
-    def score(self):
+    def score(self) -> dict:
         s = {'red': 0, 'blue': 0, 'count': len(self.rounds) + 1}
         for r in self.rounds:
             if r is not None:
                 s[r] += 1
         return s
 
-    def is_complete(self):
+    def is_complete(self) -> bool:
         return (self.match_winner
                 is not None) or (not (len(self.rounds) < self.best_of))
 
-    def update_winner(self, winning_team):
+    def update_winner(self, winning_team: str):
         self.match_winner = winning_team
         if winning_team == 'red':
             for p in self.red_team.values():
@@ -65,7 +66,10 @@ class Match:
             for p in self.blue_team.values():
                 p.matches_won += 1
 
-    def play(self, speedup=1, show_messages=False):
+    def play(self,
+             speedup: int = 1,
+             safe: bool = False,
+             show_messages: bool = False):
         for n in range(len(self.rounds), self.best_of):
 
             if self.phase == 1:
@@ -90,7 +94,7 @@ class Match:
                             blue_team=blue_team,
                             speedup=speedup,
                             show_messages=show_messages)
-            winner = engine.run()
+            winner = engine.run(safe=safe)
             self.update_scores(winner)
 
             score = self.score

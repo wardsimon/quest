@@ -10,13 +10,17 @@ import turtle
 
 class Participant:
 
-    def __init__(self, name, knights, rounds_won=0, matches_won=0):
+    def __init__(self,
+                 name: str,
+                 knights: list,
+                 rounds_won: int = 0,
+                 matches_won: int = 0):
         self.name = name
         self.knights = knights
         self.rounds_won = rounds_won
         self.matches_won = matches_won
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {'rounds_won': self.rounds_won, 'matches_won': self.matches_won}
 
 
@@ -156,7 +160,7 @@ class Manager:
                 next_match.number -= phase_1_length
                 ntot_phase = phase_2_length
             text += (f'\nNext match is: Phase {next_match.phase} '
-                     f'({number_in_phase}/{ntot_phase}) '
+                     f'({number_in_phase}/{ntot_phase})\n'
                      f'{next_match.to_string()}\n')
         screen = turtle.Screen()
         screen.clearscreen()
@@ -165,7 +169,7 @@ class Manager:
         pen.speed(0)
         pen.hideturtle()
         pen.penup()
-        pen.goto(500, 700)
+        pen.goto(500, 300)
         pen.pendown()
-        pen.write(text, move=False, align="left", font=('Arial', 18, 'normal'))
+        pen.write(text, move=False, align="left", font=('Arial', 32, 'normal'))
         pen.penup()

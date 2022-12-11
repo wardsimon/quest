@@ -3,7 +3,7 @@ import numpy as np
 
 class Map:
 
-    def __init__(self, nx, ny, ng):
+    def __init__(self, nx: int, ny: int, ng: int):
         self.nx = nx
         self.ny = ny
         self.ng = ng
@@ -13,7 +13,7 @@ class Map:
         self._make_fountains()
         self._make_gems()
 
-    def _make_obstacles(self, n=100):
+    def _make_obstacles(self, n: int = 100):
         free_zone = 200
         posx = np.random.random(n) * (self.nx - (2 * free_zone)) + free_zone
         posy = np.random.random(n) * self.ny
@@ -29,7 +29,7 @@ class Map:
                     self.array[i, j] = 1
         self._obstacles = {'x': posx, 'y': posy, 'dx': dx}
 
-    def _make_gems(self, n=100):
+    def _make_gems(self, n: int = 100):
         posx = np.zeros(n, dtype=int)
         posy = np.zeros(n, dtype=int)
         for i in range(n):

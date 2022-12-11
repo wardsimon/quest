@@ -12,7 +12,7 @@ class NeilWarrior(BaseAI):
         self.previous_health = 0
         self.next_go_straight = 0
 
-    def run(self, t, dt, info):
+    def run(self, t: float, dt: float, info: dict):
         me = info['me']
         # flag_found = None
         # for friend in info['friends'].values():
@@ -68,7 +68,7 @@ class NeilScout(BaseAI):
         self.previous_health = 0
         self.next_go_straight = 0
 
-    def run(self, t, dt, info):
+    def run(self, t: float, dt: float, info: dict):
         # super().run(t, dt, info)
         me = info['me']
         # flag_found = None
@@ -125,7 +125,7 @@ class NeilHealer(BaseAI):
         self.previous_health = 0
         self.next_go_straight = 0
 
-    def run(self, t, dt, info):
+    def run(self, t: float, dt: float, info: dict):
         # super().run(t, dt, info)
         me = info['me']
         # flag_found = None

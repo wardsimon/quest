@@ -1,7 +1,14 @@
 import turtle
+from typing import Any
 
 
-def rectangle(pen, x, y, dx, dy, color, fill=False):
+def rectangle(pen: Any,
+              x: float,
+              y: float,
+              dx: float,
+              dy: float,
+              color: str,
+              fill=False):
     pen.penup()
     pen.setheading(0)
     pen.goto(x, y)
@@ -23,7 +30,7 @@ def rectangle(pen, x, y, dx, dy, color, fill=False):
 
 class Graphics:
 
-    def __init__(self, nx, ny, ng, topbar=100):
+    def __init__(self, nx: int, ny: int, ng: int, topbar: int = 100):
         self.nx = nx
         self.ny = ny
         self.ng = ng
@@ -102,7 +109,7 @@ class Graphics:
     def add_border(self):
         rectangle(self.pen, x=0, y=0, dx=self.nx, dy=self.ny, color='black')
 
-    def add_obstacles(self, obstacles):
+    def add_obstacles(self, obstacles: dict):
         x = obstacles['x']
         y = obstacles['y']
         dx = obstacles['dx']
@@ -116,7 +123,7 @@ class Graphics:
                       color='#2F4F4F',
                       fill=True)
 
-    def add_castles(self, castles):
+    def add_castles(self, castles: dict):
         dx = castles['dx']
         thickness = castles['thickness']
         star_size = int(castles['dx'] / 3)
@@ -167,7 +174,7 @@ class Graphics:
                 self.pen.left(360 / 2.5)
             self.pen.end_fill()
 
-    def add_fountains(self, fountains):
+    def add_fountains(self, fountains: dict):
 
         for team in ('red', 'blue'):
             params = fountains[team]
@@ -186,7 +193,7 @@ class Graphics:
                            align="center",
                            font=('Arial', 12, 'normal'))
 
-    def add_gems(self, gems):
+    def add_gems(self, gems: dict):
         x = gems['x']
         y = gems['y']
         r = 10
@@ -198,7 +205,7 @@ class Graphics:
             self.pen.pendown()
             self.pen.dot(r)
 
-    def erase_gem(self, x, y):
+    def erase_gem(self, x: float, y: float):
         r = 10
 
         self.pen.color(self.background)
@@ -208,12 +215,12 @@ class Graphics:
         self.pen.dot(r)
         self.pen.penup()
 
-    def initialize_scoreboard(self, knights, score):
+    def initialize_scoreboard(self, knights: list, score: dict):
         self.pen.setheading(0)
         self.pen.color('black')
         self.pen.pensize(1)
         self.pen.penup()
-        self.pen.goto(self.nx // 2 + 5, self.ny + self.topbar - 25)
+        self.pen.goto(self.nx // 2 + 20, self.ny + self.topbar - 25)
         self.pen.pendown()
         self.pen.write("Time left =",
                        move=False,
@@ -265,7 +272,7 @@ class Graphics:
         self.pen.pensize(1)
         self.pen.penup()
 
-    def update_scoreboard(self, t, knights, time_limit):
+    def update_scoreboard(self, t: float, knights: list, time_limit: float):
         self.score_pen.clear()
         self.score_pen.setheading(0)
 
@@ -329,7 +336,7 @@ class Graphics:
                                  align=align,
                                  font=('Arial', 10, 'normal'))
 
-    def update(self, t, knights, time_limit):
+    def update(self, t: float, knights: list, time_limit: float):
         self.next_scoreboard_update += 1
         if self.next_scoreboard_update % 15 == 0:
             self.next_scoreboard_update = 0
@@ -337,7 +344,7 @@ class Graphics:
             self.update_scoreboard(t=t, knights=knights, time_limit=time_limit)
         self.screen.update()
 
-    def announce_winner(self, winner):
+    def announce_winner(self, winner: str):
         self.pen.penup()
         self.pen.goto(self.nx // 2, self.ny // 2)
         self.pen.pendown()
