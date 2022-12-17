@@ -42,6 +42,7 @@ class Engine:
         self.map = Map(nx=self.nx, ny=self.ny, ng=self.ng)
         self.speedup = int(speedup)
         self._show_messages = show_messages
+        self._gems_found = {'red': 0, 'blue': 0}
 
         self.graphics.add_obstacles(self.map._obstacles)
         self.graphics.add_castles(self.map._castles)
@@ -135,7 +136,7 @@ class Engine:
         }
 
     def pickup_gem(self, x: float, y: float, team: str):
-        kind_mapping = {0: ('attack', 3), 1: ('health', 5), 2: ('speed', 0.3)}
+        kind_mapping = {0: ('attack', 3), 1: ('health', 5), 2: ('speed', 9)}
         kind = np.random.choice([0, 1, 2])
         bonus = np.random.random() * kind_mapping[kind][1]
         for k in self.knights:
@@ -146,6 +147,7 @@ class Engine:
                     k.max_health += int(bonus)
                 elif kind == 2:
                     k.speed = min(k.speed + bonus, k.max_speed)
+        self._gems_found[team] += 1
 
     def move(self, knight: Knight, t: float, dt: float, info: dict):
 
@@ -181,15 +183,15 @@ class Engine:
                     180) - 180) < 10):
             return knight.team
 
-    def run(self, safe: bool = False):
+    def run(self, safe: bool = False, fps=30):
 
         t = 0
         time_limit = 180
-        dt = 1.0 * self.speedup
-        frequency = 1. / 30.
+        # dt = 1.0 * self.speedup
+        dt = 1. / fps
         start_time = time.time()
-        frame_times = np.linspace(frequency, time_limit,
-                                  int(time_limit / frequency))
+        frame_times = np.linspace(dt, time_limit, int(time_limit / dt))
+        dt *= self.speedup
         frame = 0
         while t < time_limit:
             t = (time.time() - start_time) * self.speedup
@@ -207,7 +209,9 @@ class Engine:
                         self.graphics.announce_winner(winner)
                         return winner
 
-                dead_bodies = fight(knights=self.knights, game_map=self.map)
+                dead_bodies = fight(knights=self.knights,
+                                    game_map=self.map,
+                                    t=t)
                 for k in dead_bodies:
                     k.avatar.color('black')
                     k.avatar_circle.clear()
@@ -225,7 +229,8 @@ class Engine:
 
                 self.graphics.update(t=t,
                                      knights=self.knights,
-                                     time_limit=time_limit)
+                                     time_limit=time_limit,
+                                     gems_found=self._gems_found)
                 frame += self.speedup
 
         self.graphics.announce_winner(None)

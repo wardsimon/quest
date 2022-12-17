@@ -67,7 +67,7 @@ class Graphics:
 
         self.knights = {}
         self.previous_update = -10
-        self.next_scoreboard_update = 0
+        self.next_scoreboard_update = -1
 
     def add_grid(self):
 
@@ -228,6 +228,21 @@ class Graphics:
                        font=('Arial', 18, 'normal'))
 
         self.pen.penup()
+        self.pen.goto(self.nx // 2 - 150, self.ny + 10)
+        self.pen.pendown()
+        self.pen.write('Gems:',
+                       move=False,
+                       align="center",
+                       font=('Arial', 10, 'normal'))
+        self.pen.penup()
+        self.pen.goto(self.nx // 2 + 150, self.ny + 10)
+        self.pen.pendown()
+        self.pen.write('Gems:',
+                       move=False,
+                       align="center",
+                       font=('Arial', 10, 'normal'))
+
+        self.pen.penup()
         self.pen.goto(self.nx // 2, self.ny + 40)
         self.pen.pendown()
         self.pen.write(f"Round number {score['count']}",
@@ -245,39 +260,82 @@ class Graphics:
 
         healthbar_dx = 300
         healthbar_dy = 15
+        red_knights = ['', '', '']
+        blue_knights = ['', '', '']
         for knight in knights:
-            self.pen.pensize(2)
-            if knight.team == 'red':
-                x = 0
-            else:
-                x = self.nx - healthbar_dx
-            y = self.ny + 10 + (knight.number * (healthbar_dy + 15))
-            rectangle(self.pen,
-                      x=x,
-                      y=y,
-                      dx=healthbar_dx,
-                      dy=healthbar_dy,
-                      color='black',
-                      fill=False)
+            # self.pen.pensize(2)
+            # if knight.team == 'red':
+            #     x = 0
+            # else:
+            #     x = self.nx - healthbar_dx
+            # # y = self.ny + 10 + (knight.number * (healthbar_dy + 15))
+            # y = self.ny + 10 + ((2 - knight.number) * (healthbar_dy + 12))
+            # rectangle(self.pen,
+            #           x=x,
+            #           y=y,
+            #           dx=healthbar_dx,
+            #           dy=healthbar_dy,
+            #           color='black',
+            #           fill=False)
 
-            self.pen.penup()
-            self.pen.goto(
-                self.nx // 2 + 260 * (1 - 2 * int(knight.team == 'red')), y)
-            self.pen.pendown()
-            self.pen.color(knight.team)
-            self.pen.write(knight.ai.creator,
-                           move=False,
-                           align="left",
-                           font=('Arial', 10, 'normal'))
+            # self.pen.penup()
+            # self.pen.goto(
+            #     self.nx // 2 + 330 * (1 - 2 * int(knight.team == 'red')), y)
+            # self.pen.pendown()
+            # self.pen.color(knight.team)
+            if knight.team == 'red':
+                red_knights[
+                    knight.number] = f'{knight.name} - {knight.ai.creator}'
+            else:
+                blue_knights[
+                    knight.number] = f'{knight.ai.creator} - {knight.name}'
+
+            # self.pen.write(text,
+            #                move=False,
+            #                align="center",
+            #                font=('Arial', 10, 'normal'))
+
+        self.pen.color('red')
+        self.pen.penup()
+        self.pen.goto(self.nx // 2 - 330, self.ny + 10)
+        self.pen.pendown()
+        self.pen.write('\n\n'.join(red_knights[i] for i in range(3)),
+                       move=False,
+                       align='right',
+                       font=('Arial', 10, 'normal'))
+        self.pen.color('blue')
+        self.pen.penup()
+        self.pen.goto(self.nx // 2 + 330, self.ny + 10)
+        self.pen.pendown()
+        self.pen.write('\n\n'.join(blue_knights[i] for i in range(3)),
+                       move=False,
+                       align='left',
+                       font=('Arial', 10, 'normal'))
+
+        # self.pen.color('black')
+        # if knight.team == 'red':
+        #     x = 5
+        #     align = 'left'
+        # else:
+        #     x = self.nx - 20
+        #     align = 'right'
+        # self.pen.penup()
+        # self.pen.goto(x, y)
+        # self.pen.write('attack=    speed=    health=',
+        #                move=False,
+        #                align=align,
+        #                font=('Arial', 10, 'normal'))
+
         self.pen.pensize(1)
         self.pen.penup()
 
-    def update_scoreboard(self, t: float, knights: list, time_limit: float):
+    def update_scoreboard(self, t: float, knights: list, time_limit: float,
+                          gems_found: dict):
         self.score_pen.clear()
         self.score_pen.setheading(0)
 
         self.score_pen.color('black')
-        self.score_pen.pensize(1)
+        # self.score_pen.pensize(1)
         self.score_pen.penup()
         self.score_pen.goto(self.nx // 2 + 50, self.ny + self.topbar - 25)
         self.score_pen.pendown()
@@ -285,17 +343,42 @@ class Graphics:
                              move=False,
                              align="center",
                              font=('Arial', 18, 'normal'))
+        # self.score_pen.penup()
+        # self.score_pen.goto(self.nx // 2 + 50, self.ny + self.topbar - 25)
+        # self.score_pen.pendown()
+        # self.score_pen.write(str(int(time_limit - t)),
+        #                      move=False,
+        #                      align="center",
+        #                      font=('Arial', 18, 'normal'))
+
+        self.score_pen.penup()
+        self.score_pen.goto(self.nx // 2 - 120, self.ny + 10)
+        self.score_pen.pendown()
+        self.score_pen.write(str(gems_found['red']),
+                             move=False,
+                             align="center",
+                             font=('Arial', 10, 'normal'))
+        self.score_pen.penup()
+        self.score_pen.goto(self.nx // 2 + 185, self.ny + 10)
+        self.score_pen.pendown()
+        self.score_pen.write(str(gems_found['blue']),
+                             move=False,
+                             align="center",
+                             font=('Arial', 10, 'normal'))
 
         healthbar_dx = 300
         healthbar_dy = 15
+        no_knight = ' ' * 126
+        red_knights = [no_knight for i in range(3)]
+        blue_knights = [no_knight for i in range(3)]
         for knight in knights:
-            self.score_pen.pensize(1)
+            # self.score_pen.pensize(1)
             perc = knight.health / knight.max_health
             if knight.team == 'red':
                 x = 0
             else:
-                x = self.nx - healthbar_dx
-            y = self.ny + 10 + (knight.number * (healthbar_dy + 15))
+                x = self.nx
+            y = self.ny + 10 + ((2 - knight.number) * (healthbar_dy + 12))
             if perc > 0.5:
                 fill = 'lime'
             elif perc < 0.2:
@@ -304,43 +387,57 @@ class Graphics:
                 fill = 'gold'
             if knight.cooldown > 0:
                 fill = 'cyan'
+            plus_or_minus_one = (1 - (2 * (knight.team == 'blue')))
             rectangle(self.score_pen,
-                      x=x + 1,
+                      x=x + 1 * plus_or_minus_one,
                       y=y + 2,
-                      dx=healthbar_dx * perc - 3,
-                      dy=healthbar_dy - 3,
+                      dx=3 * knight.health * plus_or_minus_one,
+                      dy=healthbar_dy,
                       color=fill,
                       fill=True)
 
+            text = (f'attack={knight.attack} speed={int(knight.speed)} ' +
+                    f'health={int(knight.health)} / {int(knight.max_health)}')
+            padding = ' ' * (len(no_knight) - len(text))
             if knight.team == 'red':
-                x = 0.77 * healthbar_dx
-                text = (
-                    f"{knight.health} / {knight.max_health}    "
-                    f"attack={knight.attack}  speed={round(knight.speed, 1)}  "
-                    f"{knight.name}")
-                align = 'left'
+                red_knights[knight.number] = text + padding
             else:
-                x = self.nx - 5
-                text = (f"{knight.name}  speed={round(knight.speed, 1)}  "
-                        f"attack={knight.attack}"
-                        "                                  "
-                        f" {knight.health} / {knight.max_health}")
-                align = 'right'
-            self.score_pen.pensize(1)
-            self.score_pen.penup()
-            self.score_pen.goto(x, y)
-            self.score_pen.color('black')
-            self.score_pen.pendown()
-            self.score_pen.write(text,
-                                 move=False,
-                                 align=align,
-                                 font=('Arial', 10, 'normal'))
+                blue_knights[knight.number] = padding + text
 
-    def update(self, t: float, knights: list, time_limit: float):
+            # if knight.team == 'red':
+            #     x = 0.77 * healthbar_dx
+            #     text = (f"{int(knight.health)} / {int(knight.max_health)}    "
+            #             f"attack={knight.attack}  speed={int(knight.speed)}")
+            #     align = 'left'
+            # else:
+            #     x = self.nx - 5
+            #     text = (f"speed={int(knight.speed)}  "
+            #             f"attack={knight.attack}"
+            #             "                                  "
+            #             f" {int(knight.health)} / {int(knight.max_health)}")
+            #     align = 'right'
+            # self.score_pen.pensize(1)
+
+        one_text = '\n\n'.join(red_knights[i] + blue_knights[i]
+                               for i in range(3))
+        self.score_pen.penup()
+        self.score_pen.goto(5, self.ny + 10)
+        self.score_pen.color('black')
+        self.score_pen.pendown()
+        self.score_pen.write(one_text,
+                             move=False,
+                             align='left',
+                             font=('Arial', 10, 'normal'))
+
+    def update(self, t: float, knights: list, time_limit: float,
+               gems_found: dict):
         self.next_scoreboard_update += 1
         if self.next_scoreboard_update % 15 == 0:
             self.next_scoreboard_update = 0
-            self.update_scoreboard(t=t, knights=knights, time_limit=time_limit)
+            self.update_scoreboard(t=t,
+                                   knights=knights,
+                                   time_limit=time_limit,
+                                   gems_found=gems_found)
         self.screen.update()
 
     def announce_winner(self, winner: str):

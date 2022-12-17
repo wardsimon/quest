@@ -3,8 +3,8 @@ import turtle
 import uuid
 from typing import Any
 
-SPEED = {'scout': 1.5, 'warrior': 2.0, 'healer': 2.0}
-MAX_SPEED = {'scout': 3, 'warrior': 5, 'healer': 7}
+SPEED = {'scout': 45, 'warrior': 60, 'healer': 60}
+MAX_SPEED = {'scout': 90, 'warrior': 150, 'healer': 210}
 MAX_HEALTH = {'scout': 70, 'warrior': 100, 'healer': 100}
 ATTACK = {'scout': 20, 'warrior': 30, 'healer': 10}
 VIEW_RADIUS = {'scout': 150, 'warrior': 100, 'healer': 100}
@@ -98,11 +98,11 @@ class Knight:
         self.cooldown = max(self.cooldown - dt, 0)
         if self.avatar.distance(self.fountain['x'],
                                 self.fountain['y']) <= self.fountain['size']:
-            self.heal(0.5 * dt)
+            self.heal(15. * dt)
         if self.ai.kind == 'healer':
             for friend in info['friends']:
                 if self.get_distance(friend.position) < self.view_radius:
-                    friend.heal(0.5 * dt)
+                    friend.heal(15. * dt)
 
     def execute_ai(self, t: float, dt: float, info: dict, safe: bool = False):
         if safe:

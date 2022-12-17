@@ -1,5 +1,5 @@
-def fight(knights, game_map):
-    cooldown = 80
+def fight(knights, game_map, t):
+    cooldown = 3  # 3 seconds
     combats = {}
     dead = []
     for k in knights:
