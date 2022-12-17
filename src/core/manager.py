@@ -24,6 +24,11 @@ class Participant:
         return {'rounds_won': self.rounds_won, 'matches_won': self.matches_won}
 
 
+def make_team(team):
+    creator = list(team.values())[0]().creator
+    return {creator: Participant(name=creator, knights=team)}
+
+
 class Manager:
 
     def __init__(self, *participants):
