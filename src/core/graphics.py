@@ -258,42 +258,15 @@ class Graphics:
                        align="center",
                        font=('Arial', 18, 'normal'))
 
-        healthbar_dx = 300
-        healthbar_dy = 15
         red_knights = ['', '', '']
         blue_knights = ['', '', '']
         for knight in knights:
-            # self.pen.pensize(2)
-            # if knight.team == 'red':
-            #     x = 0
-            # else:
-            #     x = self.nx - healthbar_dx
-            # # y = self.ny + 10 + (knight.number * (healthbar_dy + 15))
-            # y = self.ny + 10 + ((2 - knight.number) * (healthbar_dy + 12))
-            # rectangle(self.pen,
-            #           x=x,
-            #           y=y,
-            #           dx=healthbar_dx,
-            #           dy=healthbar_dy,
-            #           color='black',
-            #           fill=False)
-
-            # self.pen.penup()
-            # self.pen.goto(
-            #     self.nx // 2 + 330 * (1 - 2 * int(knight.team == 'red')), y)
-            # self.pen.pendown()
-            # self.pen.color(knight.team)
             if knight.team == 'red':
                 red_knights[
                     knight.number] = f'{knight.name} - {knight.ai.creator}'
             else:
                 blue_knights[
                     knight.number] = f'{knight.ai.creator} - {knight.name}'
-
-            # self.pen.write(text,
-            #                move=False,
-            #                align="center",
-            #                font=('Arial', 10, 'normal'))
 
         self.pen.color('red')
         self.pen.penup()
@@ -311,22 +284,6 @@ class Graphics:
                        move=False,
                        align='left',
                        font=('Arial', 10, 'normal'))
-
-        # self.pen.color('black')
-        # if knight.team == 'red':
-        #     x = 5
-        #     align = 'left'
-        # else:
-        #     x = self.nx - 20
-        #     align = 'right'
-        # self.pen.penup()
-        # self.pen.goto(x, y)
-        # self.pen.write('attack=    speed=    health=',
-        #                move=False,
-        #                align=align,
-        #                font=('Arial', 10, 'normal'))
-
-        self.pen.pensize(1)
         self.pen.penup()
 
     def update_scoreboard(self, t: float, knights: list, time_limit: float,
@@ -335,7 +292,6 @@ class Graphics:
         self.score_pen.setheading(0)
 
         self.score_pen.color('black')
-        # self.score_pen.pensize(1)
         self.score_pen.penup()
         self.score_pen.goto(self.nx // 2 + 50, self.ny + self.topbar - 25)
         self.score_pen.pendown()
@@ -343,13 +299,6 @@ class Graphics:
                              move=False,
                              align="center",
                              font=('Arial', 18, 'normal'))
-        # self.score_pen.penup()
-        # self.score_pen.goto(self.nx // 2 + 50, self.ny + self.topbar - 25)
-        # self.score_pen.pendown()
-        # self.score_pen.write(str(int(time_limit - t)),
-        #                      move=False,
-        #                      align="center",
-        #                      font=('Arial', 18, 'normal'))
 
         self.score_pen.penup()
         self.score_pen.goto(self.nx // 2 - 120, self.ny + 10)
@@ -366,13 +315,11 @@ class Graphics:
                              align="center",
                              font=('Arial', 10, 'normal'))
 
-        healthbar_dx = 300
         healthbar_dy = 15
         no_knight = ' ' * 126
         red_knights = [no_knight for i in range(3)]
         blue_knights = [no_knight for i in range(3)]
         for knight in knights:
-            # self.score_pen.pensize(1)
             perc = knight.health / knight.max_health
             if knight.team == 'red':
                 x = 0
@@ -403,20 +350,6 @@ class Graphics:
                 red_knights[knight.number] = text + padding
             else:
                 blue_knights[knight.number] = padding + text
-
-            # if knight.team == 'red':
-            #     x = 0.77 * healthbar_dx
-            #     text = (f"{int(knight.health)} / {int(knight.max_health)}    "
-            #             f"attack={knight.attack}  speed={int(knight.speed)}")
-            #     align = 'left'
-            # else:
-            #     x = self.nx - 5
-            #     text = (f"speed={int(knight.speed)}  "
-            #             f"attack={knight.attack}"
-            #             "                                  "
-            #             f" {int(knight.health)} / {int(knight.max_health)}")
-            #     align = 'right'
-            # self.score_pen.pensize(1)
 
         one_text = '\n\n'.join(red_knights[i] + blue_knights[i]
                                for i in range(3))
