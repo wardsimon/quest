@@ -11,14 +11,15 @@ class Match:
                  phase: int = 1,
                  rounds: int = None,
                  manager: Any = None,
-                 winner: str = None):
+                 winner: str = None,
+                 best_of: int = 3):
         self.red_team = red_team
         self.blue_team = blue_team
         self.number = number
         self.rounds = [] if rounds is None else rounds
         self.phase = phase
         self.manager = manager
-        self.best_of = 5
+        self.best_of = best_of
         self.first_to = self.best_of // 2 + 1
         self.match_winner = winner
 

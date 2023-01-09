@@ -173,7 +173,7 @@ class Engine:
         no_obstacles = (np.sum(self.map.array[(xpos, ypos)] == 1)) == 0
         if (above_xmin and below_xmax and above_ymin and below_ymax
                 and no_obstacles and (not knight.ai.stop)):
-            knight.move(dt, show_messages=self._show_messages)
+            knight.move(dt)
 
         opposing_team = 'red' if knight.team == 'blue' else 'blue'
         x, y = self.map._flags[opposing_team]
@@ -230,7 +230,8 @@ class Engine:
                 self.graphics.update(t=t,
                                      knights=self.knights,
                                      time_limit=time_limit,
-                                     gems_found=self._gems_found)
+                                     gems_found=self._gems_found,
+                                     show_messages=self._show_messages)
                 frame += self.speedup
 
         self.graphics.announce_winner(None)

@@ -362,8 +362,12 @@ class Graphics:
                              align='left',
                              font=('Arial', 10, 'normal'))
 
-    def update(self, t: float, knights: list, time_limit: float,
-               gems_found: dict):
+    def update(self,
+               t: float,
+               knights: list,
+               time_limit: float,
+               gems_found: dict,
+               show_messages: bool = False):
         self.next_scoreboard_update += 1
         if self.next_scoreboard_update % 15 == 0:
             self.next_scoreboard_update = 0
@@ -371,6 +375,11 @@ class Graphics:
                                    knights=knights,
                                    time_limit=time_limit,
                                    gems_found=gems_found)
+            if show_messages:
+                for knight in knights:
+                    if knight.ai.message is not None:
+                        print(f'{knight.name} ({knight.ai.creator}) says: '
+                              f'{knight.ai.message}')
         self.screen.update()
 
     def announce_winner(self, winner: str):
