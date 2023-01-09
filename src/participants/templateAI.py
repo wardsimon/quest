@@ -32,8 +32,6 @@ class TemplateWarrior(BaseAI):
         self.previous_position = me['position']
         self.previous_health = me['health']
 
-        self.message = 'I am a tool'
-
 
 class TemplateScout(BaseAI):
 
