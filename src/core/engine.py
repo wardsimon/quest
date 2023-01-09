@@ -78,9 +78,9 @@ class Engine:
 
     def get_local_map(self, x: float, y: float, radius: float) -> np.ndarray:
         xmin = max(x - radius, 0)
-        xmax = min(x + radius + 1, self.nx - 1)
+        xmax = min(x + radius + 1, self.nx)
         ymin = max(y - radius, 0)
-        ymax = min(y + radius + 1, self.ny - 1)
+        ymax = min(y + radius + 1, self.ny)
         local_map = self.map.array[xmin:xmax, ymin:ymax].copy()
         xm, ym = np.meshgrid(np.arange(xmin, xmax),
                              np.arange(ymin, ymax),
@@ -136,15 +136,15 @@ class Engine:
         }
 
     def pickup_gem(self, x: float, y: float, team: str):
-        kind_mapping = {0: ('attack', 3), 1: ('health', 5), 2: ('speed', 9)}
+        kind_mapping = {0: ('attack', 2), 1: ('health', 4), 2: ('speed', 8)}
         kind = np.random.choice([0, 1, 2])
         bonus = np.random.random() * kind_mapping[kind][1]
         for k in self.knights:
             if k.team == team:
                 if kind == 0:
-                    k.attack += int(bonus)
+                    k.attack += int(bonus) + 1
                 elif kind == 1:
-                    k.max_health += int(bonus)
+                    k.max_health += int(bonus) + 1
                 elif kind == 2:
                     k.speed = min(k.speed + bonus, k.max_speed)
         self._gems_found[team] += 1

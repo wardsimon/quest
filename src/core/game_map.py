@@ -35,8 +35,8 @@ class Map:
         for i in range(n):
             not_good = True
             while not_good:
-                x = int(np.random.random() * self.nx)
-                y = int(np.random.random() * self.ny)
+                x = int(np.random.random() * (self.nx - 1))
+                y = int(np.random.random() * (self.ny - 1))
                 if self.array[x, y] == 0:
                     self.array[x, y] = 2
                     posx[i] = x
