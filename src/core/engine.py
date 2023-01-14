@@ -22,7 +22,8 @@ def make_properties_dict(knight):
         'view_radius': knight.view_radius,
         'max_health': knight.max_health,
         'message': knight.ai.message,
-        'team': knight.team
+        'team': knight.team,
+        'kind': knight.ai.kind
     }
 
 
@@ -77,17 +78,20 @@ class Engine:
         self.graphics.initialize_scoreboard(knights=self.knights, score=score)
 
     def get_local_map(self, x: float, y: float, radius: float) -> np.ndarray:
+        local_map = np.full((2 * radius + 1, 2 * radius + 1), -2)
         xmin = max(x - radius, 0)
         xmax = min(x + radius + 1, self.nx)
         ymin = max(y - radius, 0)
         ymax = min(y + radius + 1, self.ny)
-        local_map = self.map.array[xmin:xmax, ymin:ymax].copy()
+        temp_map = self.map.array[xmin:xmax, ymin:ymax].copy()
         xm, ym = np.meshgrid(np.arange(xmin, xmax),
                              np.arange(ymin, ymax),
                              indexing='ij')
         dist_map = np.sqrt((xm - x)**2 + (ym - y)**2)
         invalid = dist_map > radius
-        local_map[invalid] = -1
+        temp_map[invalid] = -1
+        local_map[(xmin - x + radius):(xmax - x + radius),
+                  (ymin - y + radius):(ymax - y + radius)] = temp_map
         return local_map
 
     def get_info(self, knight: Knight, friends_as_dict: bool = False):
