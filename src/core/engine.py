@@ -78,7 +78,7 @@ class Engine:
         self.graphics.initialize_scoreboard(knights=self.knights, score=score)
 
     def get_local_map(self, x: float, y: float, radius: float) -> np.ndarray:
-        # local_map = np.full((2 * radius + 1, 2 * radius + 1), -1)
+        local_map = np.full((2 * radius + 1, 2 * radius + 1), -2)
         xmin = max(x - radius, 0)
         xmax = min(x + radius + 1, self.nx)
         ymin = max(y - radius, 0)
@@ -90,16 +90,15 @@ class Engine:
         dist_map = np.sqrt((xm - x)**2 + (ym - y)**2)
         invalid = dist_map > radius
         temp_map[invalid] = -1
-        # local_map[(xmin - x + radius):(xmax - x + radius),
-        #           (ymin - y + radius):(ymax - y + radius)] = temp_map
-        # print(temp_map.shape)
-        # print((xmin - x + radius), (xmax - x + radius), (ymin - y + radius),
-        #       (ymax - y + radius))
-        return temp_map
+        local_map[(xmin - x + radius):(xmax - x + radius),
+                  (ymin - y + radius):(ymax - y + radius)] = temp_map
+        return temp_map, local_map
 
     def get_info(self, knight: Knight, friends_as_dict: bool = False):
         r = knight.view_radius
-        local_map = self.get_local_map(x=knight.x, y=knight.y, radius=r)
+        local_map, constant_shape_map = self.get_local_map(x=knight.x,
+                                                           y=knight.y,
+                                                           radius=r)
         friends = []
         enemies = []
         for k in self.knights:
@@ -134,6 +133,7 @@ class Engine:
 
         return {
             'local_map': local_map,
+            'constant_shape_map': constant_shape_map,
             'friends': friends,
             'enemies': enemies,
             'gems': gems,
