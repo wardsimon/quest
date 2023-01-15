@@ -184,10 +184,11 @@ class Engine:
 
         opposing_team = 'red' if knight.team == 'blue' else 'blue'
         x, y = self.map._flags[opposing_team]
-        if (knight.get_distance((x, y)) <= (knight.speed * dt)) and (abs(
+        dist_to_flag = knight.get_distance((x, y))
+        if ((dist_to_flag <= (knight.speed * dt)) and (abs(
                 abs(
                     knight.avatar.towards(x, y) - knight.avatar.heading() -
-                    180) - 180) < 10):
+                    180) - 180) < 40)) or (dist_to_flag < 5):
             return knight.team
 
     def run(self, safe: bool = False, fps=30):

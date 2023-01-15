@@ -44,12 +44,13 @@ class Knight:
         self.number = number
 
         self.ai = AI(team=team)
+        self.kind = self.ai.kind
 
-        self.speed = SPEED[self.ai.kind]
-        self.max_speed = MAX_SPEED[self.ai.kind]
-        self.max_health = MAX_HEALTH[self.ai.kind]
-        self.attack = ATTACK[self.ai.kind]
-        self.view_radius = VIEW_RADIUS[self.ai.kind]
+        self.speed = SPEED[self.kind]
+        self.max_speed = MAX_SPEED[self.kind]
+        self.max_health = MAX_HEALTH[self.kind]
+        self.attack = ATTACK[self.kind]
+        self.view_radius = VIEW_RADIUS[self.kind]
         self.health = self.max_health
         self.id = uuid.uuid4().hex
 
@@ -99,7 +100,7 @@ class Knight:
         if self.avatar.distance(self.fountain['x'],
                                 self.fountain['y']) <= self.fountain['size']:
             self.heal(15. * dt)
-        if self.ai.kind == 'healer':
+        if self.kind == 'healer':
             for friend in info['friends']:
                 if self.get_distance(friend.position) < self.view_radius:
                     friend.heal(15. * dt)
@@ -120,6 +121,7 @@ class Knight:
         ]) > 1:
             print('Warning, more than one AI property is set, '
                   'results may be unpredictable!')
+        # try:
         if self.ai.heading is not None:
             self.heading = self.ai.heading
         if self.ai.goto is not None:
@@ -128,6 +130,9 @@ class Knight:
             self.left(self.ai.left)
         if self.ai.right is not None:
             self.right(self.ai.right)
+        # except:
+        #     print('Error in ', self.ai.creator, self.name)
+        #     pass
 
     def heal(self, value: float):
         self.health = min(self.max_health, self.health + value)
