@@ -1,2 +1,27 @@
+# Python
+__pycache__
+.venv
+.coverage
+.pyc
 
+# Poetry
+dist
+*.egg-info
+poetry.lock
+
+
+# Jupyter
+.ipynb_checkpoints
+
+# macOS
+.DS_Store
+*.app
+*.dmg
+
+# Misc
+..*
+*.log
+*.zip
+settings.ini*
+.ci/
 .idea/
