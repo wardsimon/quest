@@ -1,6 +1,6 @@
 from .engine import Engine
 from typing import Any
-
+from Quest import IS_NOTEBOOK
 
 class Match:
 
@@ -117,3 +117,8 @@ class Match:
             self.update_winner('red')
         if score['blue'] > score['red']:
             self.update_winner('blue')
+
+
+class JupyterMatch(Match):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

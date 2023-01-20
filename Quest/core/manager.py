@@ -5,7 +5,7 @@ from random import shuffle
 import yaml
 import shutil
 from .match import Match
-import turtle
+from Quest import turtle
 
 
 class Participant:

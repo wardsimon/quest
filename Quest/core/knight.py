@@ -1,5 +1,5 @@
 import numpy as np
-import turtle
+from Quest import turtle, IS_NOTEBOOK
 import uuid
 from typing import Any
 
@@ -14,17 +14,20 @@ class Knight:
 
     def __init__(self, x: int, y: int, name: str, heading: float, team: str,
                  castle: dict, fountain: dict, number: int, AI: Any):
-        self.avatar = turtle.Turtle()
+        args = []
+        if IS_NOTEBOOK:
+            args.append(self.canvas)
+        self.avatar = turtle.Turtle(*args)
         self.avatar.speed(0)
         self.avatar.penup()
 
-        self.avatar_circle = turtle.Turtle()
+        self.avatar_circle = turtle.Turtle(*args)
         self.avatar_circle.speed(0)
         self.avatar_circle.penup()
         self.avatar_circle.hideturtle()
         self.avatar_circle.setheading(270)
 
-        self.avatar_name = turtle.Turtle()
+        self.avatar_name = turtle.Turtle(*args)
         self.avatar_name.speed(0)
         self.avatar_name.penup()
         self.avatar_name.hideturtle()

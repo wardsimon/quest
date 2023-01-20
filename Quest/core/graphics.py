@@ -1,4 +1,4 @@
-import turtle
+from Quest import turtle, IS_NOTEBOOK
 from typing import Any
 
 
@@ -35,27 +35,33 @@ class Graphics:
         self.ny = ny
         self.ng = ng
         self.topbar = topbar
-
-        self.screen = turtle.Screen()
+        self.canvas = None
+        if IS_NOTEBOOK:
+            self.canvas = turtle.Canvas(width=self.nx, height=self.ny + self.topbar)
+            self.screen = turtle.TurtleScreen(self.canvas)
+        else:
+            self.screen = turtle.Screen()
+            self.canvas = self.screen.getcanvas()
         self.screen.clearscreen()
-
-        self.screen.setup(width=self.nx, height=self.ny + self.topbar)
+        if not IS_NOTEBOOK:
+            self.screen.setup(width=self.nx, height=self.ny + self.topbar)
         self.screen.setworldcoordinates(0, 0, self.nx, self.ny + self.topbar)
 
-        cv = self.screen.getcanvas()
-        cv.adjustScrolls()
+        self.canvas.adjustScrolls()
 
         self.background = '#D3D3D3'
         self.screen.bgcolor(self.background)
         # self.screen.bgpic('background.png')
         # cv.itemconfig(self.screen._bgpic, anchor="sw")
         self.screen.tracer(0)
-
-        self.pen = turtle.Turtle()
+        args = []
+        if IS_NOTEBOOK:
+            args.append(self.canvas)
+        self.pen = turtle.Turtle(*args)
         self.pen.speed(0)
         self.pen.hideturtle()
 
-        self.score_pen = turtle.Turtle()
+        self.score_pen = turtle.Turtle(*args)
         self.score_pen.hideturtle()
         self.score_pen.speed(0)
         self.score_pen.penup()
