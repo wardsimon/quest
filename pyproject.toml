@@ -1,0 +1,28 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "Quest"
+version = "0.1.0"
+description = "Quest - An AI coding challenge"
+license = "BSD-3-Clause"
+authors = ["Neil Vaytet"]
+readme = "README.md"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Topic :: Games/Entertainment :: Turn Based Strategy",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3 :: Only",
+]
+packages = [ { include = "Quest" } ]
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+numpy = "^1.24"
+pyyaml = "^6.0"
+ipyturtle3 = {version="^0.1.4", optional=true}
+
+
+[tool.poetry.extras]
+nb = ['ipyturtle3']

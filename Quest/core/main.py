@@ -4,7 +4,7 @@ sys.path.append('../participants')
 
 from manager import Manager
 
-from templateAI import team as TemplateTeam
+from ..knights.templateAI import team as TemplateTeam
 
 if __name__ == '__main__':
 

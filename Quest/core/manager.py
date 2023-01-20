@@ -4,7 +4,7 @@ import numpy as np
 from random import shuffle
 import yaml
 import shutil
-from match import Match
+from .match import Match
 import turtle
 
 

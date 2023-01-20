@@ -1,5 +1,5 @@
 import numpy as np
-from ai import BaseAI
+from ..core.ai import BaseAI
 
 CREATOR = 'JohnDoe'
 

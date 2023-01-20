@@ -1,7 +1,7 @@
-from game_map import Map
-from graphics import Graphics
-from fight import fight
-from knight import Knight
+from .game_map import Map
+from .graphics import Graphics
+from .fight import fight
+from .knight import Knight
 
 import numpy as np
 import time
