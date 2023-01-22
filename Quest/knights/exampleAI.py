@@ -1,10 +1,10 @@
 import numpy as np
-from ..core.ai import BaseAI
+from quest.core.ai import BaseAI
 
 CREATOR = 'JohnDoe'
 
 
-class TemplateWarrior(BaseAI):
+class ExampleWarrior(BaseAI):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, creator=CREATOR, kind='warrior', **kwargs)
@@ -33,7 +33,7 @@ class TemplateWarrior(BaseAI):
         self.previous_health = me['health']
 
 
-class TemplateScout(BaseAI):
+class ExampleScout(BaseAI):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, creator=CREATOR, kind='scout', **kwargs)
@@ -63,7 +63,7 @@ class TemplateScout(BaseAI):
 
 
 team = {
-    'Arthur': TemplateWarrior,
-    'Galahad': TemplateWarrior,
-    'Lancelot': TemplateScout
+    'Arthur':   ExampleWarrior,
+    'Galahad':  ExampleWarrior,
+    'Lancelot': ExampleScout
 }
