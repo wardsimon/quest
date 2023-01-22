@@ -5,6 +5,7 @@ import abc
 from quest.core.ai import BaseAI
 from quest.core.team import Team
 
+
 class TemplateAI(BaseAI):
 
     def __init__(self, *args, creator: str = None, kind: str = None, **kwargs):

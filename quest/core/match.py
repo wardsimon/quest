@@ -1,17 +1,16 @@
 from __future__ import annotations
 from .engine import Engine
-from typing import Optional, TYPE_CHECKING
+from typing import Dict, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .team import Team
-    from .manager import Manager
+    from .manager import Manager, Participant
 
 
 class Match:
 
     def __init__(self,
-                 red_team: Team,
-                 blue_team: Team,
+                 red_team: Dict[str, Participant],
+                 blue_team: Dict[str, Participant],
                  number: int = 1,
                  phase: int = 1,
                  rounds: Optional[int] = None,
@@ -80,7 +79,9 @@ class Match:
 
             if self.phase == 1:
                 red = list(self.red_team.keys())[0]
+                self.red_team[red].knights.reset_team()
                 blue = list(self.blue_team.keys())[0]
+                self.blue_team[blue].knights.reset_team()
                 red_team = [(k, v)
                             for k, v in self.red_team[red].knights.items()]
                 blue_team = [(k, v)
