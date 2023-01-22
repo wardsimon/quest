@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pathlib import Path
 from itertools import combinations
 import numpy as np
@@ -6,6 +7,8 @@ import yaml
 import shutil
 from .match import Match
 import turtle
+from typing import Union
+from quest.core.team import Team
 
 
 class Participant:
@@ -24,9 +27,11 @@ class Participant:
         return {'rounds_won': self.rounds_won, 'matches_won': self.matches_won}
 
 
-def make_team(team):
-    creator = list(team.values())[0]().creator
-    return {creator: Participant(name=creator, knights=team)}
+def make_team(team: Union[Team, dict]):
+    if not isinstance(team, Team):
+        creator = list(team.values())[0]().creator
+        team = Team(creator, **team)
+    return {team.creator: Participant(name=team.creator, knights=team)}
 
 
 class Manager:
