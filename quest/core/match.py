@@ -1,17 +1,22 @@
+from __future__ import annotations
 from .engine import Engine
-from typing import Any
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .team import Team
+    from .manager import Manager
 
 
 class Match:
 
     def __init__(self,
-                 red_team: dict,
-                 blue_team: dict,
+                 red_team: Team,
+                 blue_team: Team,
                  number: int = 1,
                  phase: int = 1,
-                 rounds: int = None,
-                 manager: Any = None,
-                 winner: str = None,
+                 rounds: Optional[int] = None,
+                 manager: Optional[Manager] = None,
+                 winner: Optional[str] = None,
                  best_of: int = 3):
         self.red_team = red_team
         self.blue_team = blue_team
@@ -25,9 +30,9 @@ class Match:
 
     def to_dict(self) -> dict:
         return {
-            'phase': self.phase,
-            'red': list(self.red_team.keys()),
-            'blue': list(self.blue_team.keys()),
+            'phase':  self.phase,
+            'red':    list(self.red_team.keys()),
+            'blue':   list(self.blue_team.keys()),
             'rounds': self.rounds,
             'number': self.number,
             'winner': self.match_winner

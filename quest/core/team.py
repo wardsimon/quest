@@ -10,3 +10,8 @@ class Team(collections.UserDict):
         super().__init__(kwargs)
         self.creator = creator
 
+    def reset_team(self):
+        """
+        A stud method which can be used  to reset states if needed.
+        """
+        pass

@@ -24,9 +24,9 @@ pip install .
 Create your own Team and import the knights or use the `TemplateTeam`...
 
 ```python
-from Quest.core.match import Match
-from Quest.core.manager import make_team
-from Quest.knights.templateAI import team as TemplateTeam
+from quest.core.match import Match
+from quest.core.manager import make_team
+from quest.knights.templateAI import team as TemplateTeam
 
 match = Match(red_team=make_team(TemplateTeam),
               blue_team=make_team(TemplateTeam),

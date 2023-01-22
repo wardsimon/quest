@@ -7,7 +7,7 @@ import yaml
 import shutil
 from .match import Match
 import turtle
-from typing import Union
+from typing import Union, Dict
 from quest.core.team import Team
 
 
@@ -15,7 +15,7 @@ class Participant:
 
     def __init__(self,
                  name: str,
-                 knights: list,
+                 knights: Team,
                  rounds_won: int = 0,
                  matches_won: int = 0):
         self.name = name
@@ -27,10 +27,11 @@ class Participant:
         return {'rounds_won': self.rounds_won, 'matches_won': self.matches_won}
 
 
-def make_team(team: Union[Team, dict]):
+def make_team(team: Union[Team, dict]) -> Dict[str, Participant]:
     if not isinstance(team, Team):
         creator = list(team.values())[0]().creator
         team = Team(creator, **team)
+    team.reset_team()
     return {team.creator: Participant(name=team.creator, knights=team)}
 
 
@@ -40,9 +41,7 @@ class Manager:
 
         self.participants = {}
         for team in participants:
-            creator = list(team.values())[0]().creator
-            self.participants[creator] = Participant(name=creator,
-                                                     knights=team)
+            self.participants.update(make_team(team))
 
         self.matches = []
         self.phase = 0
