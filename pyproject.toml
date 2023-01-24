@@ -23,7 +23,7 @@ dependencies = [
     'pyyaml>="6.0"'
 ]
 [tool.setuptools.packages.find]
-where = ["src
+where = ["./src"]
 
 [project.options.extras_require]
 notebook = [
