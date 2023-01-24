@@ -23,7 +23,7 @@ dependencies = [
     "pyyaml >= 6.0"
 ]
 
-[project.options.extras_require]
+[project.optional-dependencies]
 notebook = [
     "jupyter >= 1.0.0", 
     "ipyturtle3 >= 0.1.4"
