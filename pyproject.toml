@@ -14,12 +14,12 @@ classifiers = [
     "Topic :: Games/Entertainment :: Turn Based Strategy",
     "License :: OSI Approved :: BSD License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10"
+    "Programming Language :: Python :: 3.10",
     "Operating System :: OS Independent"
 ]
 dependencies = [
     'python_version>=3.8',
-    'numpy>="1.24"'
+    'numpy>="1.24"',
     'pyyaml>="6.0"'
 ]
 
@@ -35,8 +35,8 @@ notebook = [
 [tool.flake8]
 # See https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
 max-line-length = 88
-extend-ignore = E203
+extend-ignore = "E203"
 
 [tool.yapf]
-based_on_style = pep8
+based_on_style = "pep8"
 column_limit = 88
