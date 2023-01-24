@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools", "setuptools-scm", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -19,17 +19,19 @@ classifiers = [
 ]
 requires-python = ">=3.8"
 dependencies = [
-    'numpy >= 1.24',
-    'pyyaml >= 6.0'
+    "numpy >= 1.24",
+    "pyyaml >= 6.0"
 ]
-[tool.setuptools.packages.find]
-where = ["./src"]
 
 [project.options.extras_require]
 notebook = [
-    'jupyter >= 1.0.0', 
-    'ipyturtle3 >= 0.1.4'
+    "jupyter >= 1.0.0", 
+    "ipyturtle3 >= 0.1.4"
 ]
+
+
+[tool.setuptools.packages.find]
+where = ["./src"]
 
 [tool.flake8]
 # See https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
